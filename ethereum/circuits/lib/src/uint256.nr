@@ -1,26 +1,26 @@
-use dep::std::ops::Add;
-use crate::misc::types::Bytes32;
-use crate::misc::bytes32::field_to_bytes32;
 use crate::misc::arrays::memcpy_up_to_length;
+use crate::misc::bytes32::field_to_bytes32;
+use crate::misc::types::Bytes32;
+use dep::std::ops::Add;
 
 global uint128_overflow_value = 340282366920938463463374607431768211456; // 2^128
 
 struct U256 {
-    high: U128,
-    low: U128,
+    high: u128,
+    low: u128,
 }
 
 impl U256 {
-    fn new(high: U128, low: U128) -> Self {
+    fn new(high: u128, low: u128) -> Self {
         Self { high, low }
     }
 
     fn zero() -> Self {
-        Self { high: U128::from_integer(0), low: U128::from_integer(0) }
+        Self { high: 0, low: 0 }
     }
 
     fn one() -> Self {
-        Self { high: U128::from_integer(0), low: U128::from_integer(1) }
+        Self { high: 0, low: 0 }
     }
 
     fn from_field(field: Field) -> Self {
@@ -32,11 +32,11 @@ impl From<Bytes32> for U256 {
     fn from(bytes: Bytes32) -> Self {
         let mut high_bytes = [0; 16];
         memcpy_up_to_length(&mut high_bytes, bytes, 16, 16);
-        let high = U128::from_le_bytes(high_bytes);
+        let high = from_le_bytes(high_bytes);
 
         let mut low_bytes = [0; 16];
         memcpy_up_to_length(&mut low_bytes, bytes, 0, 16);
-        let low = U128::from_le_bytes(low_bytes);
+        let low = u256::from_le_bytes(low_bytes);
 
         U256::new(high, low)
     }
@@ -68,7 +68,7 @@ impl Add for U256 {
 
         let mut low = U128::from_integer(0);
         let mut carry = 0;
-        if(lo.lt(uint128_overflow_value)) {
+        if (lo.lt(uint128_overflow_value)) {
             low = U128::from_integer(lo);
         } else {
             low = U128::from_integer(lo - uint128_overflow_value);
@@ -78,7 +78,7 @@ impl Add for U256 {
         let hi: Field = self.high.to_integer() + other.high.to_integer() + carry;
         assert(hi.lt(uint128_overflow_value), "attempt to add with overflow");
 
-        let high = U128::from_integer(hi);
+        let high = hi as u128;
 
         Self { high, low }
     }

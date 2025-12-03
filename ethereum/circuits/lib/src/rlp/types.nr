@@ -23,7 +23,7 @@ impl Eq for RlpHeader {
     }
 }
 
-struct RlpFragment {
+pub struct RlpFragment {
     offset: u32,
     length: u32,
     data_type: u32,

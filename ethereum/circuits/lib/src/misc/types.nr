@@ -1,5 +1,5 @@
 global ADDRESS_LENGTH: u32 = 20;
-type Address = [u8; ADDRESS_LENGTH];
+pub(crate) type Address = [u8; ADDRESS_LENGTH];
 
 global BYTES32_LENGTH: u32 = 32;
 type Bytes32 = [u8; BYTES32_LENGTH];

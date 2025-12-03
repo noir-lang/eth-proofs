@@ -11,7 +11,7 @@ use crate::serde::Serde;
 use crate::verifiers::account::verify_account;
 use crate::verifiers::storage::verify_storage_values;
 
-use dep::std::hash::keccak256;
+use dep::keccak256::keccak256;
 
 global MAX_KEY_LEN: u32 = 32;
 global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 66; // (MAX_KEY_LEN + 1) * 2
@@ -20,8 +20,8 @@ global MAX_STORAGE_DEPTH_NO_LEAF_M = 6; // Emperically correct values to be dete
 global MAX_STORAGE_VALUE_LEN: u32 = 32; // Values taken from storageProofConfig in storage.ts.
 global MAX_STORAGE_LEAF_LEN: u32 = 69;
 
-struct Account {
-    nonce: u64,
+pub struct Account {
+    pub nonce: u64,
     balance: Field,
     storage_root: Bytes32,
     code_hash: Bytes32,
@@ -44,8 +44,8 @@ struct StateAndStorageProofInput {
     storage_proof_input: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_STORAGE_VALUE_LEN, MAX_STORAGE_DEPTH_NO_LEAF_M, MAX_STORAGE_LEAF_LEN>,
 }
 
-struct StorageWithinBlock<let N: u32> {
-    block_hash: Bytes32,
+pub struct StorageWithinBlock<let N: u32> {
+    pub block_hash: Bytes32,
     account: Account,
     values: [Bytes32; N],
 }
@@ -70,7 +70,7 @@ fn assert_storage_key_equals(
         storage_key_hash,
     );
     let other_storage_key_hash_fragment =
-        Fragment::from_array(keccak256(storage_key, BYTES32_LENGTH as u32));
+        Fragment::from_array(keccak256(storage_key, BYTES32_LENGTH));
     assert(
         storage_key_hash_fragment.eq(other_storage_key_hash_fragment),
         "Storage key does not match the argument",
@@ -106,8 +106,8 @@ pub fn get_account_with_storage(
     address: Address,
     storage_key: Bytes32,
 ) -> StorageWithinBlock<1> {
-    let BlockHeaderPartial { number: _, hash, state_root, transactions_root: _, receipts_root: _ } =
-        get_header(chain_id, block_number);
+    let BlockHeaderPartial { number: _, hash, state_root, transactions_root: _, receipts_root: _ }
+         = get_header(chain_id, block_number);
     let StateAndStorageProofInput { account, state_proof_input, storage_proof_input } =
         get_proof_unconstrained(chain_id, block_number, address, storage_key);
 

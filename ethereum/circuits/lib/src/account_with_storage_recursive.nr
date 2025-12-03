@@ -3,7 +3,7 @@ use crate::misc::{fragment::Fragment, types::{Address, ADDRESS_LENGTH, Bytes32, 
 use crate::serde::STORAGE_BLOCK_LEN;
 use dep::std::{mem::zeroed, verify_proof};
 
-struct RecursiveProof {
+pub struct RecursiveProof {
     key_hash: Field,
     verification_key: [Field; 114],
     proof: [Field; 93],

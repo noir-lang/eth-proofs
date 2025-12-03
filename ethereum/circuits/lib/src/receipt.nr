@@ -13,14 +13,14 @@ use dep::std::mem::zeroed;
 global BLOOM_FILTER_LEN: u32 = 256;
 
 global MAX_KEY_LEN: u32 = 3;
-global MAX_DEPTH_NO_LEAF = 6;
+global MAX_DEPTH_NO_LEAF: u32 = 6;
 global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 8; // (MAX_KEY_LEN + 1) * 2
 
-global MAX_VALUE_LEN_M = 1000; // Values taken from receiptProofConfigM in receipt.ts.
-global MAX_LEAF_LEN_M = 1011;
+global MAX_VALUE_LEN_M: u32 = 1000; // Values taken from receiptProofConfigM in receipt.ts.
+global MAX_LEAF_LEN_M: u32 = 1011;
 
-global MAX_RECEIPT_ENCODED_LEN_M = MAX_VALUE_LEN_M;
-global MAX_RECEIPT_RLP_LEN_M = MAX_RECEIPT_ENCODED_LEN_M - 1;
+global MAX_RECEIPT_ENCODED_LEN_M: u32 = MAX_VALUE_LEN_M;
+global MAX_RECEIPT_RLP_LEN_M: u32 = MAX_RECEIPT_ENCODED_LEN_M - 1;
 
 type TxType = u8;
 

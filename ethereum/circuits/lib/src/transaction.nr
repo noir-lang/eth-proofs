@@ -20,7 +20,7 @@ struct TxPartial<let MAX_DATA_LEN: u32> {
     nonce: u64,
     gas_limit: u64,
     to: Option<Address>,
-    value: U128,
+    value: u128,
     data: BoundedVec<u8, MAX_DATA_LEN>,
     v: u8, // ECDSA recovery id
     r: Bytes32, // ECDSA signature part
@@ -81,7 +81,8 @@ impl<let MAX_DATA_LEN: u32> From<TxPartial<MAX_DATA_LEN>> for ForeignCallTransac
 
 impl<let MAX_DATA_LEN: u32> From<ForeignCallTransaction<MAX_DATA_LEN>> for TxPartial<MAX_DATA_LEN> {
     fn from(tx: ForeignCallTransaction<MAX_DATA_LEN>) -> Self {
-        let data = BoundedVec { storage: tx.data, len: tx.data_len };
+        let mut data = BoundedVec::new();
+        data.extend_from_array(tx.data);
         TxPartial {
             nonce: tx.nonce,
             gas_limit: tx.gas_limit,

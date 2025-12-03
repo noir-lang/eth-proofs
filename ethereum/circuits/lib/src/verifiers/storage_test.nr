@@ -1,4 +1,4 @@
-use crate::fixtures::mainnet::paris::usdc_circle::{storage_proof::proofs, account::storage_root};
+use crate::fixtures::mainnet::paris::usdc_circle::{account::storage_root, storage_proof::proofs};
 use crate::verifiers::storage::verify_storage_values;
 
 #[test]

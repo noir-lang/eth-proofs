@@ -1,4 +1,4 @@
 mod decode;
 mod decode_test;
-mod types;
+pub mod types;
 mod types_test;

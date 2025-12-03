@@ -1,10 +1,9 @@
 use crate::misc::{arrays::{memcpy_up_to_length, resize}, iterator::Iterator};
-use dep::std::mem::zeroed;
 
-struct Fragment<let MAX_DATA_LEN: u32, T> {
+pub struct Fragment<let MAX_DATA_LEN: u32, T> {
     offset: u32,
     length: u32,
-    data: [T; MAX_DATA_LEN]
+    data: [T; MAX_DATA_LEN],
 }
 
 impl<let MAX_DATA_LEN: u32, T> Fragment<MAX_DATA_LEN, T> {
@@ -45,7 +44,7 @@ impl<let MAX_DATA_LEN: u32, T> Fragment<MAX_DATA_LEN, T> {
     }
 
     pub fn from_vec(vec: BoundedVec<T, MAX_DATA_LEN>) -> Fragment<MAX_DATA_LEN, T> {
-        Fragment::new_with_length(vec.len, vec.storage)
+        Fragment::new_with_length(vec.len(), vec.storage())
     }
 
     pub fn focus<let NEW_MAX_LEN: u32>(self) -> Fragment<NEW_MAX_LEN, T> {
@@ -80,7 +79,8 @@ impl<let MAX_DATA_LEN: u32, T> Fragment<MAX_DATA_LEN, T> {
     pub fn set(&mut self, index: u32, value: T) {
         let length = self.length;
         assert(
-            index < self.length, f"Index out of bounds, tried to set at index {index} but the length is {length}"
+            index < self.length,
+            f"Index out of bounds, tried to set at index {index} but the length is {length}",
         );
 
         self.data[self.offset + index] = value;
@@ -117,32 +117,34 @@ impl<let MAX_DATA_LEN: u32, T> Fragment<MAX_DATA_LEN, T> {
         }
     }
 
-    pub fn eq<let OTHER_MAX_DATA_LEN: u32>(self, other: Fragment<OTHER_MAX_DATA_LEN, T>) -> bool where T: Eq {
+    pub fn eq<let OTHER_MAX_DATA_LEN: u32>(self, other: Fragment<OTHER_MAX_DATA_LEN, T>) -> bool
+    where
+        T: Eq,
+    {
         let res = &mut true;
         if (self.length != other.length) {
             *res = false;
         }
-        self.each(
-            |el, i| {
+        self.each(|el, i| {
             if i < other.length {
                 *res &= el == other.at(i);
             }
-        }
-        );
+        });
 
         *res
     }
 }
 
-impl<let MAX_DATA_LEN: u32, T> Eq for Fragment<MAX_DATA_LEN, T> where T: Eq {
+impl<let MAX_DATA_LEN: u32, T> Eq for Fragment<MAX_DATA_LEN, T>
+where
+    T: Eq,
+{
     fn eq(self, other: Fragment<MAX_DATA_LEN, T>) -> bool {
         let res = &mut true;
         if self.length != other.length {
             *res = false;
         } else {
-            self.each(|el, i| {
-                *res &= el == other.at(i);
-            });
+            self.each(|el, i| { *res &= el == other.at(i); });
         };
 
         *res

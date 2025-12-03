@@ -12,7 +12,7 @@ global MAX_ACCOUNT_DEPTH_NO_LEAF_M: u32 = 10; // Emperically correct values to b
 global MAX_ACCOUNT_STATE_LEN: u32 = 110; // Values taken from accountProofConfig in account.ts.
 global MAX_ACCOUNT_LEAF_LEN: u32 = 148;
 
-struct AccountWithinBlock {
+pub struct AccountWithinBlock {
     account: Account,
     block_hash: Bytes32,
 }
