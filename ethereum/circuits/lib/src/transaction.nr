@@ -5,14 +5,14 @@ use crate::serde::{Serde, TX_PROOF_INPUT_LEN_M};
 use crate::verifiers::transaction::verify_tx;
 use std::mem::zeroed;
 
-global MAX_KEY_LEN: u32 = 3;
-global MAX_DEPTH_NO_LEAF = 6;
-global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 8; // (MAX_KEY_LEN + 1) * 2
+pub(crate) global MAX_KEY_LEN: u32 = 3;
+pub(crate) global MAX_DEPTH_NO_LEAF: u32 = 6;
+pub(crate) global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 8; // (MAX_KEY_LEN + 1) * 2
 
-global MAX_VALUE_LEN_M = 1000; // Values taken from txProofConfigM in tx.ts.
-global MAX_LEAF_LEN_M = 1011;
+pub(crate) global MAX_VALUE_LEN_M: u32 = 1000; // Values taken from txProofConfigM in tx.ts.
+pub(crate) global MAX_LEAF_LEN_M: u32 = 1011;
 
-global MAX_TX_ENCODED_LEN_M = MAX_VALUE_LEN_M;
+pub(crate) global MAX_TX_ENCODED_LEN_M: u32 = MAX_VALUE_LEN_M;
 
 type TxType = u8;
 
@@ -59,8 +59,8 @@ impl<let MAX_DATA_LEN: u32> From<TxPartial<MAX_DATA_LEN>> for ForeignCallTransac
         let mut data = [0; MAX_DATA_LEN];
 
         for i in 0..MAX_DATA_LEN {
-            if (i < tx.data.len) {
-                data[i] = tx.data.storage[i];
+            if (i < tx.data.len()) {
+                data[i] = tx.data.storage()[i];
             }
         }
         ForeignCallTransaction {
@@ -71,7 +71,7 @@ impl<let MAX_DATA_LEN: u32> From<TxPartial<MAX_DATA_LEN>> for ForeignCallTransac
             value_hi: tx.value.hi as u64,
             value_lo: tx.value.lo as u64,
             data,
-            data_len: tx.data.len,
+            data_len: tx.data.len(),
             v: tx.v,
             r: tx.r,
             s: tx.s,

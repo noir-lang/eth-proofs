@@ -9,17 +9,16 @@ use crate::{
     rlp::{decode::decode_list, types::{RlpFragment, RlpList}},
     verifiers::receipt::{rlp::RECEIPT_FIELDS_COUNT, verify_receipt},
 };
-use dep::std::mem::zeroed;
 
-global MAX_TOPICS_COUNT = 4;
-global LOG_FIELDS_COUNT = 3;
-global LOGS_INDEX = 3;
+global MAX_TOPICS_COUNT: u32 = 4;
+global LOG_FIELDS_COUNT: u32 = 3;
+global LOGS_INDEX: u32 = 3;
 
-global LOG_ADDRESS_INDEX = 0;
-global LOG_TOPICS_INDEX = 1;
-global LOG_DATA_INDEX = 2;
+global LOG_ADDRESS_INDEX: u32 = 0;
+global LOG_TOPICS_INDEX: u32 = 1;
+global LOG_DATA_INDEX: u32 = 2;
 
-struct Log<let MAX_LOG_DATA_LEN: u32> {
+pub(crate) struct Log<let MAX_LOG_DATA_LEN: u32> {
     address: Address,
     topics: BoundedVec<Bytes32, MAX_TOPICS_COUNT>,
     data: BoundedVec<u8, MAX_LOG_DATA_LEN>,

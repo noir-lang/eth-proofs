@@ -1,5 +1,5 @@
-mod frontier;
+pub(crate) mod frontier;
 mod homestead;
-mod london;
-mod paris;
-mod cancun;
+pub(crate) mod london;
+pub(crate) mod paris;
+pub(crate) mod cancun;

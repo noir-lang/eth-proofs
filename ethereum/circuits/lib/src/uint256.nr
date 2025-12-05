@@ -3,9 +3,9 @@ use crate::misc::bytes32::field_to_bytes32;
 use crate::misc::types::Bytes32;
 use dep::std::ops::Add;
 
-global uint128_overflow_value = 340282366920938463463374607431768211456; // 2^128
+global uint128_overflow_value: Field = 340282366920938463463374607431768211456; // 2^128
 
-struct U256 {
+pub(crate) struct U256 {
     high: u128,
     low: u128,
 }

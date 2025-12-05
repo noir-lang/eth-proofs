@@ -8,17 +8,17 @@ use crate::rlp::decode::{decode_list, decode_list_of_small_strings, decode_to_rl
 use crate::rlp::types::RlpList;
 use dep::keccak256::keccak256;
 
-global MAX_NODE_LEN: u32 = 532;
-global MAX_NODE_FIELDS: u32 = 17;
-global BRANCH_NODE_NUM_FIELDS: u32 = 17;
-global EXTENSION_NODE_NUM_FIELDS: u32 = 2;
-global EVEN: u32 = 0;
-global ODD: u32 = 1;
+pub(crate) global MAX_NODE_LEN: u32 = 532;
+pub(crate) global MAX_NODE_FIELDS: u32 = 17;
+pub(crate) global BRANCH_NODE_NUM_FIELDS: u32 = 17;
+pub(crate) global EXTENSION_NODE_NUM_FIELDS: u32 = 2;
+pub(crate) global EVEN: u32 = 0;
+pub(crate) global ODD: u32 = 1;
 
-type Node = [u8; MAX_NODE_LEN];
-type Leaf<let MAX_LEAF_LEN: u32> = [u8; MAX_LEAF_LEN];
-type Key<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32> = [u8; MAX_PREFIXED_KEY_NIBBLE_LEN];
-type Value<let MAX_VALUE_LEN: u32> = [u8; MAX_VALUE_LEN];
+pub(crate) type Node = [u8; MAX_NODE_LEN];
+pub(crate) type Leaf<let MAX_LEAF_LEN: u32> = [u8; MAX_LEAF_LEN];
+pub(crate) type Key<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32> = [u8; MAX_PREFIXED_KEY_NIBBLE_LEN];
+pub(crate) type Value<let MAX_VALUE_LEN: u32> = [u8; MAX_VALUE_LEN];
 
 pub struct Proof<let MAX_DEPTH_NO_LEAF: u32, let MAX_LEAF_LEN: u32> {
     nodes: [Node; MAX_DEPTH_NO_LEAF],

@@ -10,21 +10,21 @@ use crate::serde::Serde;
 use crate::verifiers::{receipt::verify_receipt, tx_helpers::split::split_into_tx_type_and_rlp};
 use dep::std::mem::zeroed;
 
-global BLOOM_FILTER_LEN: u32 = 256;
+pub(crate) global BLOOM_FILTER_LEN: u32 = 256;
 
-global MAX_KEY_LEN: u32 = 3;
-global MAX_DEPTH_NO_LEAF: u32 = 6;
-global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 8; // (MAX_KEY_LEN + 1) * 2
+pub(crate) global MAX_KEY_LEN: u32 = 3;
+pub(crate) global MAX_DEPTH_NO_LEAF: u32 = 6;
+pub(crate) global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 8; // (MAX_KEY_LEN + 1) * 2
 
-global MAX_VALUE_LEN_M: u32 = 1000; // Values taken from receiptProofConfigM in receipt.ts.
-global MAX_LEAF_LEN_M: u32 = 1011;
+pub(crate) global MAX_VALUE_LEN_M: u32 = 1000; // Values taken from receiptProofConfigM in receipt.ts.
+pub(crate) global MAX_LEAF_LEN_M: u32 = 1011;
 
-global MAX_RECEIPT_ENCODED_LEN_M: u32 = MAX_VALUE_LEN_M;
-global MAX_RECEIPT_RLP_LEN_M: u32 = MAX_RECEIPT_ENCODED_LEN_M - 1;
+pub(crate) global MAX_RECEIPT_ENCODED_LEN_M: u32 = MAX_VALUE_LEN_M;
+pub(crate) global MAX_RECEIPT_RLP_LEN_M: u32 = MAX_RECEIPT_ENCODED_LEN_M - 1;
 
-type TxType = u8;
+pub(crate) type TxType = u8;
 
-struct TxReceiptPartial {
+pub(crate) struct TxReceiptPartial {
     status: Option<u1>,
     state_root: Option<Bytes32>,
     cumulative_gas_used: u32,
@@ -40,7 +40,7 @@ impl Eq for TxReceiptPartial {
     }
 }
 
-struct ForeignCallTxReceiptPartial {
+pub(crate) struct ForeignCallTxReceiptPartial {
     status: u1,
     status_is_some: bool,
     state_root: Bytes32,

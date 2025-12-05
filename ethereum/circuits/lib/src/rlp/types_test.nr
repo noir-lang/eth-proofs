@@ -145,13 +145,13 @@ mod rlp_fragment {
         use crate::misc::fragment::Fragment;
         use crate::rlp::types::{RlpFragment, STRING};
 
-        global value = 0x10;
+        global value: Field = 0x10;
         global encoded_value = Fragment::from_array([value]);
         global fragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
 
         #[test]
         fn success() {
-            fragment.assert_eq_u8("Field", encoded_value, value)
+            fragment.assert_eq_u8("Field", encoded_value, value as u8)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP length")]
@@ -197,10 +197,10 @@ mod rlp_fragment {
         use crate::misc::fragment::Fragment;
         use crate::rlp::types::{RlpFragment, STRING};
 
-        global value = 0x1000000000000000;
-        global encoded_value =
+        global value: Field = 0x1000000000000000;
+        global encoded_value: Fragment<8, u8> =
             Fragment::from_array([0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
-        global fragment = RlpFragment { offset: 0, length: 8, data_type: STRING };
+        global fragment: RlpFragment = RlpFragment { offset: 0, length: 8, data_type: STRING };
 
         #[test]
         fn success() {
@@ -223,12 +223,12 @@ mod rlp_fragment {
         use crate::misc::fragment::Fragment;
         use crate::rlp::types::{RlpFragment, STRING};
 
-        global value = U128::from_integer(0x10000000000000000000000000000000);
-        global encoded_value = Fragment::from_array([
+        global value: u128 = 0x10000000000000000000000000000000 as u128;
+        global encoded_value: Fragment<16, u8> = Fragment::from_array([
             0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00,
         ]);
-        global fragment = RlpFragment { offset: 0, length: 16, data_type: STRING };
+        global fragment: RlpFragment = RlpFragment { offset: 0, length: 16, data_type: STRING };
 
         #[test]
         fn success() {
@@ -237,7 +237,7 @@ mod rlp_fragment {
 
         #[test(should_fail_with = "Field: Invalid RLP length")]
         fn invalid_length() {
-            let short_value = U128::from_integer(0x10);
+            let short_value = 0x10 as u128;
             fragment.assert_eq_u128("Field", encoded_value, short_value)
         }
 

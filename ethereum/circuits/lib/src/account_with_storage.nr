@@ -13,18 +13,18 @@ use crate::verifiers::storage::verify_storage_values;
 
 use dep::keccak256::keccak256;
 
-global MAX_KEY_LEN: u32 = 32;
-global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 66; // (MAX_KEY_LEN + 1) * 2
-global MAX_STORAGE_DEPTH_NO_LEAF_M = 6; // Emperically correct values to be determined after we scan ethereum state trie.
+pub(crate) global MAX_KEY_LEN: u32 = 32;
+pub(crate) global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 66; // (MAX_KEY_LEN + 1) * 2
+pub(crate) global MAX_STORAGE_DEPTH_NO_LEAF_M: u32 = 6; // Emperically correct values to be determined after we scan ethereum state trie.
 
-global MAX_STORAGE_VALUE_LEN: u32 = 32; // Values taken from storageProofConfig in storage.ts.
-global MAX_STORAGE_LEAF_LEN: u32 = 69;
+pub(crate) global MAX_STORAGE_VALUE_LEN: u32 = 32; // Values taken from storageProofConfig in storage.ts.
+pub(crate) global MAX_STORAGE_LEAF_LEN: u32 = 69;
 
 pub struct Account {
-    pub nonce: u64,
-    balance: Field,
-    storage_root: Bytes32,
-    code_hash: Bytes32,
+    pub(crate) nonce: u64,
+    pub(crate) balance: Field,
+    pub(crate) storage_root: Bytes32,
+    pub(crate) code_hash: Bytes32,
 }
 
 impl Eq for Account {

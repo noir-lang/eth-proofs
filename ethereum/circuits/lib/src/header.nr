@@ -3,12 +3,12 @@ use crate::verifiers::header::verify_header;
 
 global MAX_HEADER_RLP_LEN: u32 = 708;
 
-pub struct BlockHeaderPartial {
-    number: u64,
-    hash: Bytes32,
-    state_root: Bytes32,
-    transactions_root: Bytes32,
-    receipts_root: Bytes32,
+pub(crate) struct BlockHeaderPartial {
+    pub(crate) number: u64,
+    pub(crate) hash: Bytes32,
+    pub(crate) state_root: Bytes32,
+    pub(crate) transactions_root: Bytes32,
+    pub(crate) receipts_root: Bytes32,
 }
 
 type BlockHeaderRlp = BoundedVec<u8, MAX_HEADER_RLP_LEN>;

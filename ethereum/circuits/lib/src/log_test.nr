@@ -11,9 +11,9 @@ mod extract_log {
         receipt::{MAX_RECEIPT_ENCODED_LEN_M, MAX_RECEIPT_RLP_LEN_M},
     };
 
-    global MAX_LOG_NUM = 8;
-    global MAX_LOG_DATA_LEN_M = 32;
-    global MAX_LOG_DATA_LEN_L = 100;
+    global MAX_LOG_NUM: u32 = 8;
+    global MAX_LOG_DATA_LEN_M: u32 = 32;
+    global MAX_LOG_DATA_LEN_L: u32 = 100;
 
     #[test]
     fn success_small_block() {
@@ -66,7 +66,7 @@ mod extract_log {
         );
     }
 
-    global ZERO_LOG_NUM = 0;
+    global ZERO_LOG_NUM: u32 = 0;
 
     #[test(should_fail_with = "Inconsistent rlp length")]
     fn small_max_log_count() {

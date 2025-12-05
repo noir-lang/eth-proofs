@@ -6,11 +6,11 @@ use crate::serde::Serde;
 use crate::verifiers::account::verify_account;
 
 global MAX_KEY_LEN: u32 = 32;
-global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 66; // (MAX_KEY_LEN + 1) * 2
-global MAX_ACCOUNT_DEPTH_NO_LEAF_M: u32 = 10; // Emperically correct values to be determined after we scan ethereum state trie.
+pub(crate) global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 66; // (MAX_KEY_LEN + 1) * 2
+pub global MAX_ACCOUNT_DEPTH_NO_LEAF_M: u32 = 10; // Emperically correct values to be determined after we scan ethereum state trie.
 
-global MAX_ACCOUNT_STATE_LEN: u32 = 110; // Values taken from accountProofConfig in account.ts.
-global MAX_ACCOUNT_LEAF_LEN: u32 = 148;
+pub(crate) global MAX_ACCOUNT_STATE_LEN: u32 = 110; // Values taken from accountProofConfig in account.ts.
+pub(crate) global MAX_ACCOUNT_LEAF_LEN: u32 = 148;
 
 pub struct AccountWithinBlock {
     account: Account,
