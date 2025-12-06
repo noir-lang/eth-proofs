@@ -96,7 +96,7 @@ mod decode_list {
     #[test]
     fn empty() {
         let empty_list: RlpList<1> = decode_list(Fragment::from_array([0xc0]));
-        assert(empty_list.len == 0);
+        assert(empty_list.len() == 0);
     }
 
     #[test]
@@ -108,7 +108,7 @@ mod decode_list {
             RlpFragment { offset: 9, length: 1, data_type: STRING },
         ]);
         let decoded = decode_list(rlp);
-        assert_eq(decoded.len, expected.len);
+        assert_eq(decoded.len(), expected.len());
         assert_eq(decoded.storage(), expected.storage());
     }
 
@@ -142,7 +142,7 @@ mod decode_list_of_small_strings {
         let expected: RlpList<10> = bounded_vec_from_array([]);
 
         let decoded = decode_list_of_small_strings(rlp);
-        assert_eq(decoded.len, expected.len);
+        assert_eq(decoded.len(), expected.len());
         assert_eq(decoded.storage(), expected.storage());
     }
 
@@ -157,7 +157,7 @@ mod decode_list_of_small_strings {
         ]);
 
         let decoded = decode_list_of_small_strings(rlp);
-        assert_eq(decoded.len, expected.len);
+        assert_eq(decoded.len(), expected.len());
         assert_eq(decoded.storage(), expected.storage());
     }
 

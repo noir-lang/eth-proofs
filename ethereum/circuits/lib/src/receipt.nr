@@ -25,10 +25,10 @@ pub(crate) global MAX_RECEIPT_RLP_LEN_M: u32 = MAX_RECEIPT_ENCODED_LEN_M - 1;
 pub(crate) type TxType = u8;
 
 pub(crate) struct TxReceiptPartial {
-    status: Option<u1>,
-    state_root: Option<Bytes32>,
-    cumulative_gas_used: u32,
-    logs_bloom: [u8; BLOOM_FILTER_LEN],
+    pub(crate) status: Option<u1>,
+    pub(crate) state_root: Option<Bytes32>,
+    pub(crate) cumulative_gas_used: u32,
+    pub(crate) logs_bloom: [u8; BLOOM_FILTER_LEN],
 }
 
 impl Eq for TxReceiptPartial {
@@ -75,14 +75,18 @@ impl From<TxReceiptPartial> for ForeignCallTxReceiptPartial {
 
 type ProofInputSerialized<let LEN: u32> = [Field; LEN];
 
-struct TxReceiptWithinBlock {
+pub(crate) struct TxReceiptWithinBlock {
     receipt: TxReceiptPartial,
     block_hash: Bytes32,
 }
 
-pub fn get_receipt(chain_id: Field, block_number: u64, tx_idx: Field) -> TxReceiptWithinBlock {
+pub(crate) fn get_receipt(
+    chain_id: Field,
+    block_number: u64,
+    tx_idx: Field,
+) -> TxReceiptWithinBlock {
     let (tx_type, receipt, proof_input) =
-        get_receipt_unconstrained_M(chain_id, block_number, tx_idx);
+        unsafe { get_receipt_unconstrained_M(chain_id, block_number, tx_idx) };
     let header = get_header(chain_id, block_number);
     verify_receipt(
         block_number,

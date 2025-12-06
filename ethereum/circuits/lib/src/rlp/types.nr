@@ -7,12 +7,12 @@ use dep::u2b::{u32_to_u8, u64_to_u8};
 pub(crate) global STRING: u32 = 0;
 pub(crate) global LIST: u32 = 1;
 
-type RlpList<let MAX_FIELDS: u32> = BoundedVec<RlpFragment, MAX_FIELDS>;
+pub(crate) type RlpList<let MAX_FIELDS: u32> = BoundedVec<RlpFragment, MAX_FIELDS>;
 
-struct RlpHeader {
-    offset: u32,
-    length: u32,
-    data_type: u32,
+pub(crate) struct RlpHeader {
+    pub(crate) offset: u32,
+    pub(crate) length: u32,
+    pub(crate) data_type: u32,
 }
 
 impl Eq for RlpHeader {
@@ -23,10 +23,10 @@ impl Eq for RlpHeader {
     }
 }
 
-pub struct RlpFragment {
-    pub offset: u32,
-    pub length: u32,
-    pub data_type: u32,
+pub(crate) struct RlpFragment {
+    pub(crate) offset: u32,
+    pub(crate) length: u32,
+    pub(crate) data_type: u32,
 }
 
 impl RlpFragment {

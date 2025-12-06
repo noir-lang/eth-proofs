@@ -53,7 +53,9 @@ pub fn right_pad<let N: u32>(arr: [u8; N]) -> BoundedVec<u8, N> {
 }
 
 pub fn left_to_right_padding<let N: u32>(nibbles: [u8; N]) -> ([u8; N], u32) {
-    let mut BoundedVec { storage: shifted, len } = right_pad(nibbles);
+    let mut vec = right_pad(nibbles);
+    let mut len = vec.len();
+    let mut shifted = vec.storage();
     if (len % 2 == 1) {
         shift_right_by_one(&mut shifted);
         len += 1;
@@ -97,7 +99,7 @@ pub(crate) fn byte_value<let N: u32>(in_value: [u8; N]) -> BoundedVec<u8, N> {
 
     let value = left_byte_shift(in_value, N - value_length);
 
-    BoundedVec { storage: value, len: value_length }
+    BoundedVec::from_array(value)
 }
 
 pub fn add_bigint<let N: u32>(left: [u8; N], right: [u8; N]) -> [u8; N] {
