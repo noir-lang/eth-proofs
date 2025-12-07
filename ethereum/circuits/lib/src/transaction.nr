@@ -40,7 +40,7 @@ impl<let MAX_DATA_LEN: u32> Eq for TxPartial<MAX_DATA_LEN> {
     }
 }
 
-struct ForeignCallTransaction<let MAX_DATA_LEN: u32> {
+pub(crate) struct ForeignCallTransaction<let MAX_DATA_LEN: u32> {
     nonce: u64,
     gas_limit: u64,
     to: Address,
@@ -98,7 +98,7 @@ impl<let MAX_DATA_LEN: u32> From<ForeignCallTransaction<MAX_DATA_LEN>> for TxPar
 
 type ProofInputSerialized<let LEN: u32> = [Field; LEN];
 
-struct TransactionWithinBlock<let MAX_DATA_LEN: u32> {
+pub struct TransactionWithinBlock<let MAX_DATA_LEN: u32> {
     transaction: TxPartial<MAX_DATA_LEN>,
     block_hash: Bytes32,
 }
@@ -109,7 +109,7 @@ pub fn get_transaction<let MAX_DATA_LEN: u32>(
     tx_idx: Field,
 ) -> TransactionWithinBlock<MAX_DATA_LEN> {
     let (tx_type, transaction, proof_input) =
-        get_transaction_unconstrained_M(chain_id, block_number, tx_idx);
+        unsafe { get_transaction_unconstrained_M(chain_id, block_number, tx_idx) };
     let header = get_header(chain_id, block_number);
     verify_tx(
         tx_idx,

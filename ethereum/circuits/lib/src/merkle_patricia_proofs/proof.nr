@@ -21,16 +21,16 @@ pub(crate) type Key<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32> = [u8; MAX_PREFIXED_KE
 pub(crate) type Value<let MAX_VALUE_LEN: u32> = [u8; MAX_VALUE_LEN];
 
 pub struct Proof<let MAX_DEPTH_NO_LEAF: u32, let MAX_LEAF_LEN: u32> {
-    nodes: [Node; MAX_DEPTH_NO_LEAF],
+    pub(crate) nodes: [Node; MAX_DEPTH_NO_LEAF],
     // Leaf has a different max length than internal node as it contains the value of arbitrary length.
-    leaf: Leaf<MAX_LEAF_LEN>,
-    depth: u64,
+    pub(crate) leaf: Leaf<MAX_LEAF_LEN>,
+    pub(crate) depth: u64,
 }
 
 pub struct ProofInput<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, let MAX_VALUE_LEN: u32, let MAX_DEPTH_NO_LEAF: u32, let MAX_LEAF_LEN: u32> {
-    key: Key<MAX_PREFIXED_KEY_NIBBLE_LEN>,
-    value: Value<MAX_VALUE_LEN>,
-    proof: Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN>,
+    pub(crate) key: Key<MAX_PREFIXED_KEY_NIBBLE_LEN>,
+    pub(crate) value: Value<MAX_VALUE_LEN>,
+    pub(crate) proof: Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN>,
 }
 
 impl<let MAX_DEPTH_NO_LEAF: u32, let MAX_LEAF_LEN: u32> Eq for Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> {

@@ -19,9 +19,9 @@ global LOG_TOPICS_INDEX: u32 = 1;
 global LOG_DATA_INDEX: u32 = 2;
 
 pub(crate) struct Log<let MAX_LOG_DATA_LEN: u32> {
-    address: Address,
-    topics: BoundedVec<Bytes32, MAX_TOPICS_COUNT>,
-    data: BoundedVec<u8, MAX_LOG_DATA_LEN>,
+    pub(crate) address: Address,
+    pub(crate) topics: BoundedVec<Bytes32, MAX_TOPICS_COUNT>,
+    pub(crate) data: BoundedVec<u8, MAX_LOG_DATA_LEN>,
 }
 
 impl<let MAX_LOG_DATA_LEN: u32> Eq for Log<MAX_LOG_DATA_LEN> {
