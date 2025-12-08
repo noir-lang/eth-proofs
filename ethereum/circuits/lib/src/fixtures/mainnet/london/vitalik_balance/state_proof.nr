@@ -439,4 +439,4 @@ pub(crate) global proof_input: ProofInput<66, 110, 10, 148> = ProofInput {
     },
 };
 
-global proof_input_serialized: [Field; 5645] = proof_input.serialize();
+pub(crate) global proof_input_serialized: [Field; 5645] = proof_input.serialize();
