@@ -130,7 +130,7 @@ mod nodes {
     use crate::merkle_patricia_proofs::proof::MAX_NODE_LEN;
     use crate::misc::arrays::sub_array_equals;
     use crate::serde::{deserialize_receipt_nodes, serialize_receipt_nodes};
-s
+
     #[test]
     fn simple() {
         let nodes = proof_input.proof.nodes;
