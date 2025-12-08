@@ -1,15 +1,15 @@
 use crate::misc::fragment::Fragment;
-use dep::std::wrapping_add;
+use dep::std::ops::WrappingAdd;
 
 pub fn alter_array<let ARRAY_LEN: u32>(array: [u8; ARRAY_LEN]) -> [u8; ARRAY_LEN] {
     let mut copy = array.map(|x| x);
-    copy[0] = wrapping_add(copy[0], 1);
+    copy[0] = copy[0].wrapping_add(1);
     copy
 }
 
 pub fn alter_fragment<let MAX_LEN: u32>(fragment: Fragment<MAX_LEN, u8>) -> Fragment<MAX_LEN, u8> {
     let mut copy = fragment;
-    copy.set(0, wrapping_add(copy.at(0), 1));
+    copy.set(0, copy.at(0).wrapping_add(1));
     copy
 }
 

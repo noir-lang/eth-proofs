@@ -1,4 +1,4 @@
-use crate::account_with_storage::Account;
+pub use crate::account_with_storage::Account;
 use crate::header::get_header;
 use crate::merkle_patricia_proofs::proof::ProofInput;
 use crate::misc::types::{Address, Bytes32, BYTES32_LENGTH};

@@ -175,13 +175,13 @@ fn test_verify_header_invalid_receipt_root() {
     );
 }
 
-global RLP_SHORT_STRING_TYPE = 0x80;
+global RLP_SHORT_STRING_TYPE: Field = 0x80;
 
 #[test(should_fail_with = "Expected a list")]
 fn test_verify_header_invalid_rlp() {
-    let mut rlp_empty_string_encoding = [0; MAX_HEADER_RLP_LEN];
-    rlp_empty_string_encoding[0] = RLP_SHORT_STRING_TYPE;
-    let malformed_block_header_rlp = BoundedVec { storage: rlp_empty_string_encoding, len: 1 };
+    let mut rlp_empty_string_encoding: [u8; MAX_HEADER_RLP_LEN] = [0; MAX_HEADER_RLP_LEN];
+    rlp_empty_string_encoding[0] = RLP_SHORT_STRING_TYPE as u8;
+    let malformed_block_header_rlp = BoundedVec::from_parts(rlp_empty_string_encoding, 1);
     let paris_block_header_partial =
         BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
     verify_header(

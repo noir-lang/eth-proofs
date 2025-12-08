@@ -1,6 +1,6 @@
 use crate::misc::fragment::Fragment;
 use crate::rlp::types::{LIST, RlpFragment, RlpHeader, RlpList, STRING};
-use dep::std::wrapping_sub;
+use dep::std::{ops::WrappingSub, wrapping_sub};
 
 // Maximum number of bytes required to represent entity length.
 // This means that this library can only decode RLP entities with a length of up to 2^16 - 1 bytes.
@@ -32,21 +32,21 @@ pub fn decode_to_rlp_header<let N: u32>(data: Fragment<N, u8>) -> RlpHeader {
     } else if (prefix < 0xb8) {
         // [0, 55] byte string
         let offset = 1;
-        let length = wrapping_sub(prefix, 0x80) as u32;
+        let length = prefix.wrapping_sub(0x80) as u32;
         assert(offset + length <= N, "Decoded length of short string exceeds input length");
 
         RlpHeader { offset, length, data_type: STRING }
     } else if (prefix < 0xc0) {
         // > 55 byte string
-        let offset = wrapping_sub(1 + prefix, 0xb7) as u32;
-        let length = extract_payload_len(data, wrapping_sub(prefix, 0xb7) as u32);
+        let offset = (1 + prefix).wrapping_sub(0xb7) as u32;
+        let length = extract_payload_len(data, prefix.wrapping_sub(0xb7) as u32);
         assert(offset + length <= N, "Decoded length of long string exceeds input length");
 
         RlpHeader { offset, length, data_type: STRING }
     } else if (prefix < 0xf8) {
         // [0, 55] byte list
         let offset = 1;
-        let length = wrapping_sub(prefix, 0xc0) as u32;
+        let length = prefix.wrapping_sub(0xc0) as u32;
         assert(offset + length <= N, "Decoded length of short list exceeds input length");
 
         RlpHeader { offset, length, data_type: LIST }
@@ -147,6 +147,6 @@ pub fn get_small_string_offset_and_length(first_byte: u8) -> (u32, u32) {
     if (first_byte < 0x80) {
         (0, 1)
     } else {
-        (1, wrapping_sub(first_byte as u32, 0x80))
+        (1, (first_byte as u32).wrapping_sub(0x80))
     }
 }

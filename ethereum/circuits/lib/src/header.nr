@@ -1,7 +1,7 @@
 use crate::misc::types::Bytes32;
 use crate::verifiers::header::verify_header;
 
-global MAX_HEADER_RLP_LEN: u32 = 708;
+pub(crate) global MAX_HEADER_RLP_LEN: u32 = 708;
 
 pub struct BlockHeaderPartial {
     pub(crate) number: u64,
@@ -11,7 +11,7 @@ pub struct BlockHeaderPartial {
     pub(crate) receipts_root: Bytes32,
 }
 
-type BlockHeaderRlp = BoundedVec<u8, MAX_HEADER_RLP_LEN>;
+pub(crate) type BlockHeaderRlp = BoundedVec<u8, MAX_HEADER_RLP_LEN>;
 
 pub fn get_header(chain_id: Field, block_number: u64) -> BlockHeaderPartial {
     let (block_header_partial, block_header_rlp) = get_header_unconstrained(chain_id, block_number);

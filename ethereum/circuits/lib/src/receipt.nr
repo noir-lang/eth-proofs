@@ -24,7 +24,7 @@ pub(crate) global MAX_RECEIPT_RLP_LEN_M: u32 = MAX_RECEIPT_ENCODED_LEN_M - 1;
 
 pub(crate) type TxType = u8;
 
-pub(crate) struct TxReceiptPartial {
+pub struct TxReceiptPartial {
     pub(crate) status: Option<u1>,
     pub(crate) state_root: Option<Bytes32>,
     pub(crate) cumulative_gas_used: u32,

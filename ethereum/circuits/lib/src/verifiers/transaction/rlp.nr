@@ -11,14 +11,14 @@ struct FieldLayout {
     signature_idx: u32,
 }
 
-global TX_TYPE_TO_FIELD_LAYOUT = [
+pub(crate) global TX_TYPE_TO_FIELD_LAYOUT: [FieldLayout; 4] = [
     FieldLayout { field_count: 9, nonce_idx: 0, gas_limit_idx: 2, to_idx: 3, signature_idx: 6 },
     FieldLayout { field_count: 11, nonce_idx: 1, gas_limit_idx: 3, to_idx: 4, signature_idx: 8 },
     FieldLayout { field_count: 12, nonce_idx: 1, gas_limit_idx: 4, to_idx: 5, signature_idx: 9 },
     FieldLayout { field_count: 14, nonce_idx: 1, gas_limit_idx: 4, to_idx: 5, signature_idx: 11 },
 ];
 
-global MAX_TX_FIELDS_COUNT = 14;
+global MAX_TX_FIELDS_COUNT: u32 = 14;
 
 pub(crate) fn assert_tx_rlp_equals<let MAX_DATA_LEN: u32, let MAX_ENCODED_LEN: u32>(
     tx_rlp: Fragment<MAX_ENCODED_LEN, u8>,
@@ -28,8 +28,8 @@ pub(crate) fn assert_tx_rlp_equals<let MAX_DATA_LEN: u32, let MAX_ENCODED_LEN: u
     let rlp_list: RlpList<MAX_TX_FIELDS_COUNT> = decode_list(tx_rlp);
 
     let FieldLayout { field_count, nonce_idx, gas_limit_idx, to_idx, signature_idx } =
-        TX_TYPE_TO_FIELD_LAYOUT[tx_type];
-    assert(rlp_list.len == field_count, "Invalid number of fields in tx RLP");
+        TX_TYPE_TO_FIELD_LAYOUT[tx_type as u32];
+    assert(rlp_list.len() == field_count, "Invalid number of fields in tx RLP");
 
     rlp_list.get(nonce_idx).assert_eq_u64("Nonce", tx_rlp, tx.nonce);
 

@@ -1,4 +1,5 @@
 use crate::misc::fragment::Fragment;
+use crate::misc::iterator::Iterator;
 
 pub fn byte_to_nibbles(byte: u8) -> (u8, u8) {
     let upper = byte / 16;

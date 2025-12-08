@@ -137,9 +137,9 @@ pub fn extract_hash<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32>(
     let node_rlp_list: RlpList<MAX_NODE_FIELDS> =
         decode_list_of_small_strings(Fragment::from_array(node));
 
-    if (node_rlp_list.len == BRANCH_NODE_NUM_FIELDS) {
+    if (node_rlp_list.len() == BRANCH_NODE_NUM_FIELDS) {
         hash = extract_hash_from_branch_node(node, node_rlp_list, key_nibbles, key_ptr);
-    } else if (node_rlp_list.len == EXTENSION_NODE_NUM_FIELDS) {
+    } else if (node_rlp_list.len() == EXTENSION_NODE_NUM_FIELDS) {
         hash = extract_hash_from_extension_node(node, node_rlp_list, key_nibbles, key_ptr);
     } else {
         assert(false, "Invalid node type");
@@ -159,7 +159,7 @@ pub fn verify_leaf<let MAX_LEAF_LEN: u32, let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, 
     value: Value<MAX_VALUE_LEN>,
 ) {
     let leaf_rlp_list: RlpList<2> = decode_list(Fragment::from_array(leaf));
-    assert(leaf_rlp_list.len == 2, "Leaf expected to have 2 fields");
+    assert(leaf_rlp_list.len() == 2, "Leaf expected to have 2 fields");
 
     let prefixed_leaf_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8> = Fragment::new(
         leaf_rlp_list.get(0).offset,

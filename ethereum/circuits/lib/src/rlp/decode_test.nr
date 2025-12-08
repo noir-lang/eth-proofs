@@ -91,7 +91,7 @@ mod decode_string {
 
 mod decode_list {
     use crate::misc::{bounded_vecs::bounded_vec_from_array, fragment::Fragment};
-    use crate::rlp::{decode::{decode_list, RlpList}, types::{RlpFragment, STRING}};
+    use crate::rlp::{decode::decode_list, types::{RlpFragment, RlpList, STRING}};
 
     #[test]
     fn empty() {
@@ -134,7 +134,7 @@ mod decode_list {
 
 mod decode_list_of_small_strings {
     use crate::misc::{bounded_vecs::bounded_vec_from_array, fragment::Fragment};
-    use crate::rlp::{decode::{decode_list_of_small_strings, RlpFragment, RlpList}, types::STRING};
+    use crate::rlp::{decode::decode_list_of_small_strings, types::{RlpFragment, RlpList, STRING}};
 
     #[test]
     fn success_empty_list() {
@@ -225,7 +225,7 @@ mod get_small_string_offset_and_length {
 
 mod decode_to_rlp_header {
     use crate::misc::{arrays::resize, fragment::Fragment};
-    use crate::rlp::{decode::{decode_to_rlp_header, RlpHeader}, types::{LIST, STRING}};
+    use crate::rlp::{decode::decode_to_rlp_header, types::{LIST, RlpHeader, STRING}};
 
     #[test]
     fn success_single_byte() {

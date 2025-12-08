@@ -83,7 +83,6 @@ mod transaction {
 
     #[test]
     fn legacy() {
-        let pre_byzantium_encoded_tx = Fragment::from_array(pre_byzantium_encoded_tx);
         let (tx_type, tx_rlp) = split_into_tx_type_and_rlp(true, pre_byzantium_encoded_tx);
         assert_eq(tx_type, legacy_tx_type, "Incorrect tx type returned");
         assert_eq(tx_rlp.length, encoded_tx.len() - 1, "Incorrect receipt RLP length returned");
@@ -97,7 +96,7 @@ mod transaction {
     #[test(should_fail_with = "RLP receipt exceeds MAX_RLP_LENGTH")]
     fn legacy_wrong_rlp() {
         let mut wrong_legacy_rlp: Fragment<MAX_TX_ENCODED_LEN_M, u8> =
-            Fragment::from_array_resize(pre_byzantium_encoded_tx);
+            Fragment::from_array_resize(pre_byzantium_encoded_tx.to_array::<1000>());
         let not_zero_byte = 0x01;
         wrong_legacy_rlp.set(wrong_legacy_rlp.length - 1, not_zero_byte);
 

@@ -18,9 +18,7 @@ use crate::fixtures::mainnet::{
     },
 };
 use crate::misc::fragment::Fragment;
-use crate::verifiers::receipt::{
-    assert_receipt_equals, assert_receipt_rlp_equals, BYZANTIUM_BLOCK_NUM, verify_receipt,
-};
+use crate::verifiers::receipt::{assert_receipt_equals, BYZANTIUM_BLOCK_NUM, verify_receipt};
 
 #[test(should_fail_with = "Invalid tx type")]
 fn test_assert_receipt_equals_wrong_tx_type() {

@@ -9,7 +9,7 @@ use crate::verifiers::{
     tx_helpers::{idx::assert_tx_idx_equals, split::split_into_tx_type_and_rlp},
 };
 
-global BYZANTIUM_BLOCK_NUM = 4_370_000;
+pub(crate) global BYZANTIUM_BLOCK_NUM: u64 = 4_370_000;
 
 pub(crate) fn is_pre_byzantium(block_number: u64) -> bool {
     block_number < BYZANTIUM_BLOCK_NUM

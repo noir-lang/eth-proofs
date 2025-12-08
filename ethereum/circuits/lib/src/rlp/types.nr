@@ -1,15 +1,15 @@
-use crate::misc::{arrays::sub_array_equals_up_to_length, fragment::Fragment};
 use crate::misc::bytes::byte_value;
-use crate::misc::types::{Address, ADDRESS_LENGTH, Bytes32, BYTES32_LENGTH};
+use crate::misc::fragment::Fragment;
+use crate::misc::types::{Address, Bytes32};
 use dep::u2b::{u32_to_u8, u64_to_u8};
 
 // Enum for RLP data type
 pub(crate) global STRING: u32 = 0;
 pub(crate) global LIST: u32 = 1;
 
-pub(crate) type RlpList<let MAX_FIELDS: u32> = BoundedVec<RlpFragment, MAX_FIELDS>;
+pub type RlpList<let MAX_FIELDS: u32> = BoundedVec<RlpFragment, MAX_FIELDS>;
 
-pub(crate) struct RlpHeader {
+pub struct RlpHeader {
     pub(crate) offset: u32,
     pub(crate) length: u32,
     pub(crate) data_type: u32,
@@ -23,14 +23,14 @@ impl Eq for RlpHeader {
     }
 }
 
-pub(crate) struct RlpFragment {
+pub struct RlpFragment {
     pub(crate) offset: u32,
     pub(crate) length: u32,
     pub(crate) data_type: u32,
 }
 
 impl RlpFragment {
-    fn assert_eq_bytes<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32, let MAX_VALUE_LEN: u32>(
+    pub(crate) fn assert_eq_bytes<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32, let MAX_VALUE_LEN: u32>(
         self,
         field_name: str<FIELD_NAME_LEN>,
         rlp: Fragment<MAX_RLP_LEN, u8>,
@@ -44,7 +44,7 @@ impl RlpFragment {
         );
     }
 
-    fn assert_eq_bounded_vec<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32, let MAX_VALUE_LEN: u32>(
+    pub(crate) fn assert_eq_bounded_vec<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32, let MAX_VALUE_LEN: u32>(
         self,
         field_name: str<FIELD_NAME_LEN>,
         rlp: Fragment<MAX_RLP_LEN, u8>,
@@ -53,7 +53,7 @@ impl RlpFragment {
         self.assert_eq_bytes(field_name, rlp, Fragment::from_vec(value));
     }
 
-    fn assert_empty_string<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
+    pub(crate) fn assert_empty_string<let FIELD_NAME_LEN: u32>(
         self,
         field_name: str<FIELD_NAME_LEN>,
     ) {
@@ -61,7 +61,7 @@ impl RlpFragment {
         assert(self.length == 0, f"{field_name}: Expected empty string");
     }
 
-    fn assert_eq_u1<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
+    pub(crate) fn assert_eq_u1<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
         self,
         field_name: str<FIELD_NAME_LEN>,
         rlp: Fragment<MAX_RLP_LEN, u8>,
@@ -70,7 +70,7 @@ impl RlpFragment {
         self.assert_eq_bytes(field_name, rlp, Fragment::from_array([value as u8]));
     }
 
-    fn assert_eq_u8<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
+    pub(crate) fn assert_eq_u8<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
         self,
         field_name: str<FIELD_NAME_LEN>,
         rlp: Fragment<MAX_RLP_LEN, u8>,
@@ -79,7 +79,7 @@ impl RlpFragment {
         self.assert_eq_bounded_vec(field_name, rlp, byte_value([value]));
     }
 
-    fn assert_eq_u32<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
+    pub(crate) fn assert_eq_u32<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
         self,
         field_name: str<FIELD_NAME_LEN>,
         rlp: Fragment<MAX_RLP_LEN, u8>,
@@ -103,10 +103,11 @@ impl RlpFragment {
         rlp: Fragment<MAX_RLP_LEN, u8>,
         value: u128,
     ) {
-        self.assert_eq_bounded_vec(field_name, rlp, byte_value(value.to_be_bytes()));
+        let val: Field = value as Field;
+        self.assert_eq_bounded_vec(field_name, rlp, byte_value(val.to_be_bytes::<20>()));
     }
 
-    fn assert_eq_address<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
+    pub(crate) fn assert_eq_address<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
         self,
         field_name: str<FIELD_NAME_LEN>,
         rlp: Fragment<MAX_RLP_LEN, u8>,
@@ -115,7 +116,7 @@ impl RlpFragment {
         self.assert_eq_bytes(field_name, rlp, Fragment::from_array(value));
     }
 
-    fn assert_eq_bytes32<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
+    pub(crate) fn assert_eq_bytes32<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
         self,
         field_name: str<FIELD_NAME_LEN>,
         rlp: Fragment<MAX_RLP_LEN, u8>,
