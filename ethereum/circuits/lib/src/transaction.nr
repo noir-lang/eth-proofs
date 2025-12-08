@@ -14,9 +14,9 @@ pub(crate) global MAX_LEAF_LEN_M: u32 = 1011;
 
 pub(crate) global MAX_TX_ENCODED_LEN_M: u32 = MAX_VALUE_LEN_M;
 
-type TxType = u8;
+pub(crate) type TxType = u8;
 
-pub(crate) struct TxPartial<let MAX_DATA_LEN: u32> {
+pub struct TxPartial<let MAX_DATA_LEN: u32> {
     pub(crate) nonce: u64,
     pub(crate) gas_limit: u64,
     pub(crate) to: Option<Address>,
@@ -104,7 +104,7 @@ pub struct TransactionWithinBlock<let MAX_DATA_LEN: u32> {
 }
 
 pub fn get_transaction<let MAX_DATA_LEN: u32>(
-    chain_id: Field,
+    chain_id: u32,
     block_number: u64,
     tx_idx: Field,
 ) -> TransactionWithinBlock<MAX_DATA_LEN> {
@@ -124,13 +124,13 @@ pub fn get_transaction<let MAX_DATA_LEN: u32>(
 
 #[oracle(get_transaction)]
 unconstrained fn get_transaction_oracle<let MAX_DATA_LEN: u32, let PROOF_INPUT_LEN: u32>(
-    _chain_id: Field,
+    _chain_id: u32,
     _block_number: u64,
     _tx_idx: Field,
 ) -> (TxType, ForeignCallTransaction<MAX_DATA_LEN>, ProofInputSerialized<PROOF_INPUT_LEN>) {}
 
 unconstrained fn get_transaction_unconstrained_M<let MAX_DATA_LEN: u32>(
-    chain_id: Field,
+    chain_id: u32,
     block_number: u64,
     tx_idx: Field,
     ) -> (TxType, TxPartial<MAX_DATA_LEN>, ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN_M, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M>) {

@@ -45,9 +45,9 @@ struct StateAndStorageProofInput {
 }
 
 pub struct StorageWithinBlock<let N: u32> {
-    pub block_hash: Bytes32,
-    account: Account,
-    values: [Bytes32; N],
+    pub(crate) block_hash: Bytes32,
+    pub(crate) account: Account,
+    pub(crate) values: [Bytes32; N],
 }
 
 type ProofInputSerialized<let LEN: u32> = [Field; LEN];
@@ -101,7 +101,7 @@ fn get_storage_value(
 }
 
 pub fn get_account_with_storage(
-    chain_id: Field,
+    chain_id: u32,
     block_number: u64,
     address: Address,
     storage_key: Bytes32,
@@ -125,14 +125,14 @@ pub fn get_account_with_storage(
 
 #[oracle(get_proof)]
 unconstrained fn get_proof_oracle<let STATE_PROOF_INPUT_LEN: u32, let STORAGE_PROOF_INPUT: u32>(
-    _chain_id: Field,
+    _chain_id: u32,
     _block_no: u64,
     _address: Address,
     _storage_key: Bytes32,
     ) -> (Account, ProofInputSerialized<STATE_PROOF_INPUT_LEN>, ProofInputSerialized<STORAGE_PROOF_INPUT>) {}
 
 unconstrained fn get_proof_unconstrained(
-    chain_id: Field,
+    chain_id: u32,
     block_no: u64,
     address: Address,
     storage_key: Bytes32,

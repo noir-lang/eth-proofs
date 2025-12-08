@@ -16,11 +16,7 @@ mod assert_tx_equals {
 
     #[test]
     fn legacy_tx() {
-        assert_tx_equals(
-            legacy_tx_type,
-            Fragment::from_array(legacy_encoded_tx),
-            legacy_transaction,
-        );
+        assert_tx_equals(legacy_tx_type, legacy_encoded_tx, legacy_transaction);
     }
 
     #[test(should_fail_with = "Invalid tx type")]

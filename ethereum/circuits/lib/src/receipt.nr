@@ -80,7 +80,7 @@ pub struct TxReceiptWithinBlock {
     block_hash: Bytes32,
 }
 
-pub fn get_receipt(chain_id: Field, block_number: u64, tx_idx: Field) -> TxReceiptWithinBlock {
+pub fn get_receipt(chain_id: u32, block_number: u64, tx_idx: Field) -> TxReceiptWithinBlock {
     let (tx_type, receipt, proof_input) =
         unsafe { get_receipt_unconstrained_M(chain_id, block_number, tx_idx) };
     let header = get_header(chain_id, block_number);
@@ -97,13 +97,13 @@ pub fn get_receipt(chain_id: Field, block_number: u64, tx_idx: Field) -> TxRecei
 
 #[oracle(get_receipt)]
 unconstrained fn get_receipt_oracle<let PROOF_INPUT_LEN: u32>(
-    _chain_id: Field,
+    _chain_id: u32,
     _block_number: u64,
     _tx_idx: Field,
 ) -> (TxType, ForeignCallTxReceiptPartial, ProofInputSerialized<PROOF_INPUT_LEN>) {}
 
 pub(crate) unconstrained fn get_receipt_unconstrained_M(
-    chain_id: Field,
+    chain_id: u32,
     block_number: u64,
     tx_idx: Field,
     ) -> (TxType, TxReceiptPartial, ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN_M, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M>) {

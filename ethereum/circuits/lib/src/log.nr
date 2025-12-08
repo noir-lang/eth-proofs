@@ -36,7 +36,7 @@ pub struct LogWithinBlock<let MAX_LOG_DATA_LEN: u32> {
 }
 
 pub fn get_log<let MAX_LOG_DATA_LEN: u32, let MAX_LOGS_COUNT: u32>(
-    chain_id: Field,
+    chain_id: u32,
     block_number: u64,
     tx_idx: Field,
     log_idx: u32,

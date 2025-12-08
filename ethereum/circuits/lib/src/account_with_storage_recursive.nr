@@ -1,7 +1,7 @@
 use crate::account_with_storage::StorageWithinBlock;
 use crate::misc::{fragment::Fragment, types::{Address, ADDRESS_LENGTH, Bytes32, BYTES32_LENGTH}};
 use crate::serde::STORAGE_BLOCK_LEN;
-use dep::std::{mem::zeroed, verify_proof};
+use dep::std::verify_proof;
 
 pub struct RecursiveProof {
     key_hash: Field,
@@ -12,7 +12,7 @@ pub struct RecursiveProof {
 global NUM_PUBLIC_INPUTS: u32 = 1 + 1 + ADDRESS_LENGTH + BYTES32_LENGTH + STORAGE_BLOCK_LEN; // chain_id + block_number + address + storage_key + public_return_inputs
 
 pub fn get_account_with_storage_recursive(
-    chain_id: Field,
+    chain_id: u32,
     block_number: u64,
     address: Address,
     storage_key: Bytes32,
@@ -25,7 +25,7 @@ pub fn get_account_with_storage_recursive(
     );
 
     let mut public_inputs: Fragment<NUM_PUBLIC_INPUTS, Field> = Fragment::empty();
-    public_inputs.push_back(chain_id);
+    public_inputs.push_back(chain_id as Field);
     public_inputs.push_back(block_number as Field);
     public_inputs.extend_back(address.serialize());
     public_inputs.extend_back(storage_key.serialize());
@@ -43,14 +43,14 @@ pub fn get_account_with_storage_recursive(
 
 #[oracle(get_storage_recursive)]
 unconstrained fn get_account_with_storage_recursive_oracle(
-    chain_id: Field,
+    chain_id: u32,
     block_number: u64,
     address: Address,
     storage_key: Bytes32,
 ) -> ([Field; STORAGE_BLOCK_LEN], RecursiveProof) {}
 
 unconstrained fn get_account_with_storage_recursive_unconstrained(
-    chain_id: Field,
+    chain_id: u32,
     block_number: u64,
     address: Address,
     storage_key: Bytes32,

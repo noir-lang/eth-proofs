@@ -13,8 +13,8 @@ pub(crate) global MAX_ACCOUNT_STATE_LEN: u32 = 110; // Values taken from account
 pub(crate) global MAX_ACCOUNT_LEAF_LEN: u32 = 148;
 
 pub struct AccountWithinBlock {
-    account: Account,
-    block_hash: Bytes32,
+    pub(crate) account: Account,
+    pub(crate) block_hash: Bytes32,
 }
 
 impl Eq for AccountWithinBlock {
@@ -27,7 +27,7 @@ type AccountWithStateProofM = (Account, ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, 
 
 type ProofInputSerialized<let LEN: u32> = [Field; LEN];
 
-pub fn get_account(chain_id: Field, block_no: u64, address: Address) -> AccountWithinBlock {
+pub fn get_account(chain_id: u32, block_no: u64, address: Address) -> AccountWithinBlock {
     let (account, state_proof) = get_account_unconstrained_M(chain_id, block_no, address);
     let header = get_header(chain_id, block_no);
     verify_account(address, account, state_proof, header.state_root);
@@ -36,13 +36,13 @@ pub fn get_account(chain_id: Field, block_no: u64, address: Address) -> AccountW
 
 #[oracle(get_account)]
 unconstrained fn get_account_oracle<let PROOF_INPUT_LEN: u32>(
-    _chain_id: Field,
+    _chain_id: u32,
     _block_no: u64,
     _address: [u8; 20],
 ) -> (Account, ProofInputSerialized<PROOF_INPUT_LEN>) {}
 
 unconstrained fn get_account_unconstrained_M(
-    chain_id: Field,
+    chain_id: u32,
     block_no: u64,
     address: Address,
 ) -> AccountWithStateProofM {

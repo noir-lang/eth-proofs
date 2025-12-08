@@ -34,7 +34,7 @@ pub fn verify_tx<let MAX_DATA_LEN: u32, let MAX_ENCODED_LEN: u32, let MAX_LEAF_L
     let key = Fragment::from_vec(right_pad(tx_proof_input.key));
     assert_tx_idx_equals(key, tx_idx);
 
-    let value = right_pad(tx_proof_input.value).storage;
+    let value = right_pad(tx_proof_input.value).storage();
     assert_tx_equals(tx_type, Fragment::from_array(value), tx);
     verify_merkle_proof(
         tx_proof_input.key,

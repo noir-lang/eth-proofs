@@ -18,8 +18,12 @@ use dep::std::test::OracleMock;
 
 #[test]
 fn test_get_account_success() {
-    let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
-    let _ = OracleMock::mock("get_account").returns((account, state_proof_input_serialized));
+    // Unsafe: test
+    let _ =
+        unsafe { OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp)) };
+    // Unsafe: test
+    let _ =
+        unsafe { OracleMock::mock("get_account").returns((account, state_proof_input_serialized)) };
 
     let account_within_block = get_account(ETHEREUM_MAINNET_ID, number, address);
 
@@ -33,10 +37,14 @@ fn test_get_account_success() {
 
 #[test(should_fail)]
 fn test_get_account_wrong_state_root() {
-    let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
-    let _ = OracleMock::mock("get_account").returns((
-        account_from_different_header, state_proof_input_from_different_header_serialized,
-    ));
-
+    // Unsafe: test
+    let _ =
+        unsafe { OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp)) };
+    // Unsafe: test
+    let _ = unsafe {
+        OracleMock::mock("get_account").returns((
+            account_from_different_header, state_proof_input_from_different_header_serialized,
+        ))
+    };
     let _ = get_account(ETHEREUM_MAINNET_ID, number, address_from_different_header);
 }

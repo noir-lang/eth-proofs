@@ -25,10 +25,15 @@ use dep::std::test::OracleMock;
 
 #[test]
 fn test_get_account_with_storage_success() {
-    let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
-    let _ = OracleMock::mock("get_proof").returns((
-        account, state_proof_input_serialized, proofs_serialized[0],
-    ));
+    // Unsafe: test
+    let _ =
+        unsafe { OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp)) };
+    // Unsafe: test
+    let _ = unsafe {
+        OracleMock::mock("get_proof").returns((
+            account, state_proof_input_serialized, proofs_serialized[0],
+        ))
+    };
 
     let account_with_storage =
         get_account_with_storage(ETHEREUM_MAINNET_ID, number, address, storage_keys[0]);
@@ -45,12 +50,18 @@ fn test_get_account_with_storage_success() {
 
 #[test(should_fail_with = "Invalid node hash")]
 fn test_get_account_with_storage_invalid_state_root() {
-    let _ = OracleMock::mock("get_header").returns((
-        crypto_punks_block_header_partial, crypto_punks_block_header_rlp,
-    ));
-    let _ = OracleMock::mock("get_proof").returns((
-        account, state_proof_input_serialized, proofs_serialized[0],
-    ));
+    // Unsafe: test
+    let _ = unsafe {
+        OracleMock::mock("get_header").returns((
+            crypto_punks_block_header_partial, crypto_punks_block_header_rlp,
+        ))
+    };
+    // Unsafe: test
+    let _ = unsafe {
+        OracleMock::mock("get_proof").returns((
+            account, state_proof_input_serialized, proofs_serialized[0],
+        ))
+    };
 
     let _ = get_account_with_storage(
         ETHEREUM_MAINNET_ID,
@@ -62,12 +73,17 @@ fn test_get_account_with_storage_invalid_state_root() {
 
 #[test(should_fail_with = "Invalid node hash")]
 fn test_get_account_with_storage_invalid_storage_root() {
-    let _ = OracleMock::mock("get_header").returns((
-        crypto_punks_block_header_partial, crypto_punks_block_header_rlp,
-    ));
-    let _ = OracleMock::mock("get_proof").returns((
-        crypto_punks_account, crypto_punks_state_proof_input_serialized, proofs_serialized[0],
-    ));
+    let _ = unsafe {
+        OracleMock::mock("get_header").returns((
+            crypto_punks_block_header_partial, crypto_punks_block_header_rlp,
+        ))
+    };
+    // Unsafe: test
+    let _ = unsafe {
+        OracleMock::mock("get_proof").returns((
+            crypto_punks_account, crypto_punks_state_proof_input_serialized, proofs_serialized[0],
+        ))
+    };
 
     let _ = get_account_with_storage(
         ETHEREUM_MAINNET_ID,
@@ -79,10 +95,15 @@ fn test_get_account_with_storage_invalid_storage_root() {
 
 #[test(should_fail_with = "Storage key does not match the argument")]
 fn test_get_account_with_storage_storage_key_does_not_match_the_argument() {
-    let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
-    let _ = OracleMock::mock("get_proof").returns((
-        account, state_proof_input_serialized, proofs_serialized[0],
-    ));
+    // Unsafe: test
+    let _ =
+        unsafe { OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp)) };
+    // Unsafe: test
+    let _ = unsafe {
+        OracleMock::mock("get_proof").returns((
+            account, state_proof_input_serialized, proofs_serialized[0],
+        ))
+    };
 
     let _ = get_account_with_storage(
         ETHEREUM_MAINNET_ID,
