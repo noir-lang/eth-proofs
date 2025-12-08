@@ -3,7 +3,7 @@ use crate::verifiers::header::verify_header;
 
 global MAX_HEADER_RLP_LEN: u32 = 708;
 
-pub(crate) struct BlockHeaderPartial {
+pub struct BlockHeaderPartial {
     pub(crate) number: u64,
     pub(crate) hash: Bytes32,
     pub(crate) state_root: Bytes32,

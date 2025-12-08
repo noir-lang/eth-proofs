@@ -1,4 +1,4 @@
-mod rlp;
+pub(crate) mod rlp;
 mod rlp_test;
 
 use crate::merkle_patricia_proofs::proof::{ProofInput, verify_merkle_proof};

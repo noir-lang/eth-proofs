@@ -20,7 +20,7 @@ pub(crate) global MAX_STORAGE_DEPTH_NO_LEAF_M: u32 = 6; // Emperically correct v
 pub(crate) global MAX_STORAGE_VALUE_LEN: u32 = 32; // Values taken from storageProofConfig in storage.ts.
 pub(crate) global MAX_STORAGE_LEAF_LEN: u32 = 69;
 
-pub struct Account {
+pub(crate) struct Account {
     pub(crate) nonce: u64,
     pub(crate) balance: Field,
     pub(crate) storage_root: Bytes32,

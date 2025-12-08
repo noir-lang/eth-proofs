@@ -1,8 +1,9 @@
 use crate::misc::fragment::Fragment;
 use crate::receipt::{ForeignCallTxReceiptPartial, TxReceiptPartial};
+use crate::receipt::TxType;
 
-global tx_type = 2;
-global receipt_rlp = [
+global tx_type: TxType = 2;
+global receipt_rlp: [u8; 999] = [
     0xf9, 0x01, 0x09, 0x01, 0x83, 0x6a, 0xbf, 0x71, 0xb9, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -133,7 +134,7 @@ global encoded_receipt = Fragment::from_array([
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 ]);
 
-global receipt = TxReceiptPartial {
+global receipt: TxReceiptPartial = TxReceiptPartial {
     status: Option::some(1),
     state_root: Option::none(),
     cumulative_gas_used: 6995825,
@@ -159,4 +160,5 @@ global receipt = TxReceiptPartial {
     ],
 };
 
-global foreign_call_receipt = ForeignCallTxReceiptPartial::from(receipt);
+global foreign_call_receipt: ForeignCallTxReceiptPartial =
+    ForeignCallTxReceiptPartial::from(receipt);

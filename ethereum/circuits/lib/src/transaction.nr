@@ -16,15 +16,15 @@ pub(crate) global MAX_TX_ENCODED_LEN_M: u32 = MAX_VALUE_LEN_M;
 
 type TxType = u8;
 
-struct TxPartial<let MAX_DATA_LEN: u32> {
-    nonce: u64,
-    gas_limit: u64,
-    to: Option<Address>,
-    value: u128,
-    data: BoundedVec<u8, MAX_DATA_LEN>,
-    v: u8, // ECDSA recovery id
-    r: Bytes32, // ECDSA signature part
-    s: Bytes32, // ECDSA signature part
+pub(crate) struct TxPartial<let MAX_DATA_LEN: u32> {
+    pub(crate) nonce: u64,
+    pub(crate) gas_limit: u64,
+    pub(crate) to: Option<Address>,
+    pub(crate) value: u128,
+    pub(crate) data: BoundedVec<u8, MAX_DATA_LEN>,
+    pub(crate) v: u8, // ECDSA recovery id
+    pub(crate) r: Bytes32, // ECDSA signature part
+    pub(crate) s: Bytes32, // ECDSA signature part
 }
 
 impl<let MAX_DATA_LEN: u32> Eq for TxPartial<MAX_DATA_LEN> {

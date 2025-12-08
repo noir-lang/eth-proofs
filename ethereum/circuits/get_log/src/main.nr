@@ -1,7 +1,7 @@
 use dep::ethereum::log::{get_log, LogWithinBlock};
 
 global MAX_LOG_DATA_LEN: u32 = 32;
-global MAX_LOGS_COUNT = 1;
+global MAX_LOGS_COUNT: u32 = 1;
 
 fn main(
     chain_id: pub Field,

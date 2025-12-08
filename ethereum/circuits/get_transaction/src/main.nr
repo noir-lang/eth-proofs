@@ -1,6 +1,6 @@
 use dep::ethereum::transaction::{get_transaction, TransactionWithinBlock};
 
-global MAX_DATA_LEN_M = 1000;
+global MAX_DATA_LEN_M: u32 = 1000;
 
 fn main(
     chain_id: pub Field,
