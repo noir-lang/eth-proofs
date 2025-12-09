@@ -67,6 +67,6 @@ global encoded_data: [u8; 708] = [
     0x00, 0x00, 0x00, 0x00,
 ];
 
-global block_header_partial: BlockHeaderPartial =
+pub(crate) global block_header_partial: BlockHeaderPartial =
     BlockHeaderPartial { number, hash, state_root, transactions_root, receipts_root };
-global block_header_rlp: BoundedVec<u8, 708> = BoundedVec::from_parts(encoded_data, encoded_length);
+pub(crate) global block_header_rlp: BoundedVec<u8, 708> = BoundedVec::from_array(encoded_data);
