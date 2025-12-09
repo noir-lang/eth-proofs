@@ -1,7 +1,8 @@
 use crate::misc::bytes::byte_value;
 use crate::misc::fragment::Fragment;
 use crate::misc::types::{Address, Bytes32};
-use dep::u2b::{u32_to_u8, u64_to_u8};
+use crate::verifiers::tx_helpers::idx::u32_to_u8;
+use crate::verifiers::tx_helpers::idx::u64_to_u8;
 
 // Enum for RLP data type
 pub(crate) global STRING: u32 = 0;
