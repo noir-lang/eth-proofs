@@ -76,8 +76,8 @@ impl From<TxReceiptPartial> for ForeignCallTxReceiptPartial {
 type ProofInputSerialized<let LEN: u32> = [Field; LEN];
 
 pub struct TxReceiptWithinBlock {
-    receipt: TxReceiptPartial,
-    block_hash: Bytes32,
+    pub(crate) receipt: TxReceiptPartial,
+    pub(crate) block_hash: Bytes32,
 }
 
 pub fn get_receipt(chain_id: u32, block_number: u64, tx_idx: Field) -> TxReceiptWithinBlock {

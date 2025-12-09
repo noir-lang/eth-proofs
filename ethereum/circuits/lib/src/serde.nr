@@ -23,27 +23,27 @@ pub(crate) trait Serde<let LEN: u32> {
     fn deserialize(data: [Field; LEN]) -> Self;
 }
 
-pub(crate) global U128_SERIALIZED_LEN: u32 = 2;
+pub(crate) global U128_SERIALIZED_LEN: u32 = 1;
 
 impl Serde<U128_SERIALIZED_LEN> for u128 {
     fn serialize(self) -> [Field; U128_SERIALIZED_LEN] {
-        [self.lo, self.hi]
+        [self as Field]
     }
 
     fn deserialize(data: [Field; U128_SERIALIZED_LEN]) -> Self {
-        U128 { lo: data[0], hi: data[1] }
+        data[0] as u128
     }
 }
 
-pub(crate) global U256_SERIALIZED_LEN: u32 = 4;
+pub(crate) global U256_SERIALIZED_LEN: u32 = 2;
 
 impl Serde<U256_SERIALIZED_LEN> for U256 {
     fn serialize(self) -> [Field; U256_SERIALIZED_LEN] {
-        [self.low.lo, self.low.hi, self.high.lo, self.high.hi]
+        [self.low as Field, self.high as Field]
     }
 
     fn deserialize(data: [Field; U256_SERIALIZED_LEN]) -> Self {
-        U256 { low: U128 { lo: data[0], hi: data[1] }, high: U128 { lo: data[2], hi: data[3] } }
+        U256 { low: data[0] as u128, high: data[1] as u128 }
     }
 }
 
@@ -105,7 +105,7 @@ impl Serde<STORAGE_BLOCK_LEN> for StorageWithinBlock<1> {
         data.extend_from_array(self.block_hash.serialize());
         data.extend_from_array(self.account.serialize());
         data.extend_from_array(self.values[0].serialize());
-        data.storage
+        data.storage()
     }
 
     fn deserialize(data: [Field; STORAGE_BLOCK_LEN]) -> Self {
@@ -128,7 +128,7 @@ pub fn serialize_state_nodes(
     for i in 0..MAX_ACCOUNT_DEPTH_NO_LEAF_M {
         data.extend_from_array(nodes[i].serialize());
     }
-    data.storage
+    data.storage()
 }
 
 pub fn deserialize_state_nodes(
@@ -151,7 +151,7 @@ impl Serde<STATE_PROOF_LEN_M> for Proof<MAX_ACCOUNT_DEPTH_NO_LEAF_M, MAX_ACCOUNT
         data.extend_from_array(serialize_state_nodes(self.nodes));
         data.extend_from_array(self.leaf.serialize());
         data.push(self.depth as Field);
-        data.storage
+        data.storage()
     }
 
     fn deserialize(data: [Field; STATE_PROOF_LEN_M]) -> Self {
@@ -195,7 +195,7 @@ pub fn serialize_storage_nodes(
     for i in 0..MAX_STORAGE_DEPTH_NO_LEAF_M {
         data.extend_from_array(nodes[i].serialize());
     }
-    data.storage
+    data.storage()
 }
 
 pub fn deserialize_storage_nodes(
@@ -218,7 +218,7 @@ impl Serde<STORAGE_PROOF_LEN_M> for Proof<MAX_STORAGE_DEPTH_NO_LEAF_M, MAX_STORA
         data.extend_from_array(serialize_storage_nodes(self.nodes));
         data.extend_from_array(self.leaf.serialize());
         data.push(self.depth as Field);
-        data.storage
+        data.storage()
     }
 
     fn deserialize(data: [Field; STORAGE_PROOF_LEN_M]) -> Self {
@@ -239,7 +239,7 @@ impl Serde<STORAGE_PROOF_INPUT_LEN_M> for ProofInput<STORAGE_MAX_PREFIXED_KEY_NI
         data.extend_from_array(self.key.serialize());
         data.extend_from_array(self.value.serialize());
         data.extend_from_array(self.proof.serialize());
-        data.storage
+        data.storage()
     }
 
     fn deserialize(data: [Field; STORAGE_PROOF_INPUT_LEN_M]) -> Self {
@@ -262,7 +262,7 @@ pub fn serialize_receipt_nodes(
     for i in 0..RECEIPT_MAX_DEPTH_NO_LEAF {
         data.extend_from_array(nodes[i].serialize());
     }
-    data.storage
+    data.storage()
 }
 
 pub fn deserialize_receipt_nodes(
@@ -285,7 +285,7 @@ impl Serde<RECEIPT_PROOF_LEN_M> for Proof<RECEIPT_MAX_DEPTH_NO_LEAF, RECEIPT_MAX
         data.extend_from_array(serialize_receipt_nodes(self.nodes));
         data.extend_from_array(self.leaf.serialize());
         data.push(self.depth as Field);
-        data.storage
+        data.storage()
     }
 
     fn deserialize(data: [Field; RECEIPT_PROOF_LEN_M]) -> Self {
@@ -308,7 +308,7 @@ impl Serde<RECEIPT_PROOF_INPUT_LEN_M> for ProofInput<RECEIPT_MAX_PREFIXED_KEY_NI
         data.extend_from_array(self.key.serialize());
         data.extend_from_array(self.value.serialize());
         data.extend_from_array(self.proof.serialize());
-        data.storage
+        data.storage()
     }
 
     fn deserialize(data: [Field; RECEIPT_PROOF_INPUT_LEN_M]) -> Self {

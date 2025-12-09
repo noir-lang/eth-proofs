@@ -22,8 +22,7 @@ fn into_foreign_call_transaction_test() {
     assert_eq(foreign_call_transaction.to_is_some, true);
     assert_eq(foreign_call_transaction.to, transaction.to.expect(f"To is missing"));
 
-    assert_eq(foreign_call_transaction.value_hi, transaction.value.hi as u64);
-    assert_eq(foreign_call_transaction.value_lo, transaction.value.lo as u64);
+    assert_eq(foreign_call_transaction.value, transaction.value);
 
     assert_eq(foreign_call_transaction.data, [1, 2, 3, 4, 5, 0, 0, 0]);
     assert_eq(foreign_call_transaction.data_len, 5);

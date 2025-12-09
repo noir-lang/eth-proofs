@@ -1,43 +1,37 @@
 mod U128_ {
 
-    use crate::serde::U128_SERIALIZED_LEN;
+    use crate::serde::{Serde, U128_SERIALIZED_LEN};
 
     #[test]
     fn simple() {
         let value: u128 = 100;
         let serialized: [Field; U128_SERIALIZED_LEN] = value.serialize();
 
-        assert_eq(serialized[0], value.lo);
-        assert_eq(serialized[1], value.hi);
-        assert_eq(U128::deserialize(serialized), value);
+        assert_eq(serialized[0] as u128, value);
+        assert_eq(u128::deserialize(serialized), value);
     }
 }
 
 mod U256 {
+    use crate::serde::Serde;
     use crate::serde::U256_SERIALIZED_LEN;
     use crate::uint256::U256;
 
-    global u128_number = 0x10000000000000000000000000000000;
-    global u64_value = 0x1000000000000000;
+    global u128_number: u128 = 0x10000000000000000000000000000000;
 
     #[test]
     fn simple() {
-        let value = U256::new(
-            U128::from_integer(u128_number),
-            U128::from_integer(u128_number),
-        );
+        let value = U256::new(u128_number, u128_number);
         let serialized: [Field; U256_SERIALIZED_LEN] = value.serialize();
 
-        assert_eq(serialized[0], 0);
-        assert_eq(serialized[1], u64_value);
-        assert_eq(serialized[2], 0);
-        assert_eq(serialized[3], u64_value);
+        assert_eq(serialized[0] as u128, u128_number);
+        assert_eq(serialized[1] as u128, u128_number);
         assert_eq(U256::deserialize(serialized), value);
     }
 }
 
 mod u8_array {
-    use crate::misc::types::{Address, ADDRESS_LENGTH, Bytes32, BYTES32_LENGTH};
+    use crate::{misc::types::{Address, ADDRESS_LENGTH, Bytes32, BYTES32_LENGTH}, serde::Serde};
 
     #[test]
     fn bytes32() {
@@ -63,6 +57,7 @@ mod account {
     use crate::fixtures::mainnet::london::vitalik_balance::account::account;
     use crate::misc::arrays::sub_array_equals;
     use crate::serde::ACCOUNT_LEN;
+    use crate::serde::Serde;
 
     #[test]
     fn simple() {
@@ -81,6 +76,7 @@ mod account_within_block {
     use crate::fixtures::mainnet::london::vitalik_balance::{account::account, header::hash};
     use crate::misc::arrays::sub_array_equals;
     use crate::serde::{ACCOUNT_BLOCK_LEN, ACCOUNT_LEN};
+    use crate::serde::Serde;
 
     #[test]
     fn simple() {
@@ -104,6 +100,7 @@ mod storage_within_block {
     };
     use crate::misc::{arrays::sub_array_equals, types::BYTES32_LENGTH};
     use crate::serde::{ACCOUNT_LEN, STORAGE_BLOCK_LEN};
+    use crate::serde::Serde;
 
     #[test]
     fn simple() {
@@ -130,6 +127,7 @@ mod nodes {
     use crate::merkle_patricia_proofs::proof::MAX_NODE_LEN;
     use crate::misc::arrays::sub_array_equals;
     use crate::serde::{deserialize_receipt_nodes, serialize_receipt_nodes};
+    use crate::serde::Serde;
 
     #[test]
     fn simple() {
@@ -151,7 +149,8 @@ mod proof {
     use crate::merkle_patricia_proofs::proof::Proof;
     use crate::misc::arrays::sub_array_equals;
     use crate::receipt::MAX_DEPTH_NO_LEAF as RECEIPT_MAX_DEPTH_NO_LEAF;
-    use crate::serde::{RECEIPT_MAX_LEAF_LEN_M, RECEIPT_NODES_LEN, Serde, serialize_receipt_nodes};
+    use crate::receipt::MAX_LEAF_LEN_M as RECEIPT_MAX_LEAF_LEN_M;
+    use crate::serde::{RECEIPT_NODES_LEN, Serde, serialize_receipt_nodes};
 
     #[test]
     fn simple() {
