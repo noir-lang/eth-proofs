@@ -8,9 +8,10 @@ use dep::std::test::OracleMock;
 
 #[test]
 fn test_get_header_success() {
-    let _ = OracleMock::mock("get_header").returns((
-        paris_block_header_partial, paris_block_header_rlp,
-    ));
+    // Safety: test
+    let _ = unsafe {
+        OracleMock::mock("get_header").returns((paris_block_header_partial, paris_block_header_rlp))
+    };
     let header = get_header(ETHEREUM_MAINNET_ID, number);
     assert_eq(paris_block_header_partial.number, header.number);
     assert_eq(paris_block_header_partial.hash, header.hash);
@@ -22,8 +23,9 @@ fn test_get_header_success() {
 #[test(should_fail_with = "Block number does not match the argument")]
 fn test_get_header_invalid_block_number() {
     let wrong_block_number = number + 1;
-    let _ = OracleMock::mock("get_header").returns((
-        paris_block_header_partial, paris_block_header_rlp,
-    ));
+    // Safety: test
+    let _ = unsafe {
+        OracleMock::mock("get_header").returns((paris_block_header_partial, paris_block_header_rlp))
+    };
     let _ = get_header(ETHEREUM_MAINNET_ID, wrong_block_number);
 }

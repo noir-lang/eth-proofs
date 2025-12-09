@@ -1,10 +1,11 @@
 use crate::{
     header::get_header,
+    merkle_patricia_proofs::proof::ProofInput,
     misc::{bounded_vecs::bounded_vec_map, fragment::Fragment, types::{Address, Bytes32}},
     receipt::{
         get_receipt_unconstrained_M, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M, MAX_PREFIXED_KEY_NIBBLE_LEN,
-        MAX_RECEIPT_ENCODED_LEN_M, MAX_RECEIPT_RLP_LEN_M, MAX_VALUE_LEN_M, ProofInput,
-        receipt_rlp_from_proof, TxReceiptPartial, TxType,
+        MAX_RECEIPT_ENCODED_LEN_M, MAX_RECEIPT_RLP_LEN_M, MAX_VALUE_LEN_M, receipt_rlp_from_proof,
+        TxReceiptPartial, TxType,
     },
     rlp::{decode::decode_list, types::{RlpFragment, RlpList}},
     verifiers::receipt::{rlp::RECEIPT_FIELDS_COUNT, verify_receipt},
@@ -31,8 +32,8 @@ impl<let MAX_LOG_DATA_LEN: u32> Eq for Log<MAX_LOG_DATA_LEN> {
 }
 
 pub struct LogWithinBlock<let MAX_LOG_DATA_LEN: u32> {
-    log: Log<MAX_LOG_DATA_LEN>,
-    block_hash: Bytes32,
+    pub(crate) log: Log<MAX_LOG_DATA_LEN>,
+    pub(crate) block_hash: Bytes32,
 }
 
 pub fn get_log<let MAX_LOG_DATA_LEN: u32, let MAX_LOGS_COUNT: u32>(
@@ -73,7 +74,7 @@ pub(crate) fn extract_log<let MAX_LOG_DATA_LEN: u32, let MAX_LOGS_COUNT: u32, le
     );
 
     let log_values_rlp_list: RlpList<LOG_FIELDS_COUNT> = decode_list(log_fragment);
-    assert(log_values_rlp_list.len == LOG_FIELDS_COUNT, "Invalid log fields count");
+    assert(log_values_rlp_list.len() == LOG_FIELDS_COUNT, "Invalid log fields count");
 
     let address = extract_address(log_fragment, log_values_rlp_list).to_array();
     let topics = bounded_vec_map(
@@ -89,7 +90,7 @@ fn extract_logs_fragment<let MAX_RECEIPT_RLP_FRAGMENT_LEN: u32>(
     receipt_rlp_fragment: Fragment<MAX_RECEIPT_RLP_FRAGMENT_LEN, u8>,
 ) -> Fragment<MAX_RECEIPT_RLP_FRAGMENT_LEN, u8> {
     let receipt_rlp_list: RlpList<RECEIPT_FIELDS_COUNT> = decode_list(receipt_rlp_fragment);
-    assert(receipt_rlp_list.len == RECEIPT_FIELDS_COUNT, "Invalid receipt fields count");
+    assert(receipt_rlp_list.len() == RECEIPT_FIELDS_COUNT, "Invalid receipt fields count");
     rlp_subfragment(receipt_rlp_fragment, receipt_rlp_list.get(LOGS_INDEX))
 }
 

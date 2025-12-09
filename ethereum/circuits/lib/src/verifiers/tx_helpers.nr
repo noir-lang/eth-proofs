@@ -1,4 +1,4 @@
-mod split;
+pub(crate) mod split;
 mod split_test;
-mod idx;
+pub(crate) mod idx;
 mod idx_test;

@@ -43,8 +43,8 @@ mod extract_log {
         assert_eq(log.topics, small_block_log.topics);
         assert_eq(log.data.len(), small_block_log.data.len());
         assert(sub_array_equals_up_to_length(
-            small_block_log.data.storage,
-            log.data.storage,
+            small_block_log.data.storage(),
+            log.data.storage(),
             0,
             log.data.len(),
         ));

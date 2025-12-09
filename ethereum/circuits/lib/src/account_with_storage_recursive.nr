@@ -1,7 +1,8 @@
 use crate::account_with_storage::StorageWithinBlock;
 use crate::misc::{fragment::Fragment, types::{Address, ADDRESS_LENGTH, Bytes32, BYTES32_LENGTH}};
+use crate::serde::Serde;
 use crate::serde::STORAGE_BLOCK_LEN;
-use dep::std::verify_proof;
+use dep::std::verify_proof_with_type;
 
 pub struct RecursiveProof {
     key_hash: Field,
@@ -17,12 +18,14 @@ pub fn get_account_with_storage_recursive(
     address: Address,
     storage_key: Bytes32,
 ) -> StorageWithinBlock<1> {
-    let (storage_within_block, RecursiveProof { key_hash, verification_key, proof }) = get_account_with_storage_recursive_unconstrained(
-        chain_id,
-        block_number,
-        address,
-        storage_key,
-    );
+    let (storage_within_block, RecursiveProof { key_hash, verification_key, proof }) = unsafe {
+        get_account_with_storage_recursive_unconstrained(
+            chain_id,
+            block_number,
+            address,
+            storage_key,
+        )
+    };
 
     let mut public_inputs: Fragment<NUM_PUBLIC_INPUTS, Field> = Fragment::empty();
     public_inputs.push_back(chain_id as Field);
@@ -31,11 +34,12 @@ pub fn get_account_with_storage_recursive(
     public_inputs.extend_back(storage_key.serialize());
     public_inputs.extend_back(storage_within_block.serialize());
 
-    verify_proof(
+    verify_proof_with_type(
         verification_key,
         proof,
         public_inputs.to_array::<NUM_PUBLIC_INPUTS>(),
         key_hash,
+        1, // TODO: Need to confirm it's meant to non zk honk proof
     );
 
     storage_within_block

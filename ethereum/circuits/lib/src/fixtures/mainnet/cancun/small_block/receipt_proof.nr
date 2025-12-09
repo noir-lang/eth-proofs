@@ -1,6 +1,6 @@
 use crate::{merkle_patricia_proofs::proof::{Proof, ProofInput}, serde::Serde};
 
-global proof_input: ProofInput<8, 1000, 6, 1011> = ProofInput {
+pub(crate) global proof_input: ProofInput<8, 1000, 6, 1011> = ProofInput {
     key: [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08],
     value: [
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -393,4 +393,4 @@ global proof_input: ProofInput<8, 1000, 6, 1011> = ProofInput {
     },
 };
 
-global proof_input_serialized: [Field; 5212] = proof_input.serialize();
+pub(crate) global proof_input_serialized: [Field; 5212] = proof_input.serialize();

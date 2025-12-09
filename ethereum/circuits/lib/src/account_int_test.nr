@@ -18,10 +18,10 @@ use dep::std::test::OracleMock;
 
 #[test]
 fn test_get_account_success() {
-    // Unsafe: test
+    // Safety: test
     let _ =
         unsafe { OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp)) };
-    // Unsafe: test
+    // Safety: test
     let _ =
         unsafe { OracleMock::mock("get_account").returns((account, state_proof_input_serialized)) };
 
@@ -37,10 +37,10 @@ fn test_get_account_success() {
 
 #[test(should_fail)]
 fn test_get_account_wrong_state_root() {
-    // Unsafe: test
+    // Safety: test
     let _ =
         unsafe { OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp)) };
-    // Unsafe: test
+    // Safety: test
     let _ = unsafe {
         OracleMock::mock("get_account").returns((
             account_from_different_header, state_proof_input_from_different_header_serialized,

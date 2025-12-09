@@ -3,7 +3,7 @@ use crate::{receipt::{BLOOM_FILTER_LEN, TxReceiptPartial}, verifiers::receipt::i
 use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
 
-global RECEIPT_FIELDS_COUNT: u32 = 4;
+pub(crate) global RECEIPT_FIELDS_COUNT: u32 = 4;
 global STATE_ROOT_INDEX: u32 = 0;
 global STATUS_INDEX: u32 = 0;
 global CUMULATIVE_GAS_USED_INDEX: u32 = 1;

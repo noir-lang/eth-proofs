@@ -40,7 +40,7 @@ pub fn verify_receipt<let MAX_ENCODED_LEN: u32, let MAX_LEAF_LEN: u32>(
     let key = Fragment::from_vec(right_pad(receipt_proof_input.key));
     assert_tx_idx_equals(key, tx_idx);
 
-    let value = right_pad(receipt_proof_input.value).storage;
+    let value = right_pad(receipt_proof_input.value).storage();
     assert_receipt_equals(block_number, tx_type, Fragment::from_array(value), receipt);
     verify_merkle_proof(
         receipt_proof_input.key,

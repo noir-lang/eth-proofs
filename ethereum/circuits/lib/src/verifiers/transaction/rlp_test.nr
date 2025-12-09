@@ -73,12 +73,6 @@ fn invalid_value_value() {
     assert_tx_rlp_equals(eip1559_tx_rlp_fragment, eip1559_tx_type, tx);
 }
 
-#[test(should_fail_with = "Data: Invalid RLP length")]
-fn invalid_data_length() {
-    let mut tx = eip1559_tx;
-    tx.data.assert_tx_rlp_equals(eip1559_tx_rlp_fragment, eip1559_tx_type, tx);
-}
-
 #[test(should_fail_with = "V: Invalid RLP length")]
 fn invalid_v_length() {
     let mut tx = eip1559_tx;

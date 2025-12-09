@@ -4,7 +4,7 @@ use crate::{
     transaction::{ForeignCallTransaction, TxPartial},
 };
 
-global tx_idx: u32 = 0x0;
+pub(crate) global tx_idx: u32 = 0x0;
 
 pub(crate) global tx_type: TxType = 0;
 pub(crate) global tx_rlp: [u8; 999] = [
@@ -225,5 +225,5 @@ pub(crate) global transaction: TxPartial<1000> = TxPartial {
     ],
 };
 
-global foreign_call_transaction: ForeignCallTransaction<1000> =
+pub(crate) global foreign_call_transaction: ForeignCallTransaction<1000> =
     ForeignCallTransaction::from(transaction);

@@ -160,5 +160,5 @@ pub(crate) global receipt: TxReceiptPartial = TxReceiptPartial {
     ],
 };
 
-global foreign_call_receipt: ForeignCallTxReceiptPartial =
+pub(crate) global foreign_call_receipt: ForeignCallTxReceiptPartial =
     ForeignCallTxReceiptPartial::from(receipt);

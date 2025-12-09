@@ -28,7 +28,9 @@ type AccountWithStateProofM = (Account, ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, 
 type ProofInputSerialized<let LEN: u32> = [Field; LEN];
 
 pub fn get_account(chain_id: u32, block_no: u64, address: Address) -> AccountWithinBlock {
-    let (account, state_proof) = get_account_unconstrained_M(chain_id, block_no, address);
+    // Safety: verification done separately
+    let (account, state_proof) =
+        unsafe { get_account_unconstrained_M(chain_id, block_no, address) };
     let header = get_header(chain_id, block_no);
     verify_account(address, account, state_proof, header.state_root);
     AccountWithinBlock { account, block_hash: header.hash }

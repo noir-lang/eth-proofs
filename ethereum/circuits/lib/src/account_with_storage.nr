@@ -108,8 +108,9 @@ pub fn get_account_with_storage(
 ) -> StorageWithinBlock<1> {
     let BlockHeaderPartial { number: _, hash, state_root, transactions_root: _, receipts_root: _ }
          = get_header(chain_id, block_number);
+    // Safety: veirfication done separately
     let StateAndStorageProofInput { account, state_proof_input, storage_proof_input } =
-        get_proof_unconstrained(chain_id, block_number, address, storage_key);
+        unsafe { get_proof_unconstrained(chain_id, block_number, address, storage_key) };
 
     verify_account(address, account, state_proof_input, state_root);
     verify_storage_values([storage_proof_input], account.storage_root);

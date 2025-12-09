@@ -25,10 +25,10 @@ use dep::std::test::OracleMock;
 
 #[test]
 fn test_get_account_with_storage_success() {
-    // Unsafe: test
+    // Safety: test
     let _ =
         unsafe { OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp)) };
-    // Unsafe: test
+    // Safety: test
     let _ = unsafe {
         OracleMock::mock("get_proof").returns((
             account, state_proof_input_serialized, proofs_serialized[0],
@@ -50,13 +50,13 @@ fn test_get_account_with_storage_success() {
 
 #[test(should_fail_with = "Invalid node hash")]
 fn test_get_account_with_storage_invalid_state_root() {
-    // Unsafe: test
+    // Safety: test
     let _ = unsafe {
         OracleMock::mock("get_header").returns((
             crypto_punks_block_header_partial, crypto_punks_block_header_rlp,
         ))
     };
-    // Unsafe: test
+    // Safety: test
     let _ = unsafe {
         OracleMock::mock("get_proof").returns((
             account, state_proof_input_serialized, proofs_serialized[0],
@@ -78,7 +78,7 @@ fn test_get_account_with_storage_invalid_storage_root() {
             crypto_punks_block_header_partial, crypto_punks_block_header_rlp,
         ))
     };
-    // Unsafe: test
+    // Safety: test
     let _ = unsafe {
         OracleMock::mock("get_proof").returns((
             crypto_punks_account, crypto_punks_state_proof_input_serialized, proofs_serialized[0],
@@ -95,10 +95,10 @@ fn test_get_account_with_storage_invalid_storage_root() {
 
 #[test(should_fail_with = "Storage key does not match the argument")]
 fn test_get_account_with_storage_storage_key_does_not_match_the_argument() {
-    // Unsafe: test
+    // Safety: test
     let _ =
         unsafe { OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp)) };
-    // Unsafe: test
+    // Safety: test
     let _ = unsafe {
         OracleMock::mock("get_proof").returns((
             account, state_proof_input_serialized, proofs_serialized[0],
