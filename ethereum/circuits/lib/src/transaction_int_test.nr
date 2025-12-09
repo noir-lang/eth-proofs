@@ -17,7 +17,7 @@ use crate::fixtures::mainnet::{
         transaction_proof::proof_input_serialized as another_proof_input_serialized,
     },
 };
-use crate::transaction::{get_transaction, TransactionWithinBlock};
+use crate::transaction::{get_transaction, TransactionWithinBlock, TxPartial};
 use dep::std::test::OracleMock;
 
 global MAX_DATA_LEN: u32 = 1000;
@@ -37,7 +37,22 @@ fn get_transaction_success() {
         get_transaction(ETHEREUM_MAINNET_ID, number, tx_idx);
 
     assert_eq(transaction_within_block.block_hash, block_header_partial.hash);
-    assert_eq(transaction_within_block.transaction, foreign_call_transaction.into());
+    // Convert transaction from TxPartial<68> to TxPartial<1000> by creating a new one with extended data
+    let mut data_extended: BoundedVec<u8, MAX_DATA_LEN> = BoundedVec::new();
+    for i in 0..transaction.data.len() {
+        data_extended.push(transaction.data.get(i));
+    }
+    let transaction_1000 = TxPartial::<MAX_DATA_LEN> {
+        nonce: transaction.nonce,
+        gas_limit: transaction.gas_limit,
+        to: transaction.to,
+        value: transaction.value,
+        data: data_extended,
+        v: transaction.v,
+        r: transaction.r,
+        s: transaction.s,
+    };
+    assert_eq(transaction_within_block.transaction, transaction_1000);
 }
 
 #[test(should_fail_with = "Block number does not match the argument")]

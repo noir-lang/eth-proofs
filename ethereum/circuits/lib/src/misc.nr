@@ -9,6 +9,6 @@ mod fragment_test;
 mod fragment_int_test;
 pub mod types;
 pub(crate) mod option;
-pub(crate) mod bytes32;
+pub mod bytes32;
 mod bytes32_test;
 pub(crate) mod iterator;

@@ -1,10 +1,10 @@
 use crate::uint256::U256;
 
-global high = U128::from_integer(0x10000000000000000000000000000000);
-global low = U128::zero();
-global limit = U128::from_integer(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF);
+global high: u128 = 0x10000000000000000000000000000000;
+global low: u128 = 0;
+global limit: u128 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-global big_number = U256 { high, low };
+global big_number: U256 = U256::new(high, low);
 
 #[test]
 fn success() {
@@ -22,22 +22,22 @@ fn new() {
 #[test]
 fn zero_and_one() {
     let zero = U256::zero();
-    assert_eq(zero.high, U128::zero());
-    assert_eq(zero.low, U128::zero());
+    assert_eq(zero.high, 0);
+    assert_eq(zero.low, 0);
 
     let one = U256::one();
-    assert_eq(one.high, U128::zero());
-    assert_eq(one.low, U128::one());
+    assert_eq(one.high, 0);
+    assert_eq(one.low, 0);
 }
 
 mod from_bytes32 {
     use crate::uint256::U256;
-    global high = U128::from_integer(0x10000000000000000000000000000000);
-    global low = U128::zero();
-    global limit = U128::from_integer(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF);
+    global high: u128 = 0x10000000000000000000000000000000;
+    global low: u128 = 0;
+    global limit: u128 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-    global big_number = U256 { high, low };
-    global limit_u256 = U256 { high: limit, low: limit };
+    global big_number: U256 = U256::new(high, low);
+    global limit_u256: U256 = U256::new(limit, limit);
 
     #[test]
     fn zero() {
@@ -61,12 +61,12 @@ mod from_bytes32 {
 
 mod into_bytes32 {
     use crate::uint256::U256;
-    global high = U128::from_integer(0x10000000000000000000000000000000);
-    global low = U128::zero();
-    global limit = U128::from_integer(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF);
+    global high: u128 = 0x10000000000000000000000000000000;
+    global low: u128 = 0;
+    global limit: u128 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-    global big_number = U256 { high, low };
-    global limit_u256 = U256 { high: limit, low: limit };
+    global big_number: U256 = U256::new(high, low);
+    global limit_u256: U256 = U256::new(limit, limit);
 
     #[test]
     fn zero() {
@@ -107,18 +107,18 @@ fn not_eq() {
 
 mod trait_add {
     use crate::uint256::U256;
-    global high = U128::from_integer(0x10000000000000000000000000000000);
-    global low = U128::zero();
-    global limit = U128::from_integer(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF);
+    global high: u128 = 0x10000000000000000000000000000000;
+    global low: u128 = 0;
+    global limit: u128 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
-    global big_number = U256 { high, low };
-    global limit_u256 = U256 { high: limit, low: limit };
+    global big_number: U256 = U256::new(high, low);
+    global limit_u256: U256 = U256::new(limit, limit);
 
     #[test]
     fn sum() {
         let sum = big_number + big_number;
 
-        assert_eq(sum, U256 { high: U128::from_integer(0x20000000000000000000000000000000), low });
+        assert_eq(sum, U256 { high: 0x20000000000000000000000000000000, low });
     }
 
     #[test]
@@ -126,7 +126,7 @@ mod trait_add {
         let big_number = U256 { high, low: limit };
         let sum = big_number + U256::one();
 
-        assert_eq(sum, U256 { high: U128::from_integer(0x10000000000000000000000000000001), low });
+        assert_eq(sum, U256 { high: 0x10000000000000000000000000000001, low });
     }
 
     #[test(should_fail_with = "attempt to add with overflow")]

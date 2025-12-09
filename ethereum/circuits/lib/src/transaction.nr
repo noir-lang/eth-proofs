@@ -41,17 +41,17 @@ impl<let MAX_DATA_LEN: u32> Eq for TxPartial<MAX_DATA_LEN> {
 }
 
 pub(crate) struct ForeignCallTransaction<let MAX_DATA_LEN: u32> {
-    nonce: u64,
-    gas_limit: u64,
-    to: Address,
-    to_is_some: bool,
-    value_hi: u64,
-    value_lo: u64,
-    data: [u8; MAX_DATA_LEN],
-    data_len: u32,
-    v: u8, // ECDSA recovery id
-    r: Bytes32, // ECDSA signature part
-    s: Bytes32, // ECDSA signature part
+    pub(crate) nonce: u64,
+    pub(crate) gas_limit: u64,
+    pub(crate) to: Address,
+    pub(crate) to_is_some: bool,
+    pub(crate) value_hi: u64,
+    pub(crate) value_lo: u64,
+    pub(crate) data: [u8; MAX_DATA_LEN],
+    pub(crate) data_len: u32,
+    pub(crate) v: u8, // ECDSA recovery id
+    pub(crate) r: Bytes32, // ECDSA signature part
+    pub(crate) s: Bytes32, // ECDSA signature part
 }
 
 impl<let MAX_DATA_LEN: u32> From<TxPartial<MAX_DATA_LEN>> for ForeignCallTransaction<MAX_DATA_LEN> {
@@ -99,8 +99,8 @@ impl<let MAX_DATA_LEN: u32> From<ForeignCallTransaction<MAX_DATA_LEN>> for TxPar
 type ProofInputSerialized<let LEN: u32> = [Field; LEN];
 
 pub struct TransactionWithinBlock<let MAX_DATA_LEN: u32> {
-    transaction: TxPartial<MAX_DATA_LEN>,
-    block_hash: Bytes32,
+    pub(crate) transaction: TxPartial<MAX_DATA_LEN>,
+    pub(crate) block_hash: Bytes32,
 }
 
 pub fn get_transaction<let MAX_DATA_LEN: u32>(

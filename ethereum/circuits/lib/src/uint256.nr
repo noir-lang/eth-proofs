@@ -32,11 +32,11 @@ impl From<Bytes32> for U256 {
     fn from(bytes: Bytes32) -> Self {
         let mut high_bytes = [0; 16];
         memcpy_up_to_length(&mut high_bytes, bytes, 16, 16);
-        let high = from_le_bytes(high_bytes);
+        let high = Field::from_le_bytes::<16>(high_bytes) as u128;
 
         let mut low_bytes = [0; 16];
         memcpy_up_to_length(&mut low_bytes, bytes, 0, 16);
-        let low = u256::from_le_bytes(low_bytes);
+        let low = Field::from_le_bytes::<16>(low_bytes) as u128;
 
         U256::new(high, low)
     }
@@ -45,9 +45,9 @@ impl From<Bytes32> for U256 {
 impl Into<Bytes32> for U256 {
     fn into(self) -> Bytes32 {
         let mut bytes = [0; 32];
-        memcpy_up_to_length(&mut bytes, self.low.to_le_bytes(), 0, 16);
+        memcpy_up_to_length(&mut bytes, (self.low as Field).to_le_bytes::<16>(), 0, 16);
 
-        let high_bytes = self.high.to_le_bytes();
+        let high_bytes = (self.high as Field).to_le_bytes::<16>();
         for i in 0..16 {
             bytes[i + 16] = high_bytes[i];
         }
@@ -64,21 +64,22 @@ impl Eq for U256 {
 
 impl Add for U256 {
     fn add(self, other: Self) -> Self {
-        let lo: Field = self.low.to_integer() + other.low.to_integer();
+        let lo: Field = self.low as Field + other.low as Field;
 
-        let mut low = U128::from_integer(0);
+        let mut low = 0;
         let mut carry = 0;
         if (lo.lt(uint128_overflow_value)) {
-            low = U128::from_integer(lo);
+            low = lo;
         } else {
-            low = U128::from_integer(lo - uint128_overflow_value);
+            low = lo - uint128_overflow_value;
             carry = 1;
         }
 
-        let hi: Field = self.high.to_integer() + other.high.to_integer() + carry;
+        let hi: Field = self.high as Field + other.high as Field + carry;
         assert(hi.lt(uint128_overflow_value), "attempt to add with overflow");
 
         let high = hi as u128;
+        let low = low as u128;
 
         Self { high, low }
     }
