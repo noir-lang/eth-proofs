@@ -172,8 +172,10 @@ mod proof_input {
     use crate::misc::arrays::sub_array_equals;
     use crate::receipt::{
         MAX_DEPTH_NO_LEAF as RECEIPT_MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M as RECEIPT_MAX_LEAF_LEN_M,
+        MAX_PREFIXED_KEY_NIBBLE_LEN as RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN,
+        MAX_VALUE_LEN_M as RECEIPT_MAX_VALUE_LEN_M,
     };
-    use crate::serde::{RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN, RECEIPT_MAX_VALUE_LEN_M, Serde};
+    use crate::serde::Serde;
 
     #[test]
     fn simple() {

@@ -5,7 +5,7 @@ use crate::account_with_storage::{
 use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
 use crate::serde::Serde;
 
-global proofs: [ProofInput<66, 32, 6, 69>; 1] = [
+pub(crate) global proofs: [ProofInput<66, 32, 6, 69>; 1] = [
     ProofInput {
         key: [
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

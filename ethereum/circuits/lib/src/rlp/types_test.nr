@@ -244,7 +244,7 @@ mod rlp_fragment {
 
         #[test(should_fail_with = "Field: Invalid RLP value")]
         fn invalid_value() {
-            fragment.assert_eq_u128("Field", encoded_value, value + U128::from_integer(1))
+            fragment.assert_eq_u128("Field", encoded_value, value + 1)
         }
     }
 

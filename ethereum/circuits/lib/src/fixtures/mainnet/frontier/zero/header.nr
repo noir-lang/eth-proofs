@@ -1,4 +1,4 @@
-use crate::header::BlockHeaderPartial;
+use crate::{header::BlockHeaderPartial, misc::types::Bytes32};
 
 global number: u64 = 0;
 global hash: Bytes32 = [
