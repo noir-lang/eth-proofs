@@ -24,7 +24,7 @@ global MAX_DATA_LEN: u32 = 1000;
 
 #[test]
 fn get_transaction_success() {
-    // Safety: testx
+    // Safety: test
     let _ =
         unsafe { OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp)) };
     // Safety: test
