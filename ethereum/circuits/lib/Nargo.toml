@@ -5,5 +5,4 @@ authors = ["Arkadiusz Konior, Marek Kirejczyk"]
 compiler_version = ">=0.30.0"
 
 [dependencies]
-bignum = { tag = "v0.8.2", git = "https://github.com/noir-lang/noir-bignum" }
 keccak256 = {tag = "v0.1.1", git = "https://github.com/noir-lang/keccak256" }
