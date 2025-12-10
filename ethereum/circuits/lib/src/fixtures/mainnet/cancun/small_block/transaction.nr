@@ -223,5 +223,5 @@ pub(crate) global transaction: TxPartial<1000> = TxPartial {
     ],
 };
 
-pub(crate) global foreign_call_transaction: ForeignCallTransaction<68> =
+pub(crate) global foreign_call_transaction: ForeignCallTransaction<1000> =
     ForeignCallTransaction::from(transaction);
