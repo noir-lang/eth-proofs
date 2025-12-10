@@ -35,7 +35,7 @@ mod shift_right_by_one {
         assert(arr == [0x0, 0xa, 0x0, 0xb]);
     }
 
-    #[test(should_fail_with="Last element must be zero to shift the array right by one")]
+    #[test(should_fail_with = "Last element must be zero to shift the array right by one")]
     fn fail() {
         let non_zero = 0x1;
         let mut arr = [0xa, 0x0, 0xb, non_zero];
@@ -93,18 +93,18 @@ mod bytes_to_nibbles {
         let bytes = Fragment::new_with_length(
             10,
             [
-            0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-        ]
+                0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23, 0x0, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            ],
         );
-        let expected_nibbles = Fragment::from_array(
-            [
-            0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x0, 0x1, 0x2, 0x3
-        ]
-        );
+        let expected_nibbles = Fragment::from_array([
+            0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x0,
+            0x1, 0x2, 0x3,
+        ]);
         assert(bytes_to_nibbles(bytes) == expected_nibbles);
     }
 
-    #[test(should_fail_with="Bytes implicit data length must be at least 2 times larger than bytes explicit length")]
+    #[test(should_fail_with = "Bytes implicit data length must be at least 2 times larger than bytes explicit length")]
     fn fail() {
         let bytes = Fragment::from_array([0x0f, 0xf0]);
         let _ = bytes_to_nibbles(bytes);
@@ -130,7 +130,7 @@ mod nibbles_to_byte {
         assert(nibbles_to_byte(0xf, 0xf) == 0xff);
     }
 
-    #[test(should_fail_with="Nibble value must be less than 16")]
+    #[test(should_fail_with = "Nibble value must be less than 16")]
     fn fail_overflow() {
         assert(nibbles_to_byte(0x00, 0x10) == 0x10);
     }
@@ -158,16 +158,15 @@ mod nibbles_to_bytes {
     #[test]
     fn normal() {
         assert(
-            nibbles_to_bytes(
-            [
-            0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x0, 0x1, 0x2, 0x3
-        ]
-        )
-            == [0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23]
+            nibbles_to_bytes([
+                0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x0,
+                0x1, 0x2, 0x3,
+            ])
+                == [0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef, 0x01, 0x23],
         );
     }
 
-    #[test(should_fail_with="Generic arguments don't match")]
+    #[test(should_fail_with = "Generic arguments don't match")]
     fn fail() {
         let _: [u8; 1] = nibbles_to_bytes([0x0, 0x0, 0x0]);
     }
@@ -187,33 +186,35 @@ mod byte_value {
 
     #[test]
     fn test1() {
-        let actual = byte_value(
-            [
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 0, 0, 0
-        ]
-        );
+        let actual = byte_value([
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+            25, 26, 27, 28, 29, 0, 0, 0,
+        ]);
 
         assert_eq(actual.len, 32);
         assert_eq(
-            actual.storage, [
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 0, 0, 0
-        ]
+            actual.storage,
+            [
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+                24, 25, 26, 27, 28, 29, 0, 0, 0,
+            ],
         );
     }
 
     #[test]
     fn test2() {
-        let actual = byte_value(
-            [
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-        ]
-        );
+        let actual = byte_value([
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0,
+        ]);
 
         assert_eq(actual.len, 22);
         assert_eq(
-            actual.storage, [
-            11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-        ]
+            actual.storage,
+            [
+                11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0,
+            ],
         );
     }
 }
@@ -246,20 +247,23 @@ mod add_bigint {
     fn carry() {
         assert_eq([1, 0], add_bigint([0, 255], [0, 1]));
         assert_eq([0x11, 0xa, 0x4], add_bigint([0x10, 0xff, 0xfa], [0x0, 0xa, 0xa]));
-        assert_eq([0xff, 0xff, 0xff, 0xfe], add_bigint([0x00, 0xff, 0xff, 0xff], [0xfe, 0xff, 0xff, 0xff]));
+        assert_eq(
+            [0xff, 0xff, 0xff, 0xfe],
+            add_bigint([0x00, 0xff, 0xff, 0xff], [0xfe, 0xff, 0xff, 0xff]),
+        );
     }
 
-    #[test(should_fail_with="Addition overflow")]
+    #[test(should_fail_with = "Addition overflow")]
     fn overflow_simple() {
         let _ = add_bigint([0xff], [0x1]);
     }
 
-    #[test(should_fail_with="Addition overflow")]
+    #[test(should_fail_with = "Addition overflow")]
     fn overflow_full_traversal() {
         let _ = add_bigint([0xff, 0xaa, 0xbb], [0x0, 0x55, 0x45]);
     }
 
-    #[test(should_fail_with="Addition overflow")]
+    #[test(should_fail_with = "Addition overflow")]
     fn overflow_two_max() {
         let _ = add_bigint([0xff, 0xff, 0xff], [0xff, 0xff, 0xff]);
     }

@@ -14,8 +14,8 @@ mod U128_ {
 }
 
 mod U256 {
-    use crate::uint256::U256;
     use crate::serde::U256_SERIALIZED_LEN;
+    use crate::uint256::U256;
 
     global u128_number = 0x10000000000000000000000000000000;
     global u64_value = 0x1000000000000000;
@@ -24,7 +24,7 @@ mod U256 {
     fn simple() {
         let value = U256::new(
             U128::from_integer(u128_number),
-            U128::from_integer(u128_number)
+            U128::from_integer(u128_number),
         );
         let serialized: [Field; U256_SERIALIZED_LEN] = value.serialize();
 
@@ -37,7 +37,7 @@ mod U256 {
 }
 
 mod u8_array {
-    use crate::misc::types::{Bytes32, BYTES32_LENGTH, Address, ADDRESS_LENGTH};
+    use crate::misc::types::{Address, ADDRESS_LENGTH, Bytes32, BYTES32_LENGTH};
 
     #[test]
     fn bytes32() {
@@ -60,9 +60,9 @@ mod u8_array {
 
 mod account {
     use crate::account_with_storage::Account;
-    use crate::serde::ACCOUNT_LEN;
-    use crate::misc::arrays::sub_array_equals;
     use crate::fixtures::mainnet::london::vitalik_balance::account::account;
+    use crate::misc::arrays::sub_array_equals;
+    use crate::serde::ACCOUNT_LEN;
 
     #[test]
     fn simple() {
@@ -77,10 +77,10 @@ mod account {
 }
 
 mod account_within_block {
-    use crate::serde::{ACCOUNT_BLOCK_LEN, ACCOUNT_LEN};
     use crate::account::AccountWithinBlock;
     use crate::fixtures::mainnet::london::vitalik_balance::{account::account, header::hash};
     use crate::misc::arrays::sub_array_equals;
+    use crate::serde::{ACCOUNT_BLOCK_LEN, ACCOUNT_LEN};
 
     #[test]
     fn simple() {
@@ -88,22 +88,22 @@ mod account_within_block {
         let serialized: [Field; ACCOUNT_BLOCK_LEN] = account_within_block.serialize();
 
         assert(sub_array_equals(account_within_block.account.serialize(), serialized, 0));
-        assert(
-            sub_array_equals(
-                account_within_block.block_hash.serialize(),
-                serialized,
-                ACCOUNT_LEN
-            )
-        );
+        assert(sub_array_equals(
+            account_within_block.block_hash.serialize(),
+            serialized,
+            ACCOUNT_LEN,
+        ));
         assert_eq(AccountWithinBlock::deserialize(serialized), account_within_block);
     }
 }
 
 mod storage_within_block {
-    use crate::serde::{STORAGE_BLOCK_LEN, ACCOUNT_LEN};
     use crate::account_with_storage::StorageWithinBlock;
-    use crate::fixtures::mainnet::paris::usdc_circle::{account::account, header::hash, storage_proof::proofs, storage::values};
-    use crate::misc::{types::BYTES32_LENGTH, arrays::sub_array_equals};
+    use crate::fixtures::mainnet::paris::usdc_circle::{
+        account::account, header::hash, storage::values, storage_proof::proofs,
+    };
+    use crate::misc::{arrays::sub_array_equals, types::BYTES32_LENGTH};
+    use crate::serde::{ACCOUNT_LEN, STORAGE_BLOCK_LEN};
 
     #[test]
     fn simple() {
@@ -111,20 +111,16 @@ mod storage_within_block {
         let serialized: [Field; STORAGE_BLOCK_LEN] = storage_within_block.serialize();
 
         assert(sub_array_equals(storage_within_block.block_hash.serialize(), serialized, 0));
-        assert(
-            sub_array_equals(
-                storage_within_block.account.serialize(),
-                serialized,
-                BYTES32_LENGTH
-            )
-        );
-        assert(
-            sub_array_equals(
-                storage_within_block.values[0].serialize(),
-                serialized,
-                BYTES32_LENGTH + ACCOUNT_LEN
-            )
-        );
+        assert(sub_array_equals(
+            storage_within_block.account.serialize(),
+            serialized,
+            BYTES32_LENGTH,
+        ));
+        assert(sub_array_equals(
+            storage_within_block.values[0].serialize(),
+            serialized,
+            BYTES32_LENGTH + ACCOUNT_LEN,
+        ));
         assert_eq(StorageWithinBlock::deserialize(serialized), storage_within_block);
     }
 }
@@ -141,23 +137,21 @@ mod nodes {
         let serialized = serialize_receipt_nodes(nodes);
 
         assert(sub_array_equals(nodes[0].serialize(), serialized, 0));
-        assert(
-            sub_array_equals(
-                nodes[nodes.len() - 1].serialize(),
-                serialized,
-                MAX_NODE_LEN * (nodes.len() - 1) - 1
-            )
-        );
+        assert(sub_array_equals(
+            nodes[nodes.len() - 1].serialize(),
+            serialized,
+            MAX_NODE_LEN * (nodes.len() - 1) - 1,
+        ));
         assert_eq(deserialize_receipt_nodes(serialized), nodes);
     }
 }
 
 mod proof {
     use crate::fixtures::mainnet::cancun::small_block::receipt_proof::proof_input;
-    use crate::receipt::MAX_DEPTH_NO_LEAF as RECEIPT_MAX_DEPTH_NO_LEAF;
-    use crate::serde::{Serde, serialize_receipt_nodes, RECEIPT_MAX_LEAF_LEN_M, RECEIPT_NODES_LEN};
     use crate::merkle_patricia_proofs::proof::Proof;
     use crate::misc::arrays::sub_array_equals;
+    use crate::receipt::MAX_DEPTH_NO_LEAF as RECEIPT_MAX_DEPTH_NO_LEAF;
+    use crate::serde::{RECEIPT_MAX_LEAF_LEN_M, RECEIPT_NODES_LEN, Serde, serialize_receipt_nodes};
 
     #[test]
     fn simple() {
@@ -175,30 +169,28 @@ mod proof {
 
 mod proof_input {
     use crate::fixtures::mainnet::cancun::small_block::receipt_proof::proof_input;
-    use crate::receipt::{MAX_DEPTH_NO_LEAF as RECEIPT_MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M as RECEIPT_MAX_LEAF_LEN_M};
-    use crate::serde::{Serde, RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN, RECEIPT_MAX_VALUE_LEN_M};
-    use crate::misc::arrays::sub_array_equals;
     use crate::merkle_patricia_proofs::proof::ProofInput;
+    use crate::misc::arrays::sub_array_equals;
+    use crate::receipt::{
+        MAX_DEPTH_NO_LEAF as RECEIPT_MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M as RECEIPT_MAX_LEAF_LEN_M,
+    };
+    use crate::serde::{RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN, RECEIPT_MAX_VALUE_LEN_M, Serde};
 
     #[test]
     fn simple() {
         let serialized = proof_input.serialize();
 
         assert(sub_array_equals(proof_input.key.serialize(), serialized, 0));
-        assert(
-            sub_array_equals(
-                proof_input.value.serialize(),
-                serialized,
-                RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN
-            )
-        );
-        assert(
-            sub_array_equals(
-                proof_input.proof.serialize(),
-                serialized,
-                RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN + RECEIPT_MAX_VALUE_LEN_M
-            )
-        );
+        assert(sub_array_equals(
+            proof_input.value.serialize(),
+            serialized,
+            RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN,
+        ));
+        assert(sub_array_equals(
+            proof_input.proof.serialize(),
+            serialized,
+            RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN + RECEIPT_MAX_VALUE_LEN_M,
+        ));
 
         let deserialized = Serde::deserialize(serialized);
         assert_eq(deserialized, proof_input);

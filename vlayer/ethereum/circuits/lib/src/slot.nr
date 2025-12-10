@@ -1,6 +1,6 @@
 use dep::ethereum::misc::types::Bytes32;
-use dep::std::hash::keccak256;
 use dep::ethereum::uint256::U256;
+use dep::std::hash::keccak256;
 
 global STORAGE_KEY_HASH_INPUT_LENGTH = 64;
 

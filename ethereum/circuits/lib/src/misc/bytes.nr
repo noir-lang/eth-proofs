@@ -7,20 +7,21 @@ pub fn byte_to_nibbles(byte: u8) -> (u8, u8) {
     (upper, lower)
 }
 
-pub fn bytes_to_nibbles<let MAX_NIBBLE_LEN: u32>(bytes: Fragment<MAX_NIBBLE_LEN, u8>) -> Fragment<MAX_NIBBLE_LEN, u8> {
+pub fn bytes_to_nibbles<let MAX_NIBBLE_LEN: u32>(
+    bytes: Fragment<MAX_NIBBLE_LEN, u8>,
+) -> Fragment<MAX_NIBBLE_LEN, u8> {
     assert(
-        MAX_NIBBLE_LEN >= 2 * bytes.length, "Bytes implicit data length must be at least 2 times larger than bytes explicit length"
+        MAX_NIBBLE_LEN >= 2 * bytes.length,
+        "Bytes implicit data length must be at least 2 times larger than bytes explicit length",
     );
 
     let nibbles = &mut Fragment::new_with_length(2 * bytes.length, [0; MAX_NIBBLE_LEN]);
-    bytes.each(
-        |byte, i| {
+    bytes.each(|byte, i| {
         let (hi, lo) = byte_to_nibbles(byte);
 
         nibbles.set(2 * i, hi);
         nibbles.set(2 * i + 1, lo);
-    }
-    );
+    });
 
     *nibbles
 }
@@ -32,7 +33,9 @@ pub fn nibbles_to_byte(upper: u8, lower: u8) -> u8 {
     upper * 16 + lower
 }
 
-pub fn nibbles_to_bytes<let BYTES_LEN: u32, let NIB_LEN: u32>(nibbles: [u8; NIB_LEN]) -> [u8; BYTES_LEN] {
+pub fn nibbles_to_bytes<let BYTES_LEN: u32, let NIB_LEN: u32>(
+    nibbles: [u8; NIB_LEN],
+) -> [u8; BYTES_LEN] {
     assert(NIB_LEN == 2 * BYTES_LEN, "Generic arguments don't match");
 
     let mut bytes = [0; BYTES_LEN];
@@ -50,7 +53,7 @@ pub fn right_pad<let N: u32>(arr: [u8; N]) -> BoundedVec<u8, N> {
 }
 
 pub fn left_to_right_padding<let N: u32>(nibbles: [u8; N]) -> ([u8; N], u32) {
-    let mut BoundedVec {storage: shifted, len} = right_pad(nibbles);
+    let mut BoundedVec { storage: shifted, len } = right_pad(nibbles);
     if (len % 2 == 1) {
         shift_right_by_one(&mut shifted);
         len += 1;
