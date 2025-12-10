@@ -95,7 +95,7 @@ global data_storage: Bytes32 = [
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3f, 0x44, 0x12, 0x7f, 0xb4, 0x3f, 0xa1, 0x00, 0x00,
 ];
 
-global topics: BoundedVec<Bytes32, 4> = BoundedVec::from_array(topics_storage);
+global topics: BoundedVec<Bytes32, 4> = BoundedVec::from_parts(topics_storage, 3);
 global data: BoundedVec<u8, 32> = BoundedVec::from_array(data_storage);
 
 pub(crate) global log: Log<32> = Log {

@@ -18,6 +18,7 @@ pub fn get_account_with_storage_recursive(
     address: Address,
     storage_key: Bytes32,
 ) -> StorageWithinBlock<1> {
+    // Safety: veirfication done separately
     let (storage_within_block, RecursiveProof { key_hash, verification_key, proof }) = unsafe {
         get_account_with_storage_recursive_unconstrained(
             chain_id,

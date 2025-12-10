@@ -100,7 +100,7 @@ pub(crate) fn byte_value<let N: u32>(in_value: [u8; N]) -> BoundedVec<u8, N> {
 
     let value = left_byte_shift(in_value, N - value_length);
 
-    BoundedVec::from_array(value)
+    BoundedVec::from_parts(value, value_length)
 }
 
 pub fn add_bigint<let N: u32>(left: [u8; N], right: [u8; N]) -> [u8; N] {

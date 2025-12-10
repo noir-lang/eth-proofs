@@ -1,7 +1,6 @@
 use dep::keccak256::keccak256;
 
 use crate::chain::{ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID};
-use crate::HASH_LEN;
 use crate::header::{BlockHeaderPartial, BlockHeaderRlp};
 use crate::misc::{arrays::sub_array_equals, fragment::Fragment};
 use crate::rlp::decode::decode_list;
@@ -51,7 +50,6 @@ pub fn verify_header(
         expected_header_fields_count == header_rlp_list.len(),
         "number of header RLP fields does not match",
     );
-
     header_rlp_list.get(BLOCK_NUM_INDEX).assert_eq_u64(
         "Block number",
         block_header_rlp,
