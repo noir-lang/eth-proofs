@@ -79,8 +79,7 @@ impl<let MAX_DATA_LEN: u32> From<TxPartial<MAX_DATA_LEN>> for ForeignCallTransac
 
 impl<let MAX_DATA_LEN: u32> From<ForeignCallTransaction<MAX_DATA_LEN>> for TxPartial<MAX_DATA_LEN> {
     fn from(tx: ForeignCallTransaction<MAX_DATA_LEN>) -> Self {
-        let mut data = BoundedVec::new();
-        data.extend_from_array(tx.data);
+        let mut data = BoundedVec::from_parts(tx.data, tx.data_len);
         TxPartial {
             nonce: tx.nonce,
             gas_limit: tx.gas_limit,

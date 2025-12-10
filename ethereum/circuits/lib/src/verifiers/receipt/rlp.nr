@@ -14,12 +14,13 @@ pub(crate) fn assert_receipt_rlp_equals<let MAX_ENCODED_LEN: u32>(
     receipt_rlp: Fragment<MAX_ENCODED_LEN, u8>,
     receipt: TxReceiptPartial,
 ) {
+    println(f"receipt_rlp: {receipt_rlp}");
     let receipt_rlp_list: RlpList<RECEIPT_FIELDS_COUNT> = decode_list(receipt_rlp);
     assert(
         receipt_rlp_list.len() == RECEIPT_FIELDS_COUNT,
         "Invalid number of fields in receipt RLP",
     );
-
+    //println(f"receipt_rlp_list: {receipt_rlp_list}");
     if (is_pre_byzantium) {
         receipt_rlp_list.get(STATE_ROOT_INDEX).assert_eq_bytes32(
             "State root",
