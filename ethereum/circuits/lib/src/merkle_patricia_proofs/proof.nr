@@ -1,9 +1,11 @@
-use crate::rlp::types::RlpList;
-use crate::rlp::decode::{decode_to_rlp_header, decode_list_of_small_strings, decode_list};
 use crate::misc::{
-    fragment::Fragment, arrays::{sub_array_equals_up_to_length, memcpy_up_to_length},
-    types::{Hash, HASH_LEN}, bytes::{bytes_to_nibbles, byte_to_nibbles, right_pad}
+    arrays::{memcpy_up_to_length, sub_array_equals_up_to_length},
+    bytes::{byte_to_nibbles, bytes_to_nibbles, right_pad},
+    fragment::Fragment,
+    types::{Hash, HASH_LEN},
 };
+use crate::rlp::decode::{decode_list, decode_list_of_small_strings, decode_to_rlp_header};
+use crate::rlp::types::RlpList;
 use dep::std::hash::keccak256;
 
 global MAX_NODE_LEN: u32 = 532;
@@ -19,16 +21,16 @@ type Key<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32> = [u8; MAX_PREFIXED_KEY_NIBBLE_LE
 type Value<let MAX_VALUE_LEN: u32> = [u8; MAX_VALUE_LEN];
 
 struct Proof<let MAX_DEPTH_NO_LEAF: u32, let MAX_LEAF_LEN: u32> {
-	nodes: [Node; MAX_DEPTH_NO_LEAF],
+    nodes: [Node; MAX_DEPTH_NO_LEAF],
     // Leaf has a different max length than internal node as it contains the value of arbitrary length.
-	leaf: Leaf<MAX_LEAF_LEN>,
-	depth: u64
+    leaf: Leaf<MAX_LEAF_LEN>,
+    depth: u64,
 }
 
 struct ProofInput<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, let MAX_VALUE_LEN: u32, let MAX_DEPTH_NO_LEAF: u32, let MAX_LEAF_LEN: u32> {
     key: Key<MAX_PREFIXED_KEY_NIBBLE_LEN>,
     value: Value<MAX_VALUE_LEN>,
-    proof: Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN>
+    proof: Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN>,
 }
 
 impl<let MAX_DEPTH_NO_LEAF: u32, let MAX_LEAF_LEN: u32> Eq for Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> {
@@ -63,13 +65,18 @@ pub fn parity(prefix: u8) -> u32 {
 
 // Leaf and extension nodes are RLP lists with 2 elements: prefixed key nibbles (in bytes) and value.
 // This function removes the prefix and returns appropriate number of key nibbles according to the parity of the prefix (see function: parity).
-pub fn strip_prefix<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32>(prefixed_key_bytes: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8>) -> Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8> {
+pub fn strip_prefix<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32>(
+    prefixed_key_bytes: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8>,
+) -> Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8> {
     let mut prefixed_key_nibbles = bytes_to_nibbles(prefixed_key_bytes);
 
     let prefix = prefixed_key_nibbles.pop_front();
     let parity = parity(prefix);
     if (parity == EVEN) {
-        assert(prefixed_key_nibbles.pop_front() == 0, "Expected a zero after a prefix of even parity");
+        assert(
+            prefixed_key_nibbles.pop_front() == 0,
+            "Expected a zero after a prefix of even parity",
+        );
     }
 
     prefixed_key_nibbles
@@ -79,11 +86,12 @@ pub fn extract_hash_from_branch_node<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32>(
     node: Node,
     node_rlp_list: RlpList<MAX_NODE_FIELDS>,
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8>,
-    key_ptr: &mut u32
+    key_ptr: &mut u32,
 ) -> Fragment<HASH_LEN, u8> {
     let curr_nibble = key_nibbles.at(*key_ptr) as u32;
     assert(
-        node_rlp_list.get(curr_nibble).length == HASH_LEN, "Expected a hash at position given by the key nibble"
+        node_rlp_list.get(curr_nibble).length == HASH_LEN,
+        "Expected a hash at position given by the key nibble",
     );
     *key_ptr += 1;
 
@@ -94,18 +102,27 @@ pub fn extract_hash_from_extension_node<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32>(
     node: Node,
     node_rlp_list: RlpList<MAX_NODE_FIELDS>,
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8>,
-    key_ptr: &mut u32
+    key_ptr: &mut u32,
 ) -> Fragment<HASH_LEN, u8> {
-    let prefixed_extension_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8> = Fragment::new(node_rlp_list.get(0).offset, node_rlp_list.get(0).length, node).focus();
+    let prefixed_extension_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8> = Fragment::new(
+        node_rlp_list.get(0).offset,
+        node_rlp_list.get(0).length,
+        node,
+    )
+        .focus();
 
     let (prefix, _) = byte_to_nibbles(prefixed_extension_key_part.at(0));
     assert((prefix == 0) | (prefix == 1), "Extension parity prefix must be 0 or 1");
     let extension_key_part = strip_prefix(prefixed_extension_key_part); // Extension nodes have a prefix that needs to be removed.
     let curr_key_nibbles_part = key_nibbles.subfragment(*key_ptr, extension_key_part.length);
     assert(
-        extension_key_part == curr_key_nibbles_part, "Extension key part does not correspond to given key nibbles"
+        extension_key_part == curr_key_nibbles_part,
+        "Extension key part does not correspond to given key nibbles",
     );
-    assert(node_rlp_list.get(1).length == HASH_LEN, "Expected a hash at the end of the extension node");
+    assert(
+        node_rlp_list.get(1).length == HASH_LEN,
+        "Expected a hash at the end of the extension node",
+    );
     *key_ptr += extension_key_part.length;
 
     Fragment::new(node_rlp_list.get(1).offset, HASH_LEN, node).focus()
@@ -114,10 +131,11 @@ pub fn extract_hash_from_extension_node<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32>(
 pub fn extract_hash<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32>(
     node: Node,
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8>,
-    key_ptr: &mut u32
+    key_ptr: &mut u32,
 ) -> Fragment<HASH_LEN, u8> {
     let mut hash = Fragment::from_array([0; HASH_LEN]);
-    let node_rlp_list: RlpList<MAX_NODE_FIELDS> = decode_list_of_small_strings(Fragment::from_array(node));
+    let node_rlp_list: RlpList<MAX_NODE_FIELDS> =
+        decode_list_of_small_strings(Fragment::from_array(node));
 
     if (node_rlp_list.len == BRANCH_NODE_NUM_FIELDS) {
         hash = extract_hash_from_branch_node(node, node_rlp_list, key_nibbles, key_ptr);
@@ -138,12 +156,17 @@ pub fn verify_leaf<let MAX_LEAF_LEN: u32, let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, 
     leaf: Leaf<MAX_LEAF_LEN>,
     key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8>,
     key_ptr: &mut u32,
-    value: Value<MAX_VALUE_LEN>
+    value: Value<MAX_VALUE_LEN>,
 ) {
     let leaf_rlp_list: RlpList<2> = decode_list(Fragment::from_array(leaf));
     assert(leaf_rlp_list.len == 2, "Leaf expected to have 2 fields");
 
-    let prefixed_leaf_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8> = Fragment::new(leaf_rlp_list.get(0).offset, leaf_rlp_list.get(0).length, leaf).focus();
+    let prefixed_leaf_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8> = Fragment::new(
+        leaf_rlp_list.get(0).offset,
+        leaf_rlp_list.get(0).length,
+        leaf,
+    )
+        .focus();
 
     let (prefix, _) = byte_to_nibbles(prefixed_leaf_key_part.at(0));
     assert((prefix == 2) | (prefix == 3), "Leaf parity prefix must be 2 or 3");
@@ -162,8 +185,9 @@ pub fn verify_leaf<let MAX_LEAF_LEN: u32, let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, 
             value.storage,
             leaf,
             value_rlp_fragment.offset,
-            value_rlp_fragment.length
-        ), "Value mismatch"
+            value_rlp_fragment.length,
+        ),
+        "Value mismatch",
     );
 }
 
@@ -171,7 +195,7 @@ pub fn verify_merkle_proof<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, let MAX_VALUE_L
     key: Key<MAX_PREFIXED_KEY_NIBBLE_LEN>,
     value: Value<MAX_VALUE_LEN>,
     root: Hash,
-    proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>
+    proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>,
 ) {
     let key = right_pad(key);
     let key_nibbles = bytes_to_nibbles(Fragment::from_vec(key));

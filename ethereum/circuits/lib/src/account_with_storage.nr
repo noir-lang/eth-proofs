@@ -106,8 +106,8 @@ pub fn get_account_with_storage(
     address: Address,
     storage_key: Bytes32,
 ) -> StorageWithinBlock<1> {
-    let BlockHeaderPartial { number: _, hash, state_root, transactions_root: _, receipts_root: _ } =
-        get_header(chain_id, block_number);
+    let BlockHeaderPartial { number: _, hash, state_root, transactions_root: _, receipts_root: _ }
+         = get_header(chain_id, block_number);
     let StateAndStorageProofInput { account, state_proof_input, storage_proof_input } =
         get_proof_unconstrained(chain_id, block_number, address, storage_key);
 

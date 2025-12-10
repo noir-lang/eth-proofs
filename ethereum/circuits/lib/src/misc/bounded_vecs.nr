@@ -9,8 +9,8 @@ pub fn bounded_vec_from_array<T, let N: u32, let M: u32>(array: [T; N]) -> Bound
 }
 
 pub fn bounded_vec_map<U, T, let N: u32, Env>(
-    bounded_vec: BoundedVec<T, N> ,
-    f: fn[Env](T) -> U
+    bounded_vec: BoundedVec<T, N>,
+    f: fn[Env](T) -> U,
 ) -> BoundedVec<U, N> {
     let result: &mut BoundedVec<U, N> = &mut BoundedVec::new();
     bounded_vec.each(|x, _| result.push(f(x)));

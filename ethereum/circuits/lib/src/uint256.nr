@@ -1,7 +1,7 @@
-use dep::std::ops::Add;
-use crate::misc::types::Bytes32;
-use crate::misc::bytes32::field_to_bytes32;
 use crate::misc::arrays::memcpy_up_to_length;
+use crate::misc::bytes32::field_to_bytes32;
+use crate::misc::types::Bytes32;
+use dep::std::ops::Add;
 
 global uint128_overflow_value = 340282366920938463463374607431768211456; // 2^128
 
@@ -68,7 +68,7 @@ impl Add for U256 {
 
         let mut low = U128::from_integer(0);
         let mut carry = 0;
-        if(lo.lt(uint128_overflow_value)) {
+        if (lo.lt(uint128_overflow_value)) {
             low = U128::from_integer(lo);
         } else {
             low = U128::from_integer(lo - uint128_overflow_value);

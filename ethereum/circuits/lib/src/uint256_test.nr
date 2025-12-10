@@ -37,7 +37,7 @@ mod from_bytes32 {
     global limit = U128::from_integer(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF);
 
     global big_number = U256 { high, low };
-    global limit_u256 = U256 {high: limit, low:limit};
+    global limit_u256 = U256 { high: limit, low: limit };
 
     #[test]
     fn zero() {
@@ -66,7 +66,7 @@ mod into_bytes32 {
     global limit = U128::from_integer(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF);
 
     global big_number = U256 { high, low };
-    global limit_u256 = U256 {high: limit, low:limit};
+    global limit_u256 = U256 { high: limit, low: limit };
 
     #[test]
     fn zero() {
@@ -112,7 +112,7 @@ mod trait_add {
     global limit = U128::from_integer(0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF);
 
     global big_number = U256 { high, low };
-    global limit_u256 = U256 {high: limit, low:limit};
+    global limit_u256 = U256 { high: limit, low: limit };
 
     #[test]
     fn sum() {
@@ -129,7 +129,7 @@ mod trait_add {
         assert_eq(sum, U256 { high: U128::from_integer(0x10000000000000000000000000000001), low });
     }
 
-    #[test(should_fail_with="attempt to add with overflow")]
+    #[test(should_fail_with = "attempt to add with overflow")]
     fn sum_overflow() {
         let _ = limit_u256 + U256::one();
     }

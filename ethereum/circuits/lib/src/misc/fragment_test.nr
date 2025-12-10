@@ -103,7 +103,7 @@ mod subfragment {
         assert(subfragment.length == 2);
     }
 
-    #[test(should_fail_with="Subfragment overflows fragment")]
+    #[test(should_fail_with = "Subfragment overflows fragment")]
     fn fail() {
         let fragment = Fragment::new(1, 4, [1, 2, 3, 4, 5]);
         let _ = fragment.subfragment(2, 3);
@@ -138,7 +138,7 @@ mod at {
         assert(fragment.at(1) == 3);
     }
 
-    #[test(should_fail_with="Index out of bounds")]
+    #[test(should_fail_with = "Index out of bounds")]
     fn fail() {
         let fragment = Fragment::new(1, 2, [1, 2, 3]);
         let _ = fragment.at(2);
@@ -157,7 +157,7 @@ mod set {
         assert(fragment.data == [1, 4, 3]);
     }
 
-    #[test(should_fail_with="Index out of bounds, tried to set at index 2 but the length is 2")]
+    #[test(should_fail_with = "Index out of bounds, tried to set at index 2 but the length is 2")]
     fn fail() {
         let mut fragment = Fragment::new(1, 2, [1, 2, 3]);
         fragment.set(2, 4);
@@ -176,7 +176,7 @@ mod pop_front {
         assert(fragment.length == 0);
     }
 
-    #[test(should_fail_with="Cannot pop from an empty fragment")]
+    #[test(should_fail_with = "Cannot pop from an empty fragment")]
     fn fail() {
         let mut fragment = Fragment::new(1, 2, [1, 2, 3]);
         let _ = fragment.pop_front();
@@ -196,14 +196,14 @@ mod pop_front_array {
         assert(fragment.length == 0);
     }
 
-    #[test(should_fail_with="Cannot pop array: fragment is too short")]
+    #[test(should_fail_with = "Cannot pop array: fragment is too short")]
     fn fail() {
         let mut fragment = Fragment::new(1, 1, [1, 2, 3]);
         assert(fragment.pop_front_array() == [2]);
         assert(fragment.pop_front_array() == [3]);
     }
 
-    #[test(should_fail_with="Cannot pop array: fragment is too short")]
+    #[test(should_fail_with = "Cannot pop array: fragment is too short")]
     fn partial_fail() {
         let mut fragment = Fragment::new(1, 1, [1, 2, 3]);
         assert(fragment.pop_front_array() == [2, 3]);
@@ -222,7 +222,7 @@ mod pop_back {
         assert(fragment.length == 0);
     }
 
-    #[test(should_fail_with="Cannot pop from an empty fragment")]
+    #[test(should_fail_with = "Cannot pop from an empty fragment")]
     fn fail() {
         let mut fragment = Fragment::new(1, 2, [1, 2, 3]);
         let _ = fragment.pop_back();
@@ -246,7 +246,7 @@ mod push_back {
         assert(fragment.length == 3);
     }
 
-    #[test(should_fail_with="Cannot push: fragment is full")]
+    #[test(should_fail_with = "Cannot push: fragment is full")]
     fn fail() {
         let mut fragment = Fragment::new(1, 1, [0, 1, 0, 0]);
         fragment.push_back(2);
@@ -269,7 +269,7 @@ mod extend_back {
         assert(fragment.data == [1, 2, 3, 4]);
     }
 
-    #[test(should_fail_with="Cannot push: fragment is full")]
+    #[test(should_fail_with = "Cannot push: fragment is full")]
     fn fail() {
         let mut fragment = Fragment::new(0, 2, [1, 2, 0, 0]);
         fragment.extend_back([3, 4, 5]);
@@ -387,7 +387,7 @@ mod to_bounded_vec {
         assert_eq(bounded_vec, expected);
     }
 
-    #[test(should_fail_with="Fragment length exceeds BoundedVec max length")]
+    #[test(should_fail_with = "Fragment length exceeds BoundedVec max length")]
     fn bounded_vec_too_small() {
         let fragment = Fragment::new(0, 4, [1, 2, 3, 4]);
         let _: BoundedVec<Field, 3> = fragment.to_bounded_vec();
