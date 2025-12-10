@@ -20,7 +20,7 @@ impl U256 {
     }
 
     pub(crate) fn one() -> Self {
-        Self { high: 0, low: 0 }
+        Self { high: 0, low: 1 }
     }
 
     pub(crate) fn from_field(field: Field) -> Self {
