@@ -27,7 +27,7 @@ fn zero_and_one() {
 
     let one = U256::one();
     assert_eq(one.high, 0);
-    assert_eq(one.low, 0);
+    assert_eq(one.low, 1);
 }
 
 mod from_bytes32 {
