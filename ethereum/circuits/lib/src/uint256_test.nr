@@ -2,7 +2,6 @@ use crate::uint256::U256;
 
 global high: u128 = 0x10000000000000000000000000000000;
 global low: u128 = 0;
-global limit: u128 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
 
 global big_number: U256 = U256::new(high, low);
 

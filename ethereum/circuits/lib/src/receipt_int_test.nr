@@ -5,10 +5,7 @@ use crate::fixtures::mainnet::cancun::{
             block_header_partial as another_block_header_partial,
             block_header_rlp as another_block_header_rlp, NUMBER as another_number,
         },
-        receipt::{
-            foreign_call_receipt as another_foreign_call_receipt, receipt as another_receipt,
-            tx_type as another_tx_type,
-        },
+        receipt::{foreign_call_receipt as another_foreign_call_receipt, tx_type as another_tx_type},
         receipt_proof::proof_input_serialized as another_proof_input_serialized,
         transaction::tx_idx as another_tx_idx,
     },

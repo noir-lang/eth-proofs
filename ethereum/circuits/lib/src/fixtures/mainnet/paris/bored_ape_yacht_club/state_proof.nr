@@ -1,5 +1,4 @@
 use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
-use crate::serde::Serde;
 
 pub(crate) global proof_input: ProofInput<66, 110, 10, 148> = ProofInput {
     key: [

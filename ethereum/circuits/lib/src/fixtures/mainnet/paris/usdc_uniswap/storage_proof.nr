@@ -1,7 +1,3 @@
-use crate::account_with_storage::{
-    MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_STORAGE_DEPTH_NO_LEAF_M, MAX_STORAGE_LEAF_LEN,
-    MAX_STORAGE_VALUE_LEN,
-};
 use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
 
 pub(crate) global proofs: [ProofInput<66, 32, 6, 69>; 1] = [
