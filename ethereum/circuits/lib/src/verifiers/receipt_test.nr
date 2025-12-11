@@ -1,23 +1,19 @@
 use crate::fixtures::mainnet::{
     cancun::{
-        access_list::header::receipts_root as access_list_receipts_root,
+        access_list::header::receipts_root,
         small_block::{
-            header::{number as block_number, receipts_root},
+            header::number as block_number,
             receipt::{encoded_receipt, receipt, tx_type},
             receipt_proof::proof_input,
             transaction::tx_idx,
         },
     },
     homestead::fork::{
-        header::{number as pre_byzantium_block_number, receipts_root as pre_byzantium_receipt_root},
-        receipt::{
-            encoded_receipt as pre_byzantium_encoded_receipt, receipt as pre_byzantium_receipt,
-            tx_type as legacy_tx_type,
-        },
+        header::receipts_root as pre_byzantium_receipt_root,
+        receipt::receipt as pre_byzantium_receipt,
         receipt_proof::proof_input as pre_byzantium_receipt_proof_input,
     },
 };
-use crate::misc::fragment::Fragment;
 use crate::verifiers::receipt::{assert_receipt_equals, BYZANTIUM_BLOCK_NUM, verify_receipt};
 
 #[test(should_fail_with = "Invalid tx type")]

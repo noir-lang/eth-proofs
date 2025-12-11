@@ -1,14 +1,8 @@
 use crate::header::get_header;
-use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
-use crate::misc::{
-    bytes::byte_value,
-    fragment::Fragment,
-    option::make_option,
-    types::{Address, Bytes32},
-};
+use crate::merkle_patricia_proofs::proof::ProofInput;
+use crate::misc::{bytes::byte_value, fragment::Fragment, option::make_option, types::Bytes32};
 use crate::serde::Serde;
 use crate::verifiers::{receipt::verify_receipt, tx_helpers::split::split_into_tx_type_and_rlp};
-use dep::std::mem::zeroed;
 
 pub(crate) global BLOOM_FILTER_LEN: u32 = 256;
 

@@ -1,4 +1,3 @@
-use crate::misc::arrays::memcpy;
 use crate::misc::types::Bytes32;
 
 pub(crate) global MAX_FIELD_VALUE: Field =

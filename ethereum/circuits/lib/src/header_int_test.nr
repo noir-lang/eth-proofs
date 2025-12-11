@@ -1,7 +1,7 @@
 use crate::chain::ETHEREUM_MAINNET_ID;
 use crate::fixtures::mainnet::paris::usdc_circle::header::{
     block_header_partial as paris_block_header_partial, block_header_rlp as paris_block_header_rlp,
-    hash, number, receipts_root, state_root, transactions_root,
+    number,
 };
 use crate::header::get_header;
 use dep::std::test::OracleMock;

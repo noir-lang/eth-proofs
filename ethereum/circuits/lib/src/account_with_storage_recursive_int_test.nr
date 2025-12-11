@@ -6,9 +6,7 @@ use crate::fixtures::mainnet::paris::usdc_circle::{
     header::{hash, number},
     storage::{keys, values},
 };
-use crate::misc::types::{Address, Bytes32};
 use super::serde::Serde;
-use dep::std::mem::zeroed;
 use dep::std::test::OracleMock;
 
 #[test]

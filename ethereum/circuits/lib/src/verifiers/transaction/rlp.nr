@@ -1,7 +1,7 @@
 use crate::misc::fragment::Fragment;
 use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
-use crate::{transaction::{TxPartial, TxType}, verifiers::transaction::MAX_TX_RLP_LENGTH};
+use crate::transaction::{TxPartial, TxType};
 
 struct FieldLayout {
     field_count: u32,

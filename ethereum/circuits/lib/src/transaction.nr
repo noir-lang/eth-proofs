@@ -1,9 +1,8 @@
 use crate::header::get_header;
-use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
+use crate::merkle_patricia_proofs::proof::ProofInput;
 use crate::misc::{option::make_option, types::{Address, Bytes32}};
 use crate::serde::{Serde, TX_PROOF_INPUT_LEN_M};
 use crate::verifiers::transaction::verify_tx;
-use std::mem::zeroed;
 
 pub(crate) global MAX_KEY_LEN: u32 = 3;
 pub(crate) global MAX_DEPTH_NO_LEAF: u32 = 6;
@@ -106,6 +105,7 @@ pub fn get_transaction<let MAX_DATA_LEN: u32>(
     tx_idx: Field,
 ) -> TransactionWithinBlock<MAX_DATA_LEN> {
     let (tx_type, transaction, proof_input) =
+        // Safety: verification done separately
         unsafe { get_transaction_unconstrained_M(chain_id, block_number, tx_idx) };
     let header = get_header(chain_id, block_number);
     verify_tx(

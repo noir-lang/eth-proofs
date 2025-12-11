@@ -1,7 +1,6 @@
 use crate::fixtures::mainnet::cancun::approve::transaction::transaction;
 use crate::misc::bounded_vecs::bounded_vec_from_array;
 use crate::transaction::{ForeignCallTransaction, TxPartial};
-use dep::std::mem::zeroed;
 
 global data_length: u32 = 8;
 

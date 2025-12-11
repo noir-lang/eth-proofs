@@ -6,9 +6,8 @@ use crate::fixtures::mainnet::{
         transaction as legacy_tx, tx_rlp as legacy_tx_rlp, tx_type as legacy_tx_type,
     },
 };
-use crate::misc::{arrays::{alter_array, resize}, fragment::Fragment};
+use crate::misc::{arrays::alter_array, fragment::Fragment};
 use crate::verifiers::transaction::rlp::assert_tx_rlp_equals;
-use dep::std::wrapping_add;
 
 global eip1559_tx_rlp_fragment: Fragment<999, u8> = Fragment::from_array(eip1559_tx_rlp);
 

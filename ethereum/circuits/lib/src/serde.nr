@@ -9,14 +9,13 @@ use crate::account_with_storage::{
     MAX_STORAGE_LEAF_LEN, MAX_STORAGE_VALUE_LEN,
 };
 use crate::merkle_patricia_proofs::proof::{MAX_NODE_LEN, Node, Proof, ProofInput};
-use crate::misc::{fragment::Fragment, types::{Address, ADDRESS_LENGTH, Bytes32, BYTES32_LENGTH}};
+use crate::misc::{fragment::Fragment, types::BYTES32_LENGTH};
 use crate::receipt::{
     MAX_DEPTH_NO_LEAF as RECEIPT_MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M as RECEIPT_MAX_LEAF_LEN_M,
     MAX_PREFIXED_KEY_NIBBLE_LEN as RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN,
     MAX_VALUE_LEN_M as RECEIPT_MAX_VALUE_LEN_M,
 };
 use crate::uint256::U256;
-use dep::std::mem::zeroed;
 
 pub(crate) trait Serde<let LEN: u32> {
     fn serialize(self) -> [Field; LEN];

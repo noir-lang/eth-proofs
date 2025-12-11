@@ -43,6 +43,7 @@ pub fn get_log<let MAX_LOG_DATA_LEN: u32, let MAX_LOGS_COUNT: u32>(
     log_idx: u32,
 ) -> LogWithinBlock<MAX_LOG_DATA_LEN> {
     let (tx_type, receipt, receipt_proof_input): (TxType, TxReceiptPartial, ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN_M, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M>) =
+        // Safety: verification done separately
         unsafe { get_receipt_unconstrained_M(chain_id, block_number, tx_idx) };
 
     let header = get_header(chain_id, block_number);

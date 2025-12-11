@@ -1,6 +1,6 @@
 use crate::misc::fragment::Fragment;
 use crate::rlp::types::{LIST, RlpFragment, RlpHeader, RlpList, STRING};
-use dep::std::{ops::WrappingSub, wrapping_sub};
+use dep::std::ops::WrappingSub;
 
 // Maximum number of bytes required to represent entity length.
 // This means that this library can only decode RLP entities with a length of up to 2^16 - 1 bytes.
@@ -52,8 +52,8 @@ pub fn decode_to_rlp_header<let N: u32>(data: Fragment<N, u8>) -> RlpHeader {
         RlpHeader { offset, length, data_type: LIST }
     } else {
         // > 55 byte list
-        let offset = wrapping_sub(1 + prefix, 0xf7) as u32;
-        let length = extract_payload_len(data, wrapping_sub(prefix, 0xf7) as u32);
+        let offset = 1 + prefix.wrapping_sub(0xf7) as u32;
+        let length = extract_payload_len(data, prefix.wrapping_sub(0xf7) as u32);
         assert(offset + length <= N, "Decoded length of long list exceeds input length");
 
         RlpHeader { offset, length, data_type: LIST }

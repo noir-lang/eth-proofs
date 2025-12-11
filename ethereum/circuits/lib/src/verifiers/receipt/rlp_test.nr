@@ -6,7 +6,7 @@ use crate::fixtures::mainnet::{
 };
 use crate::misc::{arrays::alter_array, fragment::Fragment};
 use crate::verifiers::receipt::rlp::assert_receipt_rlp_equals;
-use dep::std::wrapping_add;
+use dep::std::ops::WrappingAdd;
 
 global receipt_rlp_fragment: Fragment<999, u8> = Fragment::from_array(receipt_rlp);
 global pre_byzantium_receipt_rlp_fragment: Fragment<999, u8> =
@@ -69,7 +69,7 @@ fn test_assert_receipt_rlp_equals_invalid_status_value() {
 #[test(should_fail_with = "Cumulative gas used: Invalid RLP value")]
 fn test_assert_receipt_rlp_equals_invalid_cumulative_gas_used_value() {
     let mut receipt = small_block_receipt;
-    receipt.cumulative_gas_used = wrapping_add(receipt.cumulative_gas_used, 1);
+    receipt.cumulative_gas_used = receipt.cumulative_gas_used.wrapping_add(1);
     assert_receipt_rlp_equals(false, receipt_rlp_fragment, receipt);
 }
 

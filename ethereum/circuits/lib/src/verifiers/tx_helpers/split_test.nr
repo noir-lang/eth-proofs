@@ -1,5 +1,5 @@
 mod receipt {
-    use crate::misc::{arrays::{memcpy, sub_array_equals}, fragment::Fragment};
+    use crate::misc::fragment::Fragment;
     use crate::verifiers::tx_helpers::split::split_into_tx_type_and_rlp;
 
     use crate::fixtures::mainnet::{
@@ -8,7 +8,7 @@ mod receipt {
             encoded_receipt as pre_byzantium_encoded_receipt, tx_type as legacy_tx_type,
         },
     };
-    use crate::receipt::{MAX_RECEIPT_ENCODED_LEN_M, TxType};
+    use crate::receipt::MAX_RECEIPT_ENCODED_LEN_M;
 
     #[test]
     fn eip1559() {
@@ -56,7 +56,7 @@ mod receipt {
 }
 
 mod transaction {
-    use crate::misc::{arrays::{memcpy, sub_array_equals}, fragment::Fragment};
+    use crate::misc::fragment::Fragment;
     use crate::verifiers::tx_helpers::split::split_into_tx_type_and_rlp;
 
     use crate::fixtures::mainnet::{
@@ -65,8 +65,7 @@ mod transaction {
             encoded_tx as pre_byzantium_encoded_tx, tx_type as legacy_tx_type,
         },
     };
-    use crate::transaction::{MAX_TX_ENCODED_LEN_M, TxType};
-    use crate::verifiers::transaction::{MAX_ENCODED_TX_LENGTH, MAX_TX_RLP_LENGTH};
+    use crate::transaction::MAX_TX_ENCODED_LEN_M;
 
     #[test]
     fn eip1559() {

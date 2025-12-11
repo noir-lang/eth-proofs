@@ -146,9 +146,7 @@ mod nodes {
 
 mod proof {
     use crate::fixtures::mainnet::cancun::small_block::receipt_proof::proof_input;
-    use crate::merkle_patricia_proofs::proof::Proof;
     use crate::misc::arrays::sub_array_equals;
-    use crate::receipt::MAX_DEPTH_NO_LEAF as RECEIPT_MAX_DEPTH_NO_LEAF;
     use crate::receipt::MAX_LEAF_LEN_M as RECEIPT_MAX_LEAF_LEN_M;
     use crate::serde::{RECEIPT_NODES_LEN, Serde, serialize_receipt_nodes};
 
@@ -168,10 +166,8 @@ mod proof {
 
 mod proof_input {
     use crate::fixtures::mainnet::cancun::small_block::receipt_proof::proof_input;
-    use crate::merkle_patricia_proofs::proof::ProofInput;
     use crate::misc::arrays::sub_array_equals;
     use crate::receipt::{
-        MAX_DEPTH_NO_LEAF as RECEIPT_MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M as RECEIPT_MAX_LEAF_LEN_M,
         MAX_PREFIXED_KEY_NIBBLE_LEN as RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN,
         MAX_VALUE_LEN_M as RECEIPT_MAX_VALUE_LEN_M,
     };

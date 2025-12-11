@@ -251,7 +251,6 @@ mod rlp_fragment {
     mod assert_eq_address {
         use crate::fixtures::mainnet::london::crypto_punks::account::address;
         use crate::misc::{arrays::alter_array, fragment::Fragment};
-        use crate::misc::types::Address;
         use crate::rlp::types::{RlpFragment, STRING};
 
         global address_fragment: Fragment<20, u8> = Fragment::from_array(address);

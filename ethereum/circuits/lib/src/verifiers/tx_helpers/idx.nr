@@ -1,5 +1,4 @@
-use crate::misc::arrays::{memcpy, sub_array_equals_up_to_length};
-use crate::misc::bytes::{left_to_right_padding, nibbles_to_bytes, right_pad};
+use crate::misc::bytes::right_pad;
 use crate::misc::fragment::Fragment;
 use crate::rlp::{decode::decode_string, types::RlpFragment};
 
