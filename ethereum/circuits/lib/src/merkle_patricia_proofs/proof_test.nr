@@ -420,7 +420,7 @@ mod verify_leaf {
     use crate::misc::{bytes::bytes_to_nibbles, fragment::Fragment};
 
     global empty_key: Fragment<2, u8> = Fragment::new_with_length(0, [0; 2]);
-    global empty_value: [u8; 3] = [0xc2, 0x20, 0x80];
+    global empty_value: [u8; 0] = [];
     global empty_leaf: [u8; 3] = [0xc2, 0x20, 0x80]; // ["0x20","0x"]
 
     global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 6;
