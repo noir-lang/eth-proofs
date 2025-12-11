@@ -3,7 +3,6 @@ use crate::account_with_storage::{
     MAX_STORAGE_VALUE_LEN,
 };
 use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
-use crate::serde::Serde;
 
 pub(crate) global proofs: [ProofInput<66, 32, 6, 69>; 1] = [
     ProofInput {
@@ -291,11 +290,3 @@ pub(crate) global proofs: [ProofInput<66, 32, 6, 69>; 1] = [
         },
     },
 ];
-
-global proofs_serialized: [[Field; 3360]; 1] = proofs
-    .map(
-        |
-    proof: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_STORAGE_VALUE_LEN, MAX_STORAGE_DEPTH_NO_LEAF_M, MAX_STORAGE_LEAF_LEN>| {
-            proof.serialize()
-        },
-    );

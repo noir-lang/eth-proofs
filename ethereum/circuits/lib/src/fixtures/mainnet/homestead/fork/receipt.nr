@@ -1,5 +1,5 @@
 use crate::misc::fragment::Fragment;
-use crate::receipt::{ForeignCallTxReceiptPartial, TxReceiptPartial};
+use crate::receipt::TxReceiptPartial;
 use crate::receipt::TxType;
 
 pub(crate) global tx_type: TxType = 0;
@@ -163,6 +163,3 @@ pub(crate) global receipt: TxReceiptPartial = TxReceiptPartial {
         0x00,
     ],
 };
-
-pub(crate) global foreign_call_receipt: ForeignCallTxReceiptPartial =
-    ForeignCallTxReceiptPartial::from(receipt);

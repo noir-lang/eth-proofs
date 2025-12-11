@@ -4,7 +4,6 @@ use crate::misc::{option::make_option, types::{Address, Bytes32}};
 use crate::serde::{Serde, TX_PROOF_INPUT_LEN_M};
 use crate::verifiers::transaction::verify_tx;
 
-pub(crate) global MAX_KEY_LEN: u32 = 3;
 pub(crate) global MAX_DEPTH_NO_LEAF: u32 = 6;
 pub(crate) global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 8; // (MAX_KEY_LEN + 1) * 2
 

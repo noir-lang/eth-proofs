@@ -96,7 +96,7 @@ mod account_within_block {
 mod storage_within_block {
     use crate::account_with_storage::StorageWithinBlock;
     use crate::fixtures::mainnet::paris::usdc_circle::{
-        account::account, header::hash, storage::values, storage_proof::proofs,
+        account::account, header::hash, storage::values,
     };
     use crate::misc::{arrays::sub_array_equals, types::BYTES32_LENGTH};
     use crate::serde::{ACCOUNT_LEN, STORAGE_BLOCK_LEN};

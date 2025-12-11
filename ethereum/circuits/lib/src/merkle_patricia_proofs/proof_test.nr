@@ -141,7 +141,6 @@ mod extract_hash_from_branch_node {
 mod extract_hash_from_extension_node {
 
     use crate::fixtures::merkle_proofs::{
-        branch_then_leaf::proof_input as branch_input,
         extension_even::proof_input as extension_even_input,
         extension_odd::proof_input as extension_odd_input,
     };

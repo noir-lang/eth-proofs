@@ -73,6 +73,7 @@ fn test_get_account_with_storage_invalid_state_root() {
 
 #[test(should_fail_with = "Invalid node hash")]
 fn test_get_account_with_storage_invalid_storage_root() {
+    // Safety: test
     let _ = unsafe {
         OracleMock::mock("get_header").returns((
             crypto_punks_block_header_partial, crypto_punks_block_header_rlp,

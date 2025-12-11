@@ -9,9 +9,6 @@ use crate::verifiers::{
     tx_helpers::{idx::assert_tx_idx_equals, split::split_into_tx_type_and_rlp},
 };
 
-pub(crate) global MAX_ENCODED_TX_LENGTH: u32 = 525;
-pub(crate) global MAX_TX_RLP_LENGTH: u32 = MAX_ENCODED_TX_LENGTH - 1;
-
 pub(crate) fn assert_tx_equals<let MAX_DATA_LEN: u32, let MAX_ENCODED_LEN: u32>(
     tx_type: TxType,
     encoded_tx: Fragment<MAX_ENCODED_LEN, u8>,

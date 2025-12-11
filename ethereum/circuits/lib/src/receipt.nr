@@ -5,10 +5,9 @@ use crate::serde::Serde;
 use crate::verifiers::{receipt::verify_receipt, tx_helpers::split::split_into_tx_type_and_rlp};
 
 pub(crate) global BLOOM_FILTER_LEN: u32 = 256;
-
 pub(crate) global MAX_KEY_LEN: u32 = 3;
 pub(crate) global MAX_DEPTH_NO_LEAF: u32 = 6;
-pub(crate) global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 8; // (MAX_KEY_LEN + 1) * 2
+pub(crate) global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = (MAX_KEY_LEN + 1) * 2;
 
 pub(crate) global MAX_VALUE_LEN_M: u32 = 1000; // Values taken from receiptProofConfigM in receipt.ts.
 pub(crate) global MAX_LEAF_LEN_M: u32 = 1011;
@@ -76,6 +75,7 @@ pub struct TxReceiptWithinBlock {
 
 pub fn get_receipt(chain_id: u32, block_number: u64, tx_idx: Field) -> TxReceiptWithinBlock {
     let (tx_type, receipt, proof_input) =
+        // Safety: test
         unsafe { get_receipt_unconstrained_M(chain_id, block_number, tx_idx) };
     let header = get_header(chain_id, block_number);
     verify_receipt(

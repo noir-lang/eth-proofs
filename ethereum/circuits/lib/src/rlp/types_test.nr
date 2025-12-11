@@ -44,7 +44,7 @@ mod rlp_fragment {
 
     mod assert_eq_bounded_vec {
         use crate::misc::{arrays::alter_array, fragment::Fragment};
-        use crate::rlp::types::{LIST, RlpFragment, STRING};
+        use crate::rlp::types::{RlpFragment, STRING};
 
         global bytes: [u8; 2] = [0x12, 0x34];
         global length: u32 = bytes.len();

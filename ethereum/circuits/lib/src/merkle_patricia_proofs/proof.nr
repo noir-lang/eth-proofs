@@ -1,5 +1,5 @@
 use crate::misc::{
-    arrays::{memcpy_up_to_length, sub_array_equals_up_to_length},
+    arrays::sub_array_equals_up_to_length,
     bytes::{byte_to_nibbles, bytes_to_nibbles, right_pad},
     fragment::Fragment,
     types::{Hash, HASH_LEN},

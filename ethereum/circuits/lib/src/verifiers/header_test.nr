@@ -32,7 +32,7 @@ use crate::fixtures::mainnet::{
         transactions_root,
     },
 };
-use crate::header::{BlockHeaderPartial, BlockHeaderRlp, MAX_HEADER_RLP_LEN};
+use crate::header::{BlockHeaderPartial, MAX_HEADER_RLP_LEN};
 use crate::misc::arrays::alter_array;
 use crate::verifiers::header::{
     CANCUN_BLOCK_NUM, get_header_fields_count, LONDON_BLOCK_NUM, PARIS_BLOCK_NUM, verify_header,

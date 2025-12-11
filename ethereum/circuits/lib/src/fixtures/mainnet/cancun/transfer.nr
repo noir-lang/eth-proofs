@@ -1,2 +1,1 @@
 pub(crate) mod transaction;
-pub(crate) mod transaction_proof;

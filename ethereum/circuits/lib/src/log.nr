@@ -4,8 +4,7 @@ use crate::{
     misc::{bounded_vecs::bounded_vec_map, fragment::Fragment, types::{Address, Bytes32}},
     receipt::{
         get_receipt_unconstrained_M, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M, MAX_PREFIXED_KEY_NIBBLE_LEN,
-        MAX_RECEIPT_ENCODED_LEN_M, MAX_RECEIPT_RLP_LEN_M, MAX_VALUE_LEN_M, receipt_rlp_from_proof,
-        TxReceiptPartial, TxType,
+        MAX_VALUE_LEN_M, receipt_rlp_from_proof, TxReceiptPartial, TxType,
     },
     rlp::{decode::decode_list, types::{RlpFragment, RlpList}},
     verifiers::receipt::{rlp::RECEIPT_FIELDS_COUNT, verify_receipt},

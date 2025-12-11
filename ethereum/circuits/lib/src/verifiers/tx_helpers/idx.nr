@@ -2,9 +2,6 @@ use crate::misc::bytes::right_pad;
 use crate::misc::fragment::Fragment;
 use crate::rlp::{decode::decode_string, types::RlpFragment};
 
-global KEY_NIBBLE_LEN: u32 = 6;
-global MAX_TX_IDX_BYTES_LEN: u32 = 2;
-
 pub fn assert_tx_idx_equals<let MAX_KEY_LEN: u32>(
     key_as_rlp: Fragment<MAX_KEY_LEN, u8>,
     tx_idx: Field,
