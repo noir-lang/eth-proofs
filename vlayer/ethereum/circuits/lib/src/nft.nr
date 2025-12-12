@@ -13,7 +13,7 @@ pub struct ERC721Token {
     pub chain_id: u32,
 }
 
-trait ERC721 {
+pub trait ERC721 {
     fn get_owner(self, token_id: Bytes32, block_number: u64) -> Address;
 }
 

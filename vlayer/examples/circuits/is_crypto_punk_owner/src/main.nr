@@ -1,6 +1,6 @@
 use dep::ethereum::misc::bytes32::field_to_bytes32;
 use dep::ethereum::misc::types::Address;
-use dep::std::field::bytes32_to_field;
+use dep::token::nft::ERC721;
 use dep::token::nft_list::mainnet::CRYPTO_PUNK;
 
 mod main_test;

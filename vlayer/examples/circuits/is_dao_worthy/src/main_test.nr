@@ -13,12 +13,18 @@ mod is_dao_worthy_main {
 
     #[test]
     fn success_greater_then() {
-        let _ = OracleMock::mock("get_header").returns((
-            paris_block_header_partial, paris_block_header_rlp,
-        ));
-        let _ = OracleMock::mock("get_proof").returns((
-            account, state_proof_input_serialized, proofs_serialized[0],
-        ));
+        // Safety: test
+        let _ = unsafe {
+            OracleMock::mock("get_header").returns((
+                paris_block_header_partial, paris_block_header_rlp,
+            ))
+        };
+        // Safety: test
+        let _ = unsafe {
+            OracleMock::mock("get_proof").returns((
+                account, state_proof_input_serialized, proofs_serialized[0],
+            ))
+        };
 
         let block_number = 19_000_000;
         let circle_address = [
