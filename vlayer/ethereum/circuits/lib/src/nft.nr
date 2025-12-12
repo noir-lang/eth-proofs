@@ -8,9 +8,9 @@ use dep::ethereum::{
 };
 
 pub struct ERC721Token {
-    address: Address,
-    token_id_to_slot: fn(Bytes32) -> U256,
-    chain_id: Field,
+    pub address: Address,
+    pub token_id_to_slot: fn(Bytes32) -> U256,
+    pub chain_id: u32,
 }
 
 trait ERC721 {

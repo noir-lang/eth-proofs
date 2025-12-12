@@ -1,2 +1,2 @@
-pub(crate) mod header;
-pub(crate) mod state_proof;
+pub mod header;
+pub mod state_proof;

@@ -7,13 +7,13 @@ use dep::ethereum::{
 use dep::ethereum::uint256::U256;
 use dep::std::field::bytes32_to_field;
 
-global TOKEN_BALANCE_INDEX = 0;
+global TOKEN_BALANCE_INDEX: u32 = 0;
 
-struct ERC20Token {
-    address: Address,
-    balances_slot: U256,
-    allowances_slot: U256,
-    chain_id: Field,
+pub struct ERC20Token {
+    pub address: Address,
+    pub balances_slot: U256,
+    pub allowances_slot: U256,
+    pub chain_id: u32,
 }
 
 impl ERC20Token {
@@ -22,7 +22,7 @@ impl ERC20Token {
     }
 }
 
-trait ERC20 {
+pub trait ERC20 {
     fn get_balance(self, wallet_address: Address, block_number: u64, recursive: bool) -> u128;
 }
 

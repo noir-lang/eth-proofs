@@ -1,2 +1,2 @@
-pub(crate) mod mainnet;
-pub(crate) mod merkle_proofs;
+pub mod mainnet;
+pub mod merkle_proofs;

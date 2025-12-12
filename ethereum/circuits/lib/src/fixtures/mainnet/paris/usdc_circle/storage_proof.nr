@@ -292,7 +292,7 @@ pub(crate) global proofs: [ProofInput<66, 32, 6, 69>; 1] = [
     },
 ];
 
-pub(crate) global proofs_serialized: [[Field; 3360]; 1] = proofs
+pub global proofs_serialized: [[Field; 3360]; 1] = proofs
     .map(
         |
     proof: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_STORAGE_VALUE_LEN, MAX_STORAGE_DEPTH_NO_LEAF_M, MAX_STORAGE_LEAF_LEN>| {

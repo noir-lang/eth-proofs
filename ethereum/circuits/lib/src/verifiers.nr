@@ -1,4 +1,4 @@
-pub(crate) mod account;
+pub mod account;
 mod account_test;
 pub(crate) mod header;
 mod header_test;

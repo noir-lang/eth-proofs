@@ -5,9 +5,9 @@ use crate::serde::STORAGE_BLOCK_LEN;
 use dep::std::verify_proof_with_type;
 
 pub struct RecursiveProof {
-    key_hash: Field,
-    verification_key: [Field; 114],
-    proof: [Field; 93],
+    pub key_hash: Field,
+    pub verification_key: [Field; 114],
+    pub proof: [Field; 93],
 }
 
 global NUM_PUBLIC_INPUTS: u32 = 1 + 1 + ADDRESS_LENGTH + BYTES32_LENGTH + STORAGE_BLOCK_LEN; // chain_id + block_number + address + storage_key + public_return_inputs

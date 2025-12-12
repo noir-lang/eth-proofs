@@ -60,7 +60,7 @@ mod mapping {
 
 mod dynamic_array {
     use crate::slot::dynamic_array;
-    use dep::ethereum::misc::{bytes32::field_to_bytes32, bytes32_test::MAX_FIELD_VALUE};
+    use dep::ethereum::misc::bytes32::MAX_FIELD_VALUE;
     use dep::ethereum::uint256::U256;
 
     #[test]
@@ -94,7 +94,7 @@ mod dynamic_array {
 
 mod dynamic_array_with_precalculated_slot {
     use crate::slot::dynamic_array_with_precalculated_slot;
-    use dep::ethereum::misc::{bytes32::field_to_bytes32, bytes32_test::MAX_FIELD_VALUE};
+    use dep::ethereum::misc::bytes32::MAX_FIELD_VALUE;
     use dep::ethereum::uint256::U256;
 
     #[test]

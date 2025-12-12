@@ -2,7 +2,7 @@ mod mainnet {
     use crate::chain_id;
     use crate::nft::ERC721Token;
     use crate::slot::{dynamic_array_with_precalculated_slot, mapping, struct_slot};
-    use dep::ethereum::{misc::{bytes32::field_to_bytes32, types::Bytes32}, uint256::U256};
+    use dep::ethereum::uint256::U256;
     use dep::std::field::bytes32_to_field;
 
     pub fn BORED_APE_YACHT_CLUB() -> ERC721Token {

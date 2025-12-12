@@ -17,7 +17,7 @@ use crate::receipt::{
 };
 use crate::uint256::U256;
 
-pub(crate) trait Serde<let LEN: u32> {
+pub trait Serde<let LEN: u32> {
     fn serialize(self) -> [Field; LEN];
     fn deserialize(data: [Field; LEN]) -> Self;
 }

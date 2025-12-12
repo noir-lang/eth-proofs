@@ -2,7 +2,7 @@ use dep::ethereum::misc::types::Bytes32;
 use dep::ethereum::uint256::U256;
 use dep::keccak256::keccak256;
 
-global STORAGE_KEY_HASH_INPUT_LENGTH = 64;
+global STORAGE_KEY_HASH_INPUT_LENGTH: u32 = 64;
 
 pub(crate) fn mapping(slot: U256, key: Bytes32) -> U256 {
     let mut vector: BoundedVec<u8, STORAGE_KEY_HASH_INPUT_LENGTH> = BoundedVec::new();

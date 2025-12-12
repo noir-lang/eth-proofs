@@ -16,4 +16,4 @@ global code_hash: Bytes32 = [
     0x6b, 0x25, 0x33, 0x5c, 0xb1, 0x37, 0x16, 0xe0, 0xd1, 0xd3, 0x13, 0x83, 0xe6, 0xb4, 0x15, 0x05,
 ];
 
-pub(crate) global account: Account = Account { nonce, balance, storage_root, code_hash };
+pub global account: Account = Account { nonce, balance, storage_root, code_hash };
