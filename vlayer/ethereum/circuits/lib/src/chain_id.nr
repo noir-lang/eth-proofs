@@ -1,4 +1,4 @@
-global MAINNET: u32 = 1;
+pub(crate) global MAINNET: u32 = 1;
 //global ROPSTEN: u32 = 3;
 //global RINKEBY: u32 = 4;
 //global GOERLI: u32 = 5;
@@ -11,4 +11,4 @@ global MAINNET: u32 = 1;
 //global CELO: u32 = 42220;
 //global AVALANCHE: u32 = 43114;
 //global MUMBAI: u32 = 80001;
-global SEPOLIA: u32 = 11155111;
+pub(crate) global SEPOLIA: u32 = 11155111;
