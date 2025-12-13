@@ -40,11 +40,13 @@ mod is_crypto_punk_owner_main {
 
     #[test(should_fail_with = "Owner is not the same as the wallet address")]
     fn invalid_wallet() {
+        // Safety: test
         let _ = unsafe {
             OracleMock::mock("get_header").returns((
                 london_block_header_partial, london_block_header_rlp,
             ))
         };
+        // Safety: test
         let _ = unsafe {
             OracleMock::mock("get_proof").returns((
                 account, state_proof_input_serialized, proofs_serialized[0],

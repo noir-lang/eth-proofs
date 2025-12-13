@@ -10,7 +10,7 @@ mod is_ape_owner_main {
             state_proof::proof_input_serialized as state_proof_input_serialized,
             storage_proof::proofs_serialized,
         },
-        misc::arrays::alter_array,
+        misc::{arrays::alter_array, types::Address},
     };
     use dep::std::test::OracleMock;
 
