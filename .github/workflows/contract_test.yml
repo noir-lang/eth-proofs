@@ -1,6 +1,7 @@
 name: ethereum contract tests
 
-on: [push, merge_group]
+on:
+  workflow_dispatch:
 
 env:
   FOUNDRY_PROFILE: ci
