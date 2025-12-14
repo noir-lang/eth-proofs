@@ -129,7 +129,6 @@ mod dynamic_array_with_precalculated_slot {
 
 mod struct_slot {
     use crate::slot::struct_slot;
-    use dep::ethereum::misc::bytes32::field_to_bytes32;
     use dep::ethereum::uint256::U256;
 
     #[test]

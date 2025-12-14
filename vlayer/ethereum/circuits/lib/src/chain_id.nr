@@ -11,4 +11,4 @@ pub(crate) global MAINNET: u32 = 1;
 //global CELO: u32 = 42220;
 //global AVALANCHE: u32 = 43114;
 //global MUMBAI: u32 = 80001;
-pub(crate) global SEPOLIA: u32 = 11155111;
+//pub(crate) global SEPOLIA: u32 = 11155111;
