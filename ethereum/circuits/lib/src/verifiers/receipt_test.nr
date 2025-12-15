@@ -2,7 +2,7 @@ use crate::fixtures::mainnet::{
     cancun::{
         access_list::header::receipts_root,
         small_block::{
-            header::number as block_number,
+            header::{number as block_number, receipts_root as small_block_receipt_root},
             receipt::{encoded_receipt, receipt, tx_type},
             receipt_proof::proof_input,
             transaction::tx_idx,
@@ -30,7 +30,7 @@ fn test_verify_receipt_success() {
         tx_type,
         receipt,
         proof_input,
-        receipts_root,
+        small_block_receipt_root,
     );
 }
 
