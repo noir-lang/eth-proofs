@@ -1,13 +1,11 @@
 mod from_bytes32 {
-    use crate::uint256::{from, from_field};
+    use crate::uint256::from;
     use dep::bignum::bignum::BigNum;
     use dep::bignum::U256;
 
-    global high: u128 = 0x10000000000000000000000000000000;
-    global low: u128 = 0;
     global limit_u256: U256 = U256::zero() - U256::one();
 
-    global big_number: U256 = from_field(0x10000000000000000000000000000000);
+    global big_number: U256 = U256::modulus().udiv(U256::from(16));
 
     #[test]
     fn zero() {
@@ -18,7 +16,7 @@ mod from_bytes32 {
     #[test]
     fn success() {
         let mut bytes = [0x00; 32];
-        bytes[31] = 0x10;
+        bytes[0] = 0x10;
         assert_eq(from(bytes), big_number);
     }
 
@@ -30,13 +28,11 @@ mod from_bytes32 {
 }
 
 mod into_bytes32 {
-    use crate::uint256::{from_field, into};
+    use crate::uint256::into;
     use dep::bignum::bignum::BigNum;
     use dep::bignum::U256;
-    global high: u128 = 0x10000000000000000000000000000000;
-    global low: u128 = 0;
 
-    global big_number: U256 = from_field(0x10000000000000000000000000000000);
+    global big_number: U256 = U256::modulus().udiv(U256::from(16));
     global limit_u256: U256 = U256::zero() - U256::one();
 
     #[test]
@@ -48,7 +44,7 @@ mod into_bytes32 {
     #[test]
     fn success() {
         let mut bytes = [0x00; 32];
-        bytes[31] = 0x10;
+        bytes[0] = 0x10;
         assert_eq(into(big_number), bytes);
     }
 

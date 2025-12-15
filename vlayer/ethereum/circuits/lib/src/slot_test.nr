@@ -87,7 +87,7 @@ mod dynamic_array {
         assert_eq(expected_slot, dynamic_array(slot, 2, 7));
     }
 
-    #[test(should_fail_with = "attempt to add with overflow")]
+    #[test(should_fail_with = "Attempt to add with overflow")]
     fn fail_overflow() {
         let slot = from_field(6);
         let _ = dynamic_array(slot, 2, MAX_FIELD_VALUE);
@@ -121,7 +121,7 @@ mod dynamic_array_with_precalculated_slot {
         assert_eq(expected_slot, dynamic_array_with_precalculated_slot(slot, 10, 1_000_000_000));
     }
 
-    #[test(should_fail_with = "attempt to add with overflow")]
+    #[test(should_fail_with = "Attempt to add with overflow")]
     fn fail_overflow() {
         let slot = from([0xfe; 32]);
         let _ = dynamic_array_with_precalculated_slot(slot, 2, MAX_FIELD_VALUE);
@@ -142,7 +142,7 @@ mod struct_slot {
         assert_eq(expected_slot, struct_slot(slot, 256));
     }
 
-    #[test(should_fail_with = "attempt to add with overflow")]
+    #[test(should_fail_with = "Attempt to add with overflow")]
     fn overflow() {
         let slot = from([0xff; 32]);
         let _ = struct_slot(slot, 256);

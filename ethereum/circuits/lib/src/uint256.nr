@@ -1,11 +1,6 @@
-use crate::misc::arrays::memcpy_up_to_length;
-use crate::misc::bytes32::field_to_bytes32;
 use crate::misc::types::Bytes32;
 use dep::bignum::bignum::BigNum;
 use dep::bignum::U256 as u256;
-use dep::std::ops::Add;
-
-global uint128_overflow_value: Field = 340282366920938463463374607431768211456; // 2^128
 
 pub fn from(bytes: Bytes32) -> u256 {
     let mut bytes33 = [0; 33];

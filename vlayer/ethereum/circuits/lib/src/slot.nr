@@ -17,9 +17,14 @@ pub(crate) fn dynamic_array(slot: U256, size: Field, index: Field) -> U256 {
 }
 
 pub(crate) fn dynamic_array_with_precalculated_slot(slot: U256, size: Field, index: Field) -> U256 {
-    slot + from_field(size * index)
+    let product = from_field(size * index);
+    let sum = slot + product;
+    assert(sum >= slot, "Attempt to add with overflow");
+    sum
 }
 
 pub(crate) fn struct_slot(slot: U256, offset: Field) -> U256 {
-    slot + from_field(offset)
+    let sum = slot + from_field(offset);
+    assert(sum >= slot, "Attempt to add with overflow");
+    sum
 }
