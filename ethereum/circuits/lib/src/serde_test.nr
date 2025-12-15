@@ -14,18 +14,19 @@ mod U128_ {
 
 mod U256 {
     use crate::serde::Serde;
-    use crate::serde::U256_SERIALIZED_LEN;
-    use crate::uint256::U256;
+    use crate::serde::u256_SERIALIZED_LEN;
+    use crate::uint256::from_field;
+    use dep::bignum::bignum::BigNum;
+    use dep::bignum::U256;
 
-    global u128_number: u128 = 0x10000000000000000000000000000000;
+    global u128_number: Field = 0x10000000000000000000000000000000;
 
     #[test]
     fn simple() {
-        let value = U256::new(u128_number, u128_number);
-        let serialized: [Field; U256_SERIALIZED_LEN] = value.serialize();
-
-        assert_eq(serialized[0] as u128, u128_number);
-        assert_eq(serialized[1] as u128, u128_number);
+        let value = from_field(u128_number);
+        let serialized: [Field; u256_SERIALIZED_LEN] = value.serialize();
+        let s = serialized.map(|x: Field| x as u128);
+        assert_eq(U256::from_limbs(s), value);
         assert_eq(U256::deserialize(serialized), value);
     }
 }
