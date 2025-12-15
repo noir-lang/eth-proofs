@@ -34,6 +34,7 @@ mod into_bytes32 {
     use dep::bignum::bignum::BigNum;
     use dep::bignum::U256;
     global high: u128 = 0x10000000000000000000000000000000;
+    
     global low: u128 = 0;
 
     global big_number: U256 = from_field(0x10000000000000000000000000000000);
