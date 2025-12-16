@@ -21,7 +21,7 @@ done
 echo $REPORTS | jq '{ programs: . }' > brillig_report.json
 
 # Convert brillig report to benchmark format
-output_file_brillig="benchmark-brillig.json"
+output_file_brillig="../benchmark-brillig.json"
 jq -r '[.programs[] | .unconstrained_functions[] | {
     "name": (if (.package_name // "") == "" then .name else "\(.package_name | sub("^null/"; ""))/\(.name)" end),
     "unit": "opcodes",

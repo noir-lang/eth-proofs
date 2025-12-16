@@ -33,8 +33,8 @@ done
 echo "]}" >> gates_report.json 
 
 # Convert the gates report into separate benchmark files
-output_file_opcodes="benchmark-opcodes.json"
-output_file_circuit="benchmark-circuit.json"
+output_file_opcodes="../benchmark-opcodes.json"
+output_file_circuit="../benchmark-circuit.json"
 
 # Convert gates report - opcodes
 jq -r '[.programs[] | {
