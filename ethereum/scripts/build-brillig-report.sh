@@ -4,7 +4,7 @@ set -e
 INSPECTOR=${INSPECTOR:-noir-inspector}
 cd $(dirname "$0")/../
 
-artifacts_path="./export"
+artifacts_path="./../export"
 artifacts=$(ls $artifacts_path)
 
 # Start the JSON array

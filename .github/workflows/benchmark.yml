@@ -32,7 +32,7 @@ jobs:
               run: nargo export
 
             - name: Generate gates report
-              run: ./scripts/build-gates-report.sh
+              run: ./ethereum/scripts/build-gates-report.sh
               env:
                   BACKEND: /home/runner/.bb/bb
 
@@ -76,7 +76,7 @@ jobs:
               run: nargo export --force-brillig
 
             - name: Generate brillig report
-              run: ./scripts/build-brillig-report.sh
+              run: ./ethereum/scripts/build-brillig-report.sh
 
             - name: Store brillig benchmark result
               uses: benchmark-action/github-action-benchmark@v1
