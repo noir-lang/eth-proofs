@@ -25,14 +25,14 @@ jobs:
             - name: Install bb
               run: |
                   curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/refs/heads/next/barretenberg/bbup/install | bash
-                  ~/.bb/bbup -nv 1.0.0-beta.12
+                  ~/.bb/bbup -nv 1.0.0-beta.16
                   sudo apt install libc++-dev
 
             - name: Build Noir benchmark programs
               run: nargo export
 
             - name: Generate gates report
-              run: ./scripts/build-gates-report.sh
+              run: ./ethereum/scripts/build-gates-report.sh
               env:
                   BACKEND: /home/runner/.bb/bb
 
@@ -76,7 +76,7 @@ jobs:
               run: nargo export --force-brillig
 
             - name: Generate brillig report
-              run: ./scripts/build-brillig-report.sh
+              run: ./ethereum/scripts/build-brillig-report.sh
 
             - name: Store brillig benchmark result
               uses: benchmark-action/github-action-benchmark@v1
