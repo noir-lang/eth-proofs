@@ -27,7 +27,6 @@ type AccountWithStateProofM = (Account, ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, 
 
 type ProofInputSerialized<let LEN: u32> = [Field; LEN];
 
-#[export]
 pub fn get_account(chain_id: u32, block_no: u64, address: Address) -> AccountWithinBlock {
     // Safety: verification done separately
     let (account, state_proof) =

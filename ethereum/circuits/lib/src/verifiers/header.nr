@@ -50,7 +50,7 @@ pub fn verify_header(
         expected_header_fields_count == header_rlp_list.len(),
         "number of header RLP fields does not match",
     );
-    header_rlp_list.get(BLOCK_NUM_INDEX).assert_eq_u64(
+    header_rlp_list.get(BLOCK_NUM_INDEX).assert_eq_num::<12, 708, 8, u64>(
         "Block number",
         block_header_rlp,
         block_header_partial.number,

@@ -28,8 +28,12 @@ pub(crate) fn assert_account_equals(
     );
 
     let account_rlp = Fragment::from_array(account_rlp_right_padded);
-    account_rlp_list.get(NONCE_INDEX).assert_eq_u64("Nonce", account_rlp, account.nonce);
-    account_rlp_list.get(BALANCE_INDEX).assert_eq_u128(
+    account_rlp_list.get(NONCE_INDEX).assert_eq_num::<5, 110, 8, u64>(
+        "Nonce",
+        account_rlp,
+        account.nonce,
+    );
+    account_rlp_list.get(BALANCE_INDEX).assert_eq_num::<7, 110, 16, u128>(
         "Balance",
         account_rlp,
         account.balance as u128,

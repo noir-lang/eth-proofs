@@ -33,7 +33,7 @@ pub(crate) fn assert_receipt_rlp_equals<let MAX_ENCODED_LEN: u32>(
         );
     }
 
-    receipt_rlp_list.get(CUMULATIVE_GAS_USED_INDEX).assert_eq_u32(
+    receipt_rlp_list.get(CUMULATIVE_GAS_USED_INDEX).assert_eq_num::<19, MAX_ENCODED_LEN, 4, u32>(
         "Cumulative gas used",
         receipt_rlp,
         receipt.cumulative_gas_used,

@@ -1,8 +1,6 @@
 use crate::misc::bytes::byte_value;
 use crate::misc::fragment::Fragment;
 use crate::misc::types::{Address, Bytes32};
-use crate::verifiers::tx_helpers::idx::u32_to_u8;
-use crate::verifiers::tx_helpers::idx::u64_to_u8;
 
 // Enum for RLP data type
 pub(crate) global STRING: u32 = 0;
@@ -71,41 +69,16 @@ impl RlpFragment {
         self.assert_eq_bytes(field_name, rlp, Fragment::from_array([value as u8]));
     }
 
-    pub(crate) fn assert_eq_u8<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
+    pub fn assert_eq_num<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32, let N: u32, Num>(
         self,
         field_name: str<FIELD_NAME_LEN>,
         rlp: Fragment<MAX_RLP_LEN, u8>,
-        value: u8,
-    ) {
-        self.assert_eq_bounded_vec(field_name, rlp, byte_value([value]));
-    }
-
-    pub(crate) fn assert_eq_u32<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
-        self,
-        field_name: str<FIELD_NAME_LEN>,
-        rlp: Fragment<MAX_RLP_LEN, u8>,
-        value: u32,
-    ) {
-        self.assert_eq_bounded_vec(field_name, rlp, byte_value(u32_to_u8(value)));
-    }
-
-    pub fn assert_eq_u64<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
-        self,
-        field_name: str<FIELD_NAME_LEN>,
-        rlp: Fragment<MAX_RLP_LEN, u8>,
-        value: u64,
-    ) {
-        self.assert_eq_bounded_vec(field_name, rlp, byte_value(u64_to_u8(value)));
-    }
-
-    pub fn assert_eq_u128<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
-        self,
-        field_name: str<FIELD_NAME_LEN>,
-        rlp: Fragment<MAX_RLP_LEN, u8>,
-        value: u128,
-    ) {
-        let val: Field = value as Field;
-        self.assert_eq_bounded_vec(field_name, rlp, byte_value(val.to_be_bytes::<20>()));
+        value: Num,
+    )
+    where
+        Num: ToBEBytes<N>,
+    {
+        self.assert_eq_bounded_vec(field_name, rlp, value.to_bytes());
     }
 
     pub(crate) fn assert_eq_address<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
@@ -138,5 +111,33 @@ impl Eq for RlpFragment {
         (self.offset == other.offset)
             & (self.length == other.length)
             & (self.data_type == other.data_type)
+    }
+}
+
+trait ToBEBytes<let N: u32> {
+    fn to_bytes(self) -> BoundedVec<u8, N>;
+}
+
+impl ToBEBytes<1> for u8 {
+    fn to_bytes(self) -> BoundedVec<u8, 1> {
+        byte_value::<1>([self])
+    }
+}
+
+impl ToBEBytes<4> for u32 {
+    fn to_bytes(self) -> BoundedVec<u8, 4> {
+        byte_value::<4>((self as Field).to_be_bytes::<4>())
+    }
+}
+
+impl ToBEBytes<8> for u64 {
+    fn to_bytes(self) -> BoundedVec<u8, 8> {
+        byte_value::<8>((self as Field).to_be_bytes::<8>())
+    }
+}
+
+impl ToBEBytes<16> for u128 {
+    fn to_bytes(self) -> BoundedVec<u8, 16> {
+        byte_value::<16>((self as Field).to_be_bytes::<16>())
     }
 }

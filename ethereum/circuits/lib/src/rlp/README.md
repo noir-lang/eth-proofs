@@ -59,7 +59,7 @@ Whe working with RLP data - it's a common pattern to have a structure (Tx, Log, 
 ```rust
 let rlp = [...];
 let decoded = decode_list(Fragment::from_array(rlp));
-decoded.get(0).assert_eq_u64("nonce", rlp, 0x10);
+decoded.get(0).assert_eq_num("nonce", rlp, 0x10);
 decoded.get(1).assert_eq_address("to", rlp, [...]);
 ```
 
@@ -69,10 +69,7 @@ decoded.get(1).assert_eq_address("to", rlp, [...]);
 - `assert_eq_bounded_vec`
 - `assert_empty_string`
 - `assert_eq_u1`
-- `assert_eq_u8`
-- `assert_eq_u32`
-- `assert_eq_u64`
-- `assert_eq_u128`
+- `assert_eq_num`
 - `assert_eq_address`
 - `assert_eq_bytes32`
 
