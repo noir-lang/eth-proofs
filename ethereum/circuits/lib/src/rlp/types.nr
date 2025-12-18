@@ -105,7 +105,7 @@ impl RlpFragment {
         value: u128,
     ) {
         let val: Field = value as Field;
-        self.assert_eq_bounded_vec(field_name, rlp, byte_value(val.to_be_bytes::<20>()));
+        self.assert_eq_bounded_vec(field_name, rlp, byte_value(val.to_be_bytes::<16>()));
     }
 
     pub(crate) fn assert_eq_address<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
