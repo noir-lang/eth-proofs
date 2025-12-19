@@ -14,6 +14,7 @@ mod is_dao_worthy_main {
         storage_proof::proofs_serialized,
     };
     use dep::std::test::OracleMock;
+    use ethereum::serde::Serde;
 
     #[test]
     fn success_greater_then() {
@@ -21,15 +22,22 @@ mod is_dao_worthy_main {
         let recursive_proof =
             RecursiveProof { key_hash: 1, verification_key: [0; 114], proof: [0; 93] };
 
-        let _ = OracleMock::mock("get_storage_recursive").returns((
-            result.serialize(), recursive_proof,
-        ));
-        let _ = OracleMock::mock("get_header").returns((
-            paris_block_header_partial, paris_block_header_rlp,
-        ));
-        let _ = OracleMock::mock("get_proof").returns((
-            account, state_proof_input_serialized, proofs_serialized[0],
-        ));
+        // Safety: test
+        let _ = unsafe {
+            OracleMock::mock("get_storage_recursive").returns((result.serialize(), recursive_proof))
+        };
+        // Safety: test
+        let _ = unsafe {
+            OracleMock::mock("get_header").returns((
+                paris_block_header_partial, paris_block_header_rlp,
+            ))
+        };
+        // Safety: test
+        let _ = unsafe {
+            OracleMock::mock("get_proof").returns((
+                account, state_proof_input_serialized, proofs_serialized[0],
+            ))
+        };
 
         let block_number = 19_000_000;
         let circle_address = [

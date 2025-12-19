@@ -1,7 +1,7 @@
 name: circuit profiling
 
-on: [push, merge_group]
-
+on:
+  workflow_dispatch:
 jobs:
   test:
     name: nargo info

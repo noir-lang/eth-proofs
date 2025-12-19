@@ -1,4 +1,4 @@
-pub(crate) mod arrays;
+pub mod arrays;
 mod arrays_test;
 pub(crate) mod bounded_vecs;
 mod bounded_vecs_test;

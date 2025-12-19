@@ -1,8 +1,8 @@
-mod mainnet {
+pub mod mainnet {
     use crate::chain_id;
     use crate::nft::ERC721Token;
     use crate::slot::{dynamic_array_with_precalculated_slot, mapping, struct_slot};
-    use dep::ethereum::{misc::{bytes32::field_to_bytes32, types::Bytes32}, uint256::U256};
+    use dep::ethereum::uint256::U256;
     use dep::std::field::bytes32_to_field;
 
     pub fn BORED_APE_YACHT_CLUB() -> ERC721Token {
@@ -52,45 +52,6 @@ mod mainnet {
                 mapping(CRYPTO_PUNK_TOKEN_OWNERS_INNER_ENTRIES_SLOT, token_id)
             },
             chain_id: chain_id::MAINNET,
-        }
-    }
-}
-
-mod sepolia {
-    use crate::chain_id;
-    use crate::nft::ERC721Token;
-    use crate::slot::{dynamic_array_with_precalculated_slot, struct_slot};
-    use dep::ethereum::{misc::{bytes32::field_to_bytes32, types::Bytes32}, uint256::U256};
-    use dep::std::field::bytes32_to_field;
-
-    // free mint: https://sepolia.etherscan.io/address/0x80d97726548fedae6ad7cf8df4f2b514fd24afba#readContract
-    fn FAKE_BORED_APE_YACHT_CLUB() -> ERC721Token {
-        ERC721Token {
-            address: [
-                0x80, 0xd9, 0x77, 0x26, 0x54, 0x8f, 0xed, 0xae, 0x6a, 0xd7, 0xcf, 0x8d, 0xf4, 0xf2,
-                0xb5, 0x14, 0xfd, 0x24, 0xaf, 0xba,
-            ],
-            token_id_to_slot: |token_id| {
-                let BORED_APE_YACHT_CLUB_MAX_TOKEN_ID: u32 = 9999;
-                let BORED_APE_YACHT_CLUB_TOKEN_OWNERS_INNER_ENTRIES_SLOT = U256::from([
-                    0x40, 0x57, 0x87, 0xfa, 0x12, 0xa8, 0x23, 0xe0, 0xf2, 0xb7, 0x63, 0x1c, 0xc4,
-                    0x1b, 0x3b, 0xa8, 0x82, 0x8b, 0x33, 0x21, 0xca, 0x81, 0x11, 0x11, 0xfa, 0x75,
-                    0xcd, 0x3a, 0xa3, 0xbb, 0x5a, 0xce,
-                ]);
-                let VALUE_INDEX = 1;
-
-                assert(
-                    bytes32_to_field(token_id) as u32 <= BORED_APE_YACHT_CLUB_MAX_TOKEN_ID,
-                    "Token ID is too high",
-                );
-                let owner_slot = dynamic_array_with_precalculated_slot(
-                    BORED_APE_YACHT_CLUB_TOKEN_OWNERS_INNER_ENTRIES_SLOT,
-                    2,
-                    bytes32_to_field(token_id),
-                );
-                struct_slot(owner_slot, VALUE_INDEX)
-            },
-            chain_id: chain_id::SEPOLIA,
         }
     }
 }

@@ -2,7 +2,6 @@ name: Circuits E2E Tests
 
 on:
   workflow_dispatch:
-
 jobs:
   test:
     name: Circuits E2E Tests

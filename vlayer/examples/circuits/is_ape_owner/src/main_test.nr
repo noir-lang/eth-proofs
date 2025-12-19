@@ -10,24 +10,30 @@ mod is_ape_owner_main {
             state_proof::proof_input_serialized as state_proof_input_serialized,
             storage_proof::proofs_serialized,
         },
-        misc::arrays::alter_array,
+        misc::{arrays::alter_array, types::Address},
     };
     use dep::std::test::OracleMock;
 
-    global BORED_APE_OWNER_WALLER_ADDRESS = [
+    global BORED_APE_OWNER_WALLER_ADDRESS: Address = [
         0x13, 0x70, 0x24, 0xfc, 0xa6, 0xcd, 0x54, 0x2e, 0x95, 0x97, 0xd5, 0xa5, 0x51, 0xeb, 0xb1,
         0xbd, 0x12, 0xdc, 0xc7, 0x03,
     ];
-    global BLOCK_NUMBER = 19_000_000;
+    global BLOCK_NUMBER: u64 = 19_000_000;
 
     #[test]
     fn success() {
-        let _ = OracleMock::mock("get_header").returns((
-            paris_block_header_partial, paris_block_header_rlp,
-        ));
-        let _ = OracleMock::mock("get_proof").returns((
-            account, state_proof_input_serialized, proofs_serialized[0],
-        ));
+        // Safety: test
+        let _ = unsafe {
+            OracleMock::mock("get_header").returns((
+                paris_block_header_partial, paris_block_header_rlp,
+            ))
+        };
+        // Safety: test
+        let _ = unsafe {
+            OracleMock::mock("get_proof").returns((
+                account, state_proof_input_serialized, proofs_serialized[0],
+            ))
+        };
 
         let token_id = [
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -38,12 +44,18 @@ mod is_ape_owner_main {
 
     #[test(should_fail_with = "Owner is not the same as the wallet address")]
     fn invalid_wallet() {
-        let _ = OracleMock::mock("get_header").returns((
-            paris_block_header_partial, paris_block_header_rlp,
-        ));
-        let _ = OracleMock::mock("get_proof").returns((
-            account, state_proof_input_serialized, proofs_serialized[0],
-        ));
+        // Safety: test
+        let _ = unsafe {
+            OracleMock::mock("get_header").returns((
+                paris_block_header_partial, paris_block_header_rlp,
+            ))
+        };
+        // Safety: test
+        let _ = unsafe {
+            OracleMock::mock("get_proof").returns((
+                account, state_proof_input_serialized, proofs_serialized[0],
+            ))
+        };
 
         let token_id = [
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

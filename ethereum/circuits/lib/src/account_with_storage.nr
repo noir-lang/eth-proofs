@@ -44,9 +44,9 @@ struct StateAndStorageProofInput {
 }
 
 pub struct StorageWithinBlock<let N: u32> {
-    pub(crate) block_hash: Bytes32,
-    pub(crate) account: Account,
-    pub(crate) values: [Bytes32; N],
+    pub block_hash: Bytes32,
+    pub account: Account,
+    pub values: [Bytes32; N],
 }
 
 type ProofInputSerialized<let LEN: u32> = [Field; LEN];

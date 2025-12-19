@@ -5,25 +5,25 @@ use dep::std::ops::Add;
 
 global uint128_overflow_value: Field = 340282366920938463463374607431768211456; // 2^128
 
-pub(crate) struct U256 {
+pub struct U256 {
     pub(crate) high: u128,
     pub(crate) low: u128,
 }
 
 impl U256 {
-    pub(crate) fn new(high: u128, low: u128) -> Self {
+    pub fn new(high: u128, low: u128) -> Self {
         Self { high, low }
     }
 
-    pub(crate) fn zero() -> Self {
+    pub fn zero() -> Self {
         Self { high: 0, low: 0 }
     }
 
-    pub(crate) fn one() -> Self {
+    pub fn one() -> Self {
         Self { high: 0, low: 1 }
     }
 
-    pub(crate) fn from_field(field: Field) -> Self {
+    pub fn from_field(field: Field) -> Self {
         U256::from(field_to_bytes32(field))
     }
 }

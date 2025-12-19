@@ -1,4 +1,4 @@
-use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
+use crate::{merkle_patricia_proofs::proof::{Proof, ProofInput}, serde::Serde};
 
 pub(crate) global proof_input: ProofInput<66, 110, 10, 148> = ProofInput {
     key: [
@@ -437,3 +437,5 @@ pub(crate) global proof_input: ProofInput<66, 110, 10, 148> = ProofInput {
         depth: 9,
     },
 };
+
+pub global proof_input_serialized: [Field; 5645] = proof_input.serialize();

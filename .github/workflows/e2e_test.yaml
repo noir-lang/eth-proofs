@@ -2,6 +2,7 @@ name: E2E Tests
 
 on:
   workflow_dispatch:
+
 jobs:
   test:
     name: E2E Tests

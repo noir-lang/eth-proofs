@@ -1,4 +1,5 @@
 use dep::ethereum::misc::types::Address;
+use dep::token::token::ERC20;
 use dep::token::token_list::mainnet::USDC;
 
 mod main_test;

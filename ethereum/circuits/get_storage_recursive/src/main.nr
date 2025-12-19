@@ -3,7 +3,6 @@ use dep::ethereum::{
     misc::types::{Address, Bytes32},
 };
 
-#[recursive]
 fn main(
     chain_id: pub Field,
     block_number: pub u64,
