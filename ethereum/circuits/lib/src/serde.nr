@@ -15,7 +15,8 @@ use crate::receipt::{
     MAX_PREFIXED_KEY_NIBBLE_LEN as RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN,
     MAX_VALUE_LEN_M as RECEIPT_MAX_VALUE_LEN_M,
 };
-use crate::uint256::U256;
+use dep::bignum::bignum::BigNum;
+use dep::bignum::U256 as u256;
 
 pub trait Serde<let LEN: u32> {
     fn serialize(self) -> [Field; LEN];
@@ -34,15 +35,18 @@ impl Serde<U128_SERIALIZED_LEN> for u128 {
     }
 }
 
-pub(crate) global U256_SERIALIZED_LEN: u32 = 2;
+pub(crate) global u256_SERIALIZED_LEN: u32 = 3;
 
-impl Serde<U256_SERIALIZED_LEN> for U256 {
-    fn serialize(self) -> [Field; U256_SERIALIZED_LEN] {
-        [self.low as Field, self.high as Field]
+impl Serde<u256_SERIALIZED_LEN> for u256 {
+    fn serialize(self) -> [Field; u256_SERIALIZED_LEN] {
+        self.get_limbs().map(|x: u128| x as Field)
     }
 
-    fn deserialize(data: [Field; U256_SERIALIZED_LEN]) -> Self {
-        U256 { low: data[0] as u128, high: data[1] as u128 }
+    fn deserialize(data: [Field; u256_SERIALIZED_LEN]) -> Self {
+        for i in 0..u256_SERIALIZED_LEN {
+            data[i].assert_max_bit_size::<120>();
+        }
+        u256::from_limbs(data.map(|x: Field| x as u128))
     }
 }
 
