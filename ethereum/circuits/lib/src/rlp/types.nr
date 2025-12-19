@@ -127,32 +127,3 @@ impl<let MAX_FIELD_VALUE_LEN: u32> ToRlpFragment<MAX_FIELD_VALUE_LEN> for Fragme
         self
     }
 }
-
-// Implementations for numeric types using ToBEBytes
-trait ToBEBytes<let N: u32> {
-    fn to_bytes(self) -> BoundedVec<u8, N>;
-}
-
-impl ToBEBytes<1> for u8 {
-    fn to_bytes(self) -> BoundedVec<u8, 1> {
-        byte_value::<1>([self])
-    }
-}
-
-impl ToBEBytes<4> for u32 {
-    fn to_bytes(self) -> BoundedVec<u8, 4> {
-        byte_value::<4>((self as Field).to_be_bytes::<4>())
-    }
-}
-
-impl ToBEBytes<8> for u64 {
-    fn to_bytes(self) -> BoundedVec<u8, 8> {
-        byte_value::<8>((self as Field).to_be_bytes::<8>())
-    }
-}
-
-impl ToBEBytes<16> for u128 {
-    fn to_bytes(self) -> BoundedVec<u8, 16> {
-        byte_value::<16>((self as Field).to_be_bytes::<16>())
-    }
-}
