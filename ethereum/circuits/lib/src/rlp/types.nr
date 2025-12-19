@@ -29,27 +29,22 @@ pub struct RlpFragment {
 }
 
 impl RlpFragment {
-    pub(crate) fn assert_eq_bytes<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32, let MAX_VALUE_LEN: u32>(
+    pub fn assert_eq_value<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32, let MAX_VALUE_LEN: u32, VALUE_TYPE>(
         self,
         field_name: str<FIELD_NAME_LEN>,
         rlp: Fragment<MAX_RLP_LEN, u8>,
-        value: Fragment<MAX_VALUE_LEN, u8>,
-    ) {
+        value: VALUE_TYPE,
+    )
+    where
+        VALUE_TYPE: ToRlpFragment<MAX_VALUE_LEN>,
+    {
+        let value_fragment = value.to_fragment();
         assert(self.data_type == STRING, f"{field_name}: Invalid RLP type");
-        assert(self.length == value.length, f"{field_name}: Invalid RLP length");
+        assert(self.length == value_fragment.length, f"{field_name}: Invalid RLP length");
         assert(
-            rlp.subfragment(self.offset, self.length).eq(value),
+            rlp.subfragment(self.offset, self.length).eq(value_fragment),
             f"{field_name}: Invalid RLP value",
         );
-    }
-
-    pub(crate) fn assert_eq_bounded_vec<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32, let MAX_VALUE_LEN: u32>(
-        self,
-        field_name: str<FIELD_NAME_LEN>,
-        rlp: Fragment<MAX_RLP_LEN, u8>,
-        value: BoundedVec<u8, MAX_VALUE_LEN>,
-    ) {
-        self.assert_eq_bytes(field_name, rlp, Fragment::from_vec(value));
     }
 
     pub(crate) fn assert_empty_string<let FIELD_NAME_LEN: u32>(
@@ -58,45 +53,6 @@ impl RlpFragment {
     ) {
         assert(self.data_type == STRING, f"{field_name}: Invalid RLP type");
         assert(self.length == 0, f"{field_name}: Expected empty string");
-    }
-
-    pub(crate) fn assert_eq_u1<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
-        self,
-        field_name: str<FIELD_NAME_LEN>,
-        rlp: Fragment<MAX_RLP_LEN, u8>,
-        value: u1,
-    ) {
-        self.assert_eq_bytes(field_name, rlp, Fragment::from_array([value as u8]));
-    }
-
-    pub fn assert_eq_num<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32, let N: u32, Num>(
-        self,
-        field_name: str<FIELD_NAME_LEN>,
-        rlp: Fragment<MAX_RLP_LEN, u8>,
-        value: Num,
-    )
-    where
-        Num: ToBEBytes<N>,
-    {
-        self.assert_eq_bounded_vec(field_name, rlp, value.to_bytes());
-    }
-
-    pub(crate) fn assert_eq_address<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
-        self,
-        field_name: str<FIELD_NAME_LEN>,
-        rlp: Fragment<MAX_RLP_LEN, u8>,
-        value: Address,
-    ) {
-        self.assert_eq_bytes(field_name, rlp, Fragment::from_array(value));
-    }
-
-    pub(crate) fn assert_eq_bytes32<let FIELD_NAME_LEN: u32, let MAX_RLP_LEN: u32>(
-        self,
-        field_name: str<FIELD_NAME_LEN>,
-        rlp: Fragment<MAX_RLP_LEN, u8>,
-        value: Bytes32,
-    ) {
-        self.assert_eq_bytes(field_name, rlp, Fragment::from_array(value));
     }
 }
 
@@ -114,6 +70,65 @@ impl Eq for RlpFragment {
     }
 }
 
+trait ToRlpFragment<let MAX_VALUE_LEN: u32> {
+    fn to_fragment(self) -> Fragment<MAX_VALUE_LEN, u8>;
+}
+
+impl ToRlpFragment<1> for u1 {
+    fn to_fragment(self) -> Fragment<1, u8> {
+        Fragment::from_array([self as u8])
+    }
+}
+
+impl ToRlpFragment<1> for u8 {
+    fn to_fragment(self) -> Fragment<1, u8> {
+        Fragment::from_vec(byte_value::<1>([self]))
+    }
+}
+
+impl ToRlpFragment<4> for u32 {
+    fn to_fragment(self) -> Fragment<4, u8> {
+        Fragment::from_vec(byte_value::<4>((self as Field).to_be_bytes::<4>()))
+    }
+}
+
+impl ToRlpFragment<8> for u64 {
+    fn to_fragment(self) -> Fragment<8, u8> {
+        Fragment::from_vec(byte_value::<8>((self as Field).to_be_bytes::<8>()))
+    }
+}
+
+impl ToRlpFragment<16> for u128 {
+    fn to_fragment(self) -> Fragment<16, u8> {
+        Fragment::from_vec(byte_value::<16>((self as Field).to_be_bytes::<16>()))
+    }
+}
+
+impl ToRlpFragment<20> for Address {
+    fn to_fragment(self) -> Fragment<20, u8> {
+        Fragment::from_array(self)
+    }
+}
+
+impl ToRlpFragment<32> for Bytes32 {
+    fn to_fragment(self) -> Fragment<32, u8> {
+        Fragment::from_array(self)
+    }
+}
+
+impl<let MAX_FIELD_VALUE_LEN: u32> ToRlpFragment<MAX_FIELD_VALUE_LEN> for BoundedVec<u8, MAX_FIELD_VALUE_LEN> {
+    fn to_fragment(self) -> Fragment<MAX_FIELD_VALUE_LEN, u8> {
+        Fragment::from_vec(self)
+    }
+}
+
+impl<let MAX_FIELD_VALUE_LEN: u32> ToRlpFragment<MAX_FIELD_VALUE_LEN> for Fragment<MAX_FIELD_VALUE_LEN, u8> {
+    fn to_fragment(self) -> Fragment<MAX_FIELD_VALUE_LEN, u8> {
+        self
+    }
+}
+
+// Implementations for numeric types using ToBEBytes
 trait ToBEBytes<let N: u32> {
     fn to_bytes(self) -> BoundedVec<u8, N>;
 }
