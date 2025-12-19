@@ -1,7 +1,7 @@
 name: circuit profiling
 
 on:
-
+  workflow_dispatch:
 jobs:
   test:
     name: nargo info
