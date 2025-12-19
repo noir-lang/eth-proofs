@@ -43,6 +43,9 @@ impl Serde<u256_SERIALIZED_LEN> for u256 {
     }
 
     fn deserialize(data: [Field; u256_SERIALIZED_LEN]) -> Self {
+        for i in 0..u256_SERIALIZED_LEN {
+            data[i].assert_max_bit_size::<120>();
+        }
         u256::from_limbs(data.map(|x: Field| x as u128))
     }
 }
