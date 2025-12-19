@@ -10,7 +10,7 @@ mod rlp_fragment {
 
         #[test]
         fn success() {
-            fragment.assert_eq_bytes("Field", encoded_bytes, bytes)
+            fragment.assert_eq_value("Field", encoded_bytes, bytes)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP type")]
@@ -18,7 +18,7 @@ mod rlp_fragment {
             let mut invalid_type_fragment = fragment;
             invalid_type_fragment.data_type = LIST;
 
-            invalid_type_fragment.assert_eq_bytes("Field", encoded_bytes, bytes)
+            invalid_type_fragment.assert_eq_value("Field", encoded_bytes, bytes)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP length")]
@@ -26,59 +26,19 @@ mod rlp_fragment {
             let mut invalid_length_fragment = fragment;
             invalid_length_fragment.length += 1;
 
-            invalid_length_fragment.assert_eq_bytes("Field", encoded_bytes, bytes)
+            invalid_length_fragment.assert_eq_value("Field", encoded_bytes, bytes)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP length")]
         fn invalid_length_given() {
             let mut invalid_length_bytes = bytes;
             invalid_length_bytes.push_back(0x00);
-            fragment.assert_eq_bytes("Field", encoded_bytes, invalid_length_bytes)
+            fragment.assert_eq_value("Field", encoded_bytes, invalid_length_bytes)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP value")]
         fn invalid_value() {
-            fragment.assert_eq_bytes("Field", encoded_bytes, alter_fragment(bytes))
-        }
-    }
-
-    mod assert_eq_bounded_vec {
-        use crate::misc::{arrays::alter_array, fragment::Fragment};
-        use crate::rlp::types::{RlpFragment, STRING};
-
-        global bytes: [u8; 2] = [0x12, 0x34];
-        global length: u32 = bytes.len();
-        global bounded_vec: BoundedVec<u8, 2> = BoundedVec::from_parts(bytes, length);
-        global encoded_bytes: Fragment<2, u8> = Fragment::from_array(bytes);
-        global fragment: RlpFragment = RlpFragment { offset: 0, length, data_type: STRING };
-
-        #[test]
-        fn success_short() {
-            let short_fragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
-            let short_bounded_vec: BoundedVec<u8, 2> = BoundedVec::from_parts(bytes, 1);
-
-            short_fragment.assert_eq_bounded_vec("Field", encoded_bytes, short_bounded_vec)
-        }
-
-        #[test]
-        fn success() {
-            fragment.assert_eq_bounded_vec("Field", encoded_bytes, bounded_vec)
-        }
-
-        #[test(should_fail_with = "Field: Invalid RLP length")]
-        fn invalid_length() {
-            let mut invalid_length_fragment = fragment;
-            invalid_length_fragment.length = 1;
-
-            invalid_length_fragment.assert_eq_bounded_vec("Field", encoded_bytes, bounded_vec)
-        }
-
-        #[test(should_fail_with = "Field: Invalid RLP value")]
-        fn invalid_value() {
-            let invalid_value_bounded_vec: BoundedVec<u8, 2> =
-                BoundedVec::from_parts(alter_array(bytes), length);
-
-            fragment.assert_eq_bounded_vec("Field", encoded_bytes, invalid_value_bounded_vec)
+            fragment.assert_eq_value("Field", encoded_bytes, alter_fragment(bytes))
         }
     }
 
@@ -119,7 +79,7 @@ mod rlp_fragment {
 
         #[test]
         fn success() {
-            fragment.assert_eq_u1("Field", encoded_value, bit_value)
+            fragment.assert_eq_value("Field", encoded_value, bit_value)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP length")]
@@ -127,18 +87,18 @@ mod rlp_fragment {
             let mut invalid_length_fragment = fragment;
             invalid_length_fragment.length = 2;
 
-            invalid_length_fragment.assert_eq_u1("Field", encoded_value, bit_value)
+            invalid_length_fragment.assert_eq_value("Field", encoded_value, bit_value)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP value")]
         fn invalid_value() {
-            fragment.assert_eq_u1("Field", encoded_value, bit_value - 1)
+            fragment.assert_eq_value("Field", encoded_value, bit_value - 1)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP value")]
         fn invalid_value_exceeding_bit() {
             let invalid_over_bit_encoded_value = Fragment::from_array([0x11]);
-            fragment.assert_eq_u1("Field", invalid_over_bit_encoded_value, bit_value)
+            fragment.assert_eq_value("Field", invalid_over_bit_encoded_value, bit_value)
         }
     }
 
@@ -152,7 +112,7 @@ mod rlp_fragment {
 
         #[test]
         fn success() {
-            fragment.assert_eq_u8("Field", encoded_value, value as u8)
+            fragment.assert_eq_value("Field", encoded_value, value as u8)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP length")]
@@ -160,12 +120,12 @@ mod rlp_fragment {
             let mut invalid_length_fragment = fragment;
             invalid_length_fragment.length = 2;
 
-            invalid_length_fragment.assert_eq_u8("Field", encoded_value, value)
+            invalid_length_fragment.assert_eq_value("Field", encoded_value, value)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP value")]
         fn invalid_value() {
-            fragment.assert_eq_u8("Field", encoded_value, value + 1)
+            fragment.assert_eq_value("Field", encoded_value, value + 1)
         }
     }
 
@@ -179,18 +139,18 @@ mod rlp_fragment {
 
         #[test]
         fn success() {
-            fragment.assert_eq_u32("Field", encoded_value, value)
+            fragment.assert_eq_value("Field", encoded_value, value)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP length")]
         fn invalid_length() {
-            let short_value = 0x10;
-            fragment.assert_eq_u32("Field", encoded_value, short_value)
+            let short_value: u32 = 0x10;
+            fragment.assert_eq_value("Field", encoded_value, short_value)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP value")]
         fn invalid_value() {
-            fragment.assert_eq_u32("Field", encoded_value, value + 1)
+            fragment.assert_eq_value("Field", encoded_value, value + 1)
         }
     }
 
@@ -205,18 +165,18 @@ mod rlp_fragment {
 
         #[test]
         fn success() {
-            fragment.assert_eq_u64("Field", encoded_value, value)
+            fragment.assert_eq_value("Field", encoded_value, value)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP length")]
         fn invalid_length() {
-            let short_value = 0x10;
-            fragment.assert_eq_u64("Field", encoded_value, short_value)
+            let short_value: u64 = 0x10;
+            fragment.assert_eq_value("Field", encoded_value, short_value)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP value")]
         fn invalid_value() {
-            fragment.assert_eq_u64("Field", encoded_value, value + 1)
+            fragment.assert_eq_value("Field", encoded_value, value + 1)
         }
     }
 
@@ -233,18 +193,18 @@ mod rlp_fragment {
 
         #[test]
         fn success() {
-            fragment.assert_eq_u128("Field", encoded_value, value)
+            fragment.assert_eq_value("Field", encoded_value, value)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP length")]
         fn invalid_length() {
             let short_value = 0x10 as u128;
-            fragment.assert_eq_u128("Field", encoded_value, short_value)
+            fragment.assert_eq_value("Field", encoded_value, short_value)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP value")]
         fn invalid_value() {
-            fragment.assert_eq_u128("Field", encoded_value, value + 1)
+            fragment.assert_eq_value("Field", encoded_value, value + 1)
         }
     }
 
@@ -258,7 +218,7 @@ mod rlp_fragment {
 
         #[test]
         fn success() {
-            fragment.assert_eq_address("Field", address_fragment, address)
+            fragment.assert_eq_value("Field", address_fragment, address)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP length")]
@@ -266,12 +226,12 @@ mod rlp_fragment {
             let mut invalid_length_fragment = fragment;
             invalid_length_fragment.length = 2;
 
-            invalid_length_fragment.assert_eq_address("Field", address_fragment, address)
+            invalid_length_fragment.assert_eq_value("Field", address_fragment, address)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP value")]
         fn invalid_value() {
-            fragment.assert_eq_address("Field", address_fragment, alter_array(address))
+            fragment.assert_eq_value("Field", address_fragment, alter_array(address))
         }
     }
 
@@ -287,7 +247,7 @@ mod rlp_fragment {
 
         #[test]
         fn success() {
-            fragment.assert_eq_bytes32("Field", bytes_fragment, bytes)
+            fragment.assert_eq_value("Field", bytes_fragment, bytes)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP length")]
@@ -295,12 +255,12 @@ mod rlp_fragment {
             let mut invalid_length_fragment = fragment;
             invalid_length_fragment.length = 2;
 
-            invalid_length_fragment.assert_eq_bytes32("Field", bytes_fragment, bytes)
+            invalid_length_fragment.assert_eq_value("Field", bytes_fragment, bytes)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP value")]
         fn invalid_value() {
-            fragment.assert_eq_bytes32("Field", bytes_fragment, alter_array(bytes))
+            fragment.assert_eq_value("Field", bytes_fragment, alter_array(bytes))
         }
     }
 }

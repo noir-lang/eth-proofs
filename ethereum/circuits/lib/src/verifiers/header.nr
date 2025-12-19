@@ -50,22 +50,22 @@ pub fn verify_header(
         expected_header_fields_count == header_rlp_list.len(),
         "number of header RLP fields does not match",
     );
-    header_rlp_list.get(BLOCK_NUM_INDEX).assert_eq_u64(
+    header_rlp_list.get(BLOCK_NUM_INDEX).assert_eq_value(
         "Block number",
         block_header_rlp,
         block_header_partial.number,
     );
-    header_rlp_list.get(STATE_ROOT_INDEX).assert_eq_bytes32(
+    header_rlp_list.get(STATE_ROOT_INDEX).assert_eq_value(
         "State root",
         block_header_rlp,
         block_header_partial.state_root,
     );
-    header_rlp_list.get(TRANSACTIONS_ROOT_INDEX).assert_eq_bytes32(
+    header_rlp_list.get(TRANSACTIONS_ROOT_INDEX).assert_eq_value(
         "Transactions root",
         block_header_rlp,
         block_header_partial.transactions_root,
     );
-    header_rlp_list.get(RECEIPTS_ROOT_INDEX).assert_eq_bytes32(
+    header_rlp_list.get(RECEIPTS_ROOT_INDEX).assert_eq_value(
         "Receipts root",
         block_header_rlp,
         block_header_partial.receipts_root,
