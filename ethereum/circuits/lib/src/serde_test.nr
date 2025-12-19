@@ -1,7 +1,6 @@
 mod U128_ {
 
     use crate::serde::{Serde, U128_SERIALIZED_LEN};
-    use crate::serde::{Serde, U128_SERIALIZED_LEN};
 
     #[test]
     fn simple() {
@@ -37,7 +36,6 @@ mod U256 {
 
 mod u8_array {
     use crate::{misc::types::{Address, ADDRESS_LENGTH, Bytes32, BYTES32_LENGTH}, serde::Serde};
-    use crate::{misc::types::{Address, ADDRESS_LENGTH, Bytes32, BYTES32_LENGTH}, serde::Serde};
 
     #[test]
     fn bytes32() {
@@ -64,7 +62,6 @@ mod account {
     use crate::misc::arrays::sub_array_equals;
     use crate::serde::ACCOUNT_LEN;
     use crate::serde::Serde;
-    use crate::serde::Serde;
 
     #[test]
     fn simple() {
@@ -83,7 +80,6 @@ mod account_within_block {
     use crate::fixtures::mainnet::london::vitalik_balance::{account::account, header::hash};
     use crate::misc::arrays::sub_array_equals;
     use crate::serde::{ACCOUNT_BLOCK_LEN, ACCOUNT_LEN};
-    use crate::serde::Serde;
     use crate::serde::Serde;
 
     #[test]
@@ -108,7 +104,6 @@ mod storage_within_block {
     };
     use crate::misc::{arrays::sub_array_equals, types::BYTES32_LENGTH};
     use crate::serde::{ACCOUNT_LEN, STORAGE_BLOCK_LEN};
-    use crate::serde::Serde;
     use crate::serde::Serde;
 
     #[test]
@@ -137,7 +132,6 @@ mod nodes {
     use crate::misc::arrays::sub_array_equals;
     use crate::serde::{deserialize_receipt_nodes, serialize_receipt_nodes};
     use crate::serde::Serde;
-    use crate::serde::Serde;
 
     #[test]
     fn simple() {
@@ -158,8 +152,6 @@ mod proof {
     use crate::fixtures::mainnet::cancun::small_block::receipt_proof::proof_input;
     use crate::misc::arrays::sub_array_equals;
     use crate::receipt::MAX_LEAF_LEN_M as RECEIPT_MAX_LEAF_LEN_M;
-    use crate::receipt::MAX_LEAF_LEN_M as RECEIPT_MAX_LEAF_LEN_M;
-    use crate::serde::{RECEIPT_NODES_LEN, Serde, serialize_receipt_nodes};
     use crate::serde::{RECEIPT_NODES_LEN, Serde, serialize_receipt_nodes};
 
     #[test]
@@ -183,7 +175,6 @@ mod proof_input {
         MAX_PREFIXED_KEY_NIBBLE_LEN as RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN,
         MAX_VALUE_LEN_M as RECEIPT_MAX_VALUE_LEN_M,
     };
-    use crate::serde::Serde;
     use crate::serde::Serde;
 
     #[test]
