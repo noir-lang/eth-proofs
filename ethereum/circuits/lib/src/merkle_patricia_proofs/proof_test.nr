@@ -91,9 +91,9 @@ mod extract_hash_from_branch_node {
     use crate::rlp::decode::decode_list_of_small_strings;
     use crate::rlp::types::RlpList;
 
-    global key = branch_input.key;
-    global branch_node = branch_input.proof.nodes[0];
-    global branch_hash = Fragment::from_array([
+    global key: [u8; 4] = branch_input.key;
+    global branch_node: [u8; 532] = branch_input.proof.nodes[0];
+    global branch_hash: Fragment<32, u8> = Fragment::from_array([
         0x4d, 0xf3, 0xf1, 0x5d, 0xfc, 0x22, 0x96, 0x36, 0xc2, 0x7f, 0x5f, 0xfb, 0x66, 0x73, 0x0d,
         0x90, 0x41, 0x23, 0xd3, 0xd8, 0xd6, 0xe3, 0xbc, 0xf0, 0x32, 0x5d, 0xf7, 0x1e, 0x13, 0xfb,
         0xec, 0xbb,
@@ -141,7 +141,6 @@ mod extract_hash_from_branch_node {
 mod extract_hash_from_extension_node {
 
     use crate::fixtures::merkle_proofs::{
-        branch_then_leaf::proof_input as branch_input,
         extension_even::proof_input as extension_even_input,
         extension_odd::proof_input as extension_odd_input,
     };
@@ -150,7 +149,7 @@ mod extract_hash_from_extension_node {
     use crate::rlp::decode::decode_list_of_small_strings;
     use crate::rlp::types::RlpList;
 
-    global extension_hash = Fragment::from_array([
+    global extension_hash: Fragment<32, u8> = Fragment::from_array([
         0x60, 0xc1, 0xdf, 0x16, 0xda, 0x26, 0x84, 0x73, 0xae, 0xe6, 0xb0, 0x02, 0xca, 0xe7, 0x9c,
         0xf9, 0x10, 0xd1, 0xfa, 0x0b, 0xc8, 0xc0, 0x66, 0x9a, 0xfa, 0x63, 0x1b, 0xae, 0xd0, 0xeb,
         0x6f, 0x52,
@@ -392,9 +391,10 @@ mod verify_node_hash {
 
     use crate::fixtures::merkle_proofs::branch_then_leaf::proof_input;
     use crate::merkle_patricia_proofs::proof::verify_node_hash;
+    use crate::misc::types::Bytes32;
 
-    global node = proof_input.proof.nodes[0];
-    global node_hash = [
+    global node: [u8; 532] = proof_input.proof.nodes[0];
+    global node_hash: Bytes32 = [
         0x50, 0x7a, 0x49, 0xdf, 0x2b, 0x19, 0x39, 0x4b, 0x69, 0xa1, 0xdd, 0x55, 0x3b, 0x47, 0x4c,
         0x65, 0xe1, 0xd1, 0xe6, 0x54, 0x36, 0xa2, 0x21, 0xe9, 0xc6, 0x52, 0xdb, 0x84, 0x3f, 0xf3,
         0xed, 0x12,
@@ -419,18 +419,19 @@ mod verify_leaf {
     use crate::merkle_patricia_proofs::proof::verify_leaf;
     use crate::misc::{bytes::bytes_to_nibbles, fragment::Fragment};
 
-    global empty_key = Fragment::new_with_length(0, [0; 2]);
-    global empty_value = [];
-    global empty_leaf = [0xc2, 0x20, 0x80]; // ["0x20","0x"]
+    global empty_key: Fragment<2, u8> = Fragment::new_with_length(0, [0; 2]);
+    global empty_value: [u8; 0] = [];
+    global empty_leaf: [u8; 3] = [0xc2, 0x20, 0x80]; // ["0x20","0x"]
 
     global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 6;
     global MAX_VALUE_LEN: u32 = 3;
-    global some_key = [0xab, 0xcd];
+    global some_key: [u8; 2] = [0xab, 0xcd];
     global some_key_fragment: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8> =
         Fragment::from_array_resize(some_key);
-    global some_key_nibbles = bytes_to_nibbles(some_key_fragment);
+    global some_key_nibbles: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8> =
+        bytes_to_nibbles(some_key_fragment);
     global some_value: [u8; MAX_VALUE_LEN] = [0x00, 0x12, 0x34];
-    global some_leaf = [0xc6, 0x82, 0x20, 0xcd, 0x82, 0x12, 0x34]; // ["0x20bc","0x1234"]
+    global some_leaf: [u8; 7] = [0xc6, 0x82, 0x20, 0xcd, 0x82, 0x12, 0x34]; // ["0x20bc","0x1234"]
 
     #[test]
     fn success_empty() {
@@ -701,7 +702,7 @@ mod verify_merkle_proof {
     #[test(should_fail_with = "Invalid node hash")]
     fn fail_invalid_proof() {
         let mut invalid_proof = london_state_proof_input.proof;
-        invalid_proof.nodes[invalid_proof.depth - 2][0] -= 1;
+        invalid_proof.nodes[invalid_proof.depth as u32 - 2][0] -= 1;
         verify_merkle_proof(
             london_state_proof_input.key,
             london_state_proof_input.value,

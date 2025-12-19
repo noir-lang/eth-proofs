@@ -9,41 +9,40 @@ use crate::account_with_storage::{
     MAX_STORAGE_LEAF_LEN, MAX_STORAGE_VALUE_LEN,
 };
 use crate::merkle_patricia_proofs::proof::{MAX_NODE_LEN, Node, Proof, ProofInput};
-use crate::misc::{fragment::Fragment, types::{Address, ADDRESS_LENGTH, Bytes32, BYTES32_LENGTH}};
+use crate::misc::{fragment::Fragment, types::BYTES32_LENGTH};
 use crate::receipt::{
     MAX_DEPTH_NO_LEAF as RECEIPT_MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M as RECEIPT_MAX_LEAF_LEN_M,
     MAX_PREFIXED_KEY_NIBBLE_LEN as RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN,
     MAX_VALUE_LEN_M as RECEIPT_MAX_VALUE_LEN_M,
 };
 use crate::uint256::U256;
-use dep::std::mem::zeroed;
 
-trait Serde<let LEN: u32> {
+pub(crate) trait Serde<let LEN: u32> {
     fn serialize(self) -> [Field; LEN];
     fn deserialize(data: [Field; LEN]) -> Self;
 }
 
-global U128_SERIALIZED_LEN: u32 = 2;
+pub(crate) global U128_SERIALIZED_LEN: u32 = 1;
 
-impl Serde<U128_SERIALIZED_LEN> for U128 {
+impl Serde<U128_SERIALIZED_LEN> for u128 {
     fn serialize(self) -> [Field; U128_SERIALIZED_LEN] {
-        [self.lo, self.hi]
+        [self as Field]
     }
 
     fn deserialize(data: [Field; U128_SERIALIZED_LEN]) -> Self {
-        U128 { lo: data[0], hi: data[1] }
+        data[0] as u128
     }
 }
 
-global U256_SERIALIZED_LEN: u32 = 4;
+pub(crate) global U256_SERIALIZED_LEN: u32 = 2;
 
 impl Serde<U256_SERIALIZED_LEN> for U256 {
     fn serialize(self) -> [Field; U256_SERIALIZED_LEN] {
-        [self.low.lo, self.low.hi, self.high.lo, self.high.hi]
+        [self.low as Field, self.high as Field]
     }
 
     fn deserialize(data: [Field; U256_SERIALIZED_LEN]) -> Self {
-        U256 { low: U128 { lo: data[0], hi: data[1] }, high: U128 { lo: data[2], hi: data[3] } }
+        U256 { low: data[0] as u128, high: data[1] as u128 }
     }
 }
 
@@ -57,7 +56,7 @@ impl<let LEN: u32> Serde<LEN> for [u8; LEN] {
     }
 }
 
-global ACCOUNT_LEN: u32 = 1 + 1 + BYTES32_LENGTH + BYTES32_LENGTH;
+pub(crate) global ACCOUNT_LEN: u32 = 1 + 1 + BYTES32_LENGTH + BYTES32_LENGTH;
 
 impl Serde<ACCOUNT_LEN> for Account {
     fn serialize(self) -> [Field; ACCOUNT_LEN] {
@@ -66,7 +65,7 @@ impl Serde<ACCOUNT_LEN> for Account {
         data.push(self.balance);
         data.extend_from_array(self.storage_root.serialize());
         data.extend_from_array(self.code_hash.serialize());
-        data.storage
+        data.storage()
     }
 
     fn deserialize(data: [Field; ACCOUNT_LEN]) -> Self {
@@ -79,14 +78,14 @@ impl Serde<ACCOUNT_LEN> for Account {
     }
 }
 
-global ACCOUNT_BLOCK_LEN: u32 = ACCOUNT_LEN + BYTES32_LENGTH;
+pub(crate) global ACCOUNT_BLOCK_LEN: u32 = ACCOUNT_LEN + BYTES32_LENGTH;
 
 impl Serde<ACCOUNT_BLOCK_LEN> for AccountWithinBlock {
     fn serialize(self) -> [Field; ACCOUNT_BLOCK_LEN] {
         let mut data: BoundedVec<Field, ACCOUNT_BLOCK_LEN> = BoundedVec::new();
         data.extend_from_array(self.account.serialize());
         data.extend_from_array(self.block_hash.serialize());
-        data.storage
+        data.storage()
     }
 
     fn deserialize(data: [Field; ACCOUNT_BLOCK_LEN]) -> Self {
@@ -97,7 +96,7 @@ impl Serde<ACCOUNT_BLOCK_LEN> for AccountWithinBlock {
     }
 }
 
-global STORAGE_BLOCK_LEN: u32 = BYTES32_LENGTH + ACCOUNT_LEN + BYTES32_LENGTH;
+pub(crate) global STORAGE_BLOCK_LEN: u32 = BYTES32_LENGTH + ACCOUNT_LEN + BYTES32_LENGTH;
 
 impl Serde<STORAGE_BLOCK_LEN> for StorageWithinBlock<1> {
     fn serialize(self) -> [Field; STORAGE_BLOCK_LEN] {
@@ -105,7 +104,7 @@ impl Serde<STORAGE_BLOCK_LEN> for StorageWithinBlock<1> {
         data.extend_from_array(self.block_hash.serialize());
         data.extend_from_array(self.account.serialize());
         data.extend_from_array(self.values[0].serialize());
-        data.storage
+        data.storage()
     }
 
     fn deserialize(data: [Field; STORAGE_BLOCK_LEN]) -> Self {
@@ -119,7 +118,7 @@ impl Serde<STORAGE_BLOCK_LEN> for StorageWithinBlock<1> {
 
 /** STATE PROOF INPUT **/
 
-global STATE_NODES_LEN_M = 5320; // MAX_NODE_LEN * MAX_ACCOUNT_DEPTH_NO_LEAF_M
+pub(crate) global STATE_NODES_LEN_M: u32 = 5320; // MAX_NODE_LEN * MAX_ACCOUNT_DEPTH_NO_LEAF_M
 
 pub fn serialize_state_nodes(
     nodes: [Node; MAX_ACCOUNT_DEPTH_NO_LEAF_M],
@@ -128,7 +127,7 @@ pub fn serialize_state_nodes(
     for i in 0..MAX_ACCOUNT_DEPTH_NO_LEAF_M {
         data.extend_from_array(nodes[i].serialize());
     }
-    data.storage
+    data.storage()
 }
 
 pub fn deserialize_state_nodes(
@@ -143,7 +142,7 @@ pub fn deserialize_state_nodes(
     result.data
 }
 
-global STATE_PROOF_LEN_M = 5469; // STATE_NODES_LEN_M + MAX_ACCOUNT_LEAF_LEN + 1
+pub(crate) global STATE_PROOF_LEN_M: u32 = 5469; // STATE_NODES_LEN_M + MAX_ACCOUNT_LEAF_LEN + 1
 
 impl Serde<STATE_PROOF_LEN_M> for Proof<MAX_ACCOUNT_DEPTH_NO_LEAF_M, MAX_ACCOUNT_LEAF_LEN> {
     fn serialize(self) -> [Field; STATE_PROOF_LEN_M] {
@@ -151,7 +150,7 @@ impl Serde<STATE_PROOF_LEN_M> for Proof<MAX_ACCOUNT_DEPTH_NO_LEAF_M, MAX_ACCOUNT
         data.extend_from_array(serialize_state_nodes(self.nodes));
         data.extend_from_array(self.leaf.serialize());
         data.push(self.depth as Field);
-        data.storage
+        data.storage()
     }
 
     fn deserialize(data: [Field; STATE_PROOF_LEN_M]) -> Self {
@@ -164,7 +163,7 @@ impl Serde<STATE_PROOF_LEN_M> for Proof<MAX_ACCOUNT_DEPTH_NO_LEAF_M, MAX_ACCOUNT
     }
 }
 
-global STATE_PROOF_INPUT_LEN_M: u32 = 5645; // ACCOUNT_MAX_PREFIXED_KEY_NIBBLE_LEN + MAX_ACCOUNT_STATE_LEN + STATE_PROOF_LEN_M
+pub(crate) global STATE_PROOF_INPUT_LEN_M: u32 = 5645; // ACCOUNT_MAX_PREFIXED_KEY_NIBBLE_LEN + MAX_ACCOUNT_STATE_LEN + STATE_PROOF_LEN_M
 
 impl Serde<STATE_PROOF_INPUT_LEN_M> for ProofInput<ACCOUNT_MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_ACCOUNT_STATE_LEN, MAX_ACCOUNT_DEPTH_NO_LEAF_M, MAX_ACCOUNT_LEAF_LEN> {
     fn serialize(self) -> [Field; STATE_PROOF_INPUT_LEN_M] {
@@ -172,7 +171,7 @@ impl Serde<STATE_PROOF_INPUT_LEN_M> for ProofInput<ACCOUNT_MAX_PREFIXED_KEY_NIBB
         data.extend_from_array(self.key.serialize());
         data.extend_from_array(self.value.serialize());
         data.extend_from_array(self.proof.serialize());
-        data.storage
+        data.storage()
     }
 
     fn deserialize(data: [Field; STATE_PROOF_INPUT_LEN_M]) -> Self {
@@ -186,7 +185,7 @@ impl Serde<STATE_PROOF_INPUT_LEN_M> for ProofInput<ACCOUNT_MAX_PREFIXED_KEY_NIBB
 
 /** STORAGE PROOF INPUT **/
 
-global STORAGE_NODES_LEN_M: u32 = 3192; // MAX_NODE_LEN * MAX_STORAGE_DEPTH_NO_LEAF_M
+pub(crate) global STORAGE_NODES_LEN_M: u32 = 3192; // MAX_NODE_LEN * MAX_STORAGE_DEPTH_NO_LEAF_M
 
 pub fn serialize_storage_nodes(
     nodes: [Node; MAX_STORAGE_DEPTH_NO_LEAF_M],
@@ -195,7 +194,7 @@ pub fn serialize_storage_nodes(
     for i in 0..MAX_STORAGE_DEPTH_NO_LEAF_M {
         data.extend_from_array(nodes[i].serialize());
     }
-    data.storage
+    data.storage()
 }
 
 pub fn deserialize_storage_nodes(
@@ -210,7 +209,7 @@ pub fn deserialize_storage_nodes(
     result.data
 }
 
-global STORAGE_PROOF_LEN_M: u32 = 3262; // STORAGE_NODES_LEN_M + MAX_STORAGE_LEAF_LEN + 1
+pub(crate) global STORAGE_PROOF_LEN_M: u32 = 3262; // STORAGE_NODES_LEN_M + MAX_STORAGE_LEAF_LEN + 1
 
 impl Serde<STORAGE_PROOF_LEN_M> for Proof<MAX_STORAGE_DEPTH_NO_LEAF_M, MAX_STORAGE_LEAF_LEN> {
     fn serialize(self) -> [Field; STORAGE_PROOF_LEN_M] {
@@ -218,7 +217,7 @@ impl Serde<STORAGE_PROOF_LEN_M> for Proof<MAX_STORAGE_DEPTH_NO_LEAF_M, MAX_STORA
         data.extend_from_array(serialize_storage_nodes(self.nodes));
         data.extend_from_array(self.leaf.serialize());
         data.push(self.depth as Field);
-        data.storage
+        data.storage()
     }
 
     fn deserialize(data: [Field; STORAGE_PROOF_LEN_M]) -> Self {
@@ -231,7 +230,7 @@ impl Serde<STORAGE_PROOF_LEN_M> for Proof<MAX_STORAGE_DEPTH_NO_LEAF_M, MAX_STORA
     }
 }
 
-global STORAGE_PROOF_INPUT_LEN_M: u32 = 3360; // STORAGE_MAX_PREFIXED_KEY_NIBBLE_LEN + MAX_STORAGE_VALUE_LEN + STORAGE_PROOF_LEN_M
+pub(crate) global STORAGE_PROOF_INPUT_LEN_M: u32 = 3360; // STORAGE_MAX_PREFIXED_KEY_NIBBLE_LEN + MAX_STORAGE_VALUE_LEN + STORAGE_PROOF_LEN_M
 
 impl Serde<STORAGE_PROOF_INPUT_LEN_M> for ProofInput<STORAGE_MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_STORAGE_VALUE_LEN, MAX_STORAGE_DEPTH_NO_LEAF_M, MAX_STORAGE_LEAF_LEN> {
     fn serialize(self) -> [Field; STORAGE_PROOF_INPUT_LEN_M] {
@@ -239,7 +238,7 @@ impl Serde<STORAGE_PROOF_INPUT_LEN_M> for ProofInput<STORAGE_MAX_PREFIXED_KEY_NI
         data.extend_from_array(self.key.serialize());
         data.extend_from_array(self.value.serialize());
         data.extend_from_array(self.proof.serialize());
-        data.storage
+        data.storage()
     }
 
     fn deserialize(data: [Field; STORAGE_PROOF_INPUT_LEN_M]) -> Self {
@@ -253,7 +252,7 @@ impl Serde<STORAGE_PROOF_INPUT_LEN_M> for ProofInput<STORAGE_MAX_PREFIXED_KEY_NI
 
 /** RECEIPT/TX PROOF INPUT **/
 
-global RECEIPT_NODES_LEN: u32 = MAX_NODE_LEN * RECEIPT_MAX_DEPTH_NO_LEAF;
+pub(crate) global RECEIPT_NODES_LEN: u32 = MAX_NODE_LEN * RECEIPT_MAX_DEPTH_NO_LEAF;
 
 pub fn serialize_receipt_nodes(
     nodes: [Node; RECEIPT_MAX_DEPTH_NO_LEAF],
@@ -262,7 +261,7 @@ pub fn serialize_receipt_nodes(
     for i in 0..RECEIPT_MAX_DEPTH_NO_LEAF {
         data.extend_from_array(nodes[i].serialize());
     }
-    data.storage
+    data.storage()
 }
 
 pub fn deserialize_receipt_nodes(
@@ -277,7 +276,7 @@ pub fn deserialize_receipt_nodes(
     result.data
 }
 
-global RECEIPT_PROOF_LEN_M = RECEIPT_NODES_LEN + RECEIPT_MAX_LEAF_LEN_M + 1;
+pub(crate) global RECEIPT_PROOF_LEN_M: u32 = RECEIPT_NODES_LEN + RECEIPT_MAX_LEAF_LEN_M + 1;
 
 impl Serde<RECEIPT_PROOF_LEN_M> for Proof<RECEIPT_MAX_DEPTH_NO_LEAF, RECEIPT_MAX_LEAF_LEN_M> {
     fn serialize(self) -> [Field; RECEIPT_PROOF_LEN_M] {
@@ -285,7 +284,7 @@ impl Serde<RECEIPT_PROOF_LEN_M> for Proof<RECEIPT_MAX_DEPTH_NO_LEAF, RECEIPT_MAX
         data.extend_from_array(serialize_receipt_nodes(self.nodes));
         data.extend_from_array(self.leaf.serialize());
         data.push(self.depth as Field);
-        data.storage
+        data.storage()
     }
 
     fn deserialize(data: [Field; RECEIPT_PROOF_LEN_M]) -> Self {
@@ -298,9 +297,9 @@ impl Serde<RECEIPT_PROOF_LEN_M> for Proof<RECEIPT_MAX_DEPTH_NO_LEAF, RECEIPT_MAX
     }
 }
 
-global RECEIPT_PROOF_INPUT_LEN_M: u32 =
+pub(crate) global RECEIPT_PROOF_INPUT_LEN_M: u32 =
     RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN + RECEIPT_MAX_VALUE_LEN_M + RECEIPT_PROOF_LEN_M;
-global TX_PROOF_INPUT_LEN_M: u32 = RECEIPT_PROOF_INPUT_LEN_M;
+pub(crate) global TX_PROOF_INPUT_LEN_M: u32 = RECEIPT_PROOF_INPUT_LEN_M;
 
 impl Serde<RECEIPT_PROOF_INPUT_LEN_M> for ProofInput<RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN, RECEIPT_MAX_VALUE_LEN_M, RECEIPT_MAX_DEPTH_NO_LEAF, RECEIPT_MAX_LEAF_LEN_M> {
     fn serialize(self) -> [Field; RECEIPT_PROOF_INPUT_LEN_M] {
@@ -308,7 +307,7 @@ impl Serde<RECEIPT_PROOF_INPUT_LEN_M> for ProofInput<RECEIPT_MAX_PREFIXED_KEY_NI
         data.extend_from_array(self.key.serialize());
         data.extend_from_array(self.value.serialize());
         data.extend_from_array(self.proof.serialize());
-        data.storage
+        data.storage()
     }
 
     fn deserialize(data: [Field; RECEIPT_PROOF_INPUT_LEN_M]) -> Self {

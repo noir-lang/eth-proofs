@@ -1,10 +1,9 @@
 use crate::misc::{arrays::{memcpy_up_to_length, resize}, iterator::Iterator};
-use dep::std::mem::zeroed;
 
-struct Fragment<let MAX_DATA_LEN: u32, T> {
-    offset: u32,
-    length: u32,
-    data: [T; MAX_DATA_LEN],
+pub struct Fragment<let MAX_DATA_LEN: u32, T> {
+    pub(crate) offset: u32,
+    pub(crate) length: u32,
+    pub(crate) data: [T; MAX_DATA_LEN],
 }
 
 impl<let MAX_DATA_LEN: u32, T> Fragment<MAX_DATA_LEN, T> {
@@ -45,7 +44,7 @@ impl<let MAX_DATA_LEN: u32, T> Fragment<MAX_DATA_LEN, T> {
     }
 
     pub fn from_vec(vec: BoundedVec<T, MAX_DATA_LEN>) -> Fragment<MAX_DATA_LEN, T> {
-        Fragment::new_with_length(vec.len, vec.storage)
+        Fragment::new_with_length(vec.len(), vec.storage())
     }
 
     pub fn focus<let NEW_MAX_LEN: u32>(self) -> Fragment<NEW_MAX_LEN, T> {

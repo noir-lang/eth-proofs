@@ -1,40 +1,20 @@
-name: Release changesets
+name: Release
 
-# This workflow will be triggered on push to the main branch
-# on:
-#   push:
-#     branches:
-#       - main
-# temporarly manual triggers only
 on:
-  workflow_dispatch:
-
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+  push:
+    branches:
+      - main
 
 jobs:
-  release:
-    name: Release
+  release-please:
+    name: Create Release
+    outputs:
+      release-pr: ${{ steps.release.outputs.pr }}
+      tag-name: ${{ steps.release.outputs.tag_name }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v3
+      - name: Run release-please
+        id: release
+        uses: googleapis/release-please-action@v4
         with:
-          node-version: 20
-
-      - name: Enable Corepack and Install Yarn 4
-        run: |
-          corepack enable
-          yarn set version latest
-
-      - name: Install Dependencies
-        run: yarn install
-
-      - name: Create Release Pull Request
-        uses: changesets/action@v1
-        with:
-          version: yarn changeset version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.NOIR_RELEASES_TOKEN }}

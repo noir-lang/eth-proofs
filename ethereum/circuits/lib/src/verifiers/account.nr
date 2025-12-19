@@ -7,29 +7,32 @@ use crate::misc::{bytes::right_pad, fragment::Fragment, types::{Address, ADDRESS
 use crate::rlp::decode::decode_list_of_small_strings;
 use crate::rlp::types::RlpList;
 
-use dep::std::hash::keccak256;
+use dep::keccak256::keccak256;
 
-global ACCOUNT_FIELDS_COUNT = 4;
-global NONCE_INDEX = 0;
-global BALANCE_INDEX = 1;
-global STORAGE_ROOT_INDEX = 2;
-global CODE_HASH_INDEX = 3;
+global ACCOUNT_FIELDS_COUNT: u32 = 4;
+global NONCE_INDEX: u32 = 0;
+global BALANCE_INDEX: u32 = 1;
+global STORAGE_ROOT_INDEX: u32 = 2;
+global CODE_HASH_INDEX: u32 = 3;
 
 pub(crate) fn assert_account_equals(
     account_rlp_left_padded: [u8; MAX_ACCOUNT_STATE_LEN],
     account: Account,
 ) {
-    let account_rlp_right_padded = right_pad(account_rlp_left_padded).storage;
+    let account_rlp_right_padded = right_pad(account_rlp_left_padded).storage();
     let account_rlp_list: RlpList<ACCOUNT_FIELDS_COUNT> =
         decode_list_of_small_strings(Fragment::from_array(account_rlp_right_padded));
-    assert(account_rlp_list.len == ACCOUNT_FIELDS_COUNT, "Invalid number of fields in account RLP");
+    assert(
+        account_rlp_list.len() == ACCOUNT_FIELDS_COUNT,
+        "Invalid number of fields in account RLP",
+    );
 
     let account_rlp = Fragment::from_array(account_rlp_right_padded);
     account_rlp_list.get(NONCE_INDEX).assert_eq_u64("Nonce", account_rlp, account.nonce);
     account_rlp_list.get(BALANCE_INDEX).assert_eq_u128(
         "Balance",
         account_rlp,
-        U128::from_integer(account.balance),
+        account.balance as u128,
     );
 
     account_rlp_list.get(STORAGE_ROOT_INDEX).assert_eq_bytes32(

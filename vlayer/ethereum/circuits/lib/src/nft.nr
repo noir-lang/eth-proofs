@@ -7,7 +7,7 @@ use dep::ethereum::{
     uint256::U256,
 };
 
-struct ERC721Token {
+pub struct ERC721Token {
     address: Address,
     token_id_to_slot: fn(Bytes32) -> U256,
     chain_id: Field,

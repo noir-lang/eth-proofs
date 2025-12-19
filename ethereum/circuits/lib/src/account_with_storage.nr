@@ -11,20 +11,19 @@ use crate::serde::Serde;
 use crate::verifiers::account::verify_account;
 use crate::verifiers::storage::verify_storage_values;
 
-use dep::std::hash::keccak256;
+use dep::keccak256::keccak256;
 
-global MAX_KEY_LEN: u32 = 32;
-global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 66; // (MAX_KEY_LEN + 1) * 2
-global MAX_STORAGE_DEPTH_NO_LEAF_M = 6; // Emperically correct values to be determined after we scan ethereum state trie.
+pub(crate) global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 66; // (MAX_KEY_LEN + 1) * 2
+pub(crate) global MAX_STORAGE_DEPTH_NO_LEAF_M: u32 = 6; // Emperically correct values to be determined after we scan ethereum state trie.
 
-global MAX_STORAGE_VALUE_LEN: u32 = 32; // Values taken from storageProofConfig in storage.ts.
-global MAX_STORAGE_LEAF_LEN: u32 = 69;
+pub(crate) global MAX_STORAGE_VALUE_LEN: u32 = 32; // Values taken from storageProofConfig in storage.ts.
+pub(crate) global MAX_STORAGE_LEAF_LEN: u32 = 69;
 
-struct Account {
-    nonce: u64,
-    balance: Field,
-    storage_root: Bytes32,
-    code_hash: Bytes32,
+pub struct Account {
+    pub(crate) nonce: u64,
+    pub(crate) balance: Field,
+    pub(crate) storage_root: Bytes32,
+    pub(crate) code_hash: Bytes32,
 }
 
 impl Eq for Account {
@@ -44,10 +43,10 @@ struct StateAndStorageProofInput {
     storage_proof_input: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_STORAGE_VALUE_LEN, MAX_STORAGE_DEPTH_NO_LEAF_M, MAX_STORAGE_LEAF_LEN>,
 }
 
-struct StorageWithinBlock<let N: u32> {
-    block_hash: Bytes32,
-    account: Account,
-    values: [Bytes32; N],
+pub struct StorageWithinBlock<let N: u32> {
+    pub(crate) block_hash: Bytes32,
+    pub(crate) account: Account,
+    pub(crate) values: [Bytes32; N],
 }
 
 type ProofInputSerialized<let LEN: u32> = [Field; LEN];
@@ -70,7 +69,7 @@ fn assert_storage_key_equals(
         storage_key_hash,
     );
     let other_storage_key_hash_fragment =
-        Fragment::from_array(keccak256(storage_key, BYTES32_LENGTH as u32));
+        Fragment::from_array(keccak256(storage_key, BYTES32_LENGTH));
     assert(
         storage_key_hash_fragment.eq(other_storage_key_hash_fragment),
         "Storage key does not match the argument",
@@ -101,15 +100,16 @@ fn get_storage_value(
 }
 
 pub fn get_account_with_storage(
-    chain_id: Field,
+    chain_id: u32,
     block_number: u64,
     address: Address,
     storage_key: Bytes32,
 ) -> StorageWithinBlock<1> {
     let BlockHeaderPartial { number: _, hash, state_root, transactions_root: _, receipts_root: _ }
          = get_header(chain_id, block_number);
+    // Safety: veirfication done separately
     let StateAndStorageProofInput { account, state_proof_input, storage_proof_input } =
-        get_proof_unconstrained(chain_id, block_number, address, storage_key);
+        unsafe { get_proof_unconstrained(chain_id, block_number, address, storage_key) };
 
     verify_account(address, account, state_proof_input, state_root);
     verify_storage_values([storage_proof_input], account.storage_root);
@@ -125,14 +125,14 @@ pub fn get_account_with_storage(
 
 #[oracle(get_proof)]
 unconstrained fn get_proof_oracle<let STATE_PROOF_INPUT_LEN: u32, let STORAGE_PROOF_INPUT: u32>(
-    _chain_id: Field,
+    _chain_id: u32,
     _block_no: u64,
     _address: Address,
     _storage_key: Bytes32,
     ) -> (Account, ProofInputSerialized<STATE_PROOF_INPUT_LEN>, ProofInputSerialized<STORAGE_PROOF_INPUT>) {}
 
 unconstrained fn get_proof_unconstrained(
-    chain_id: Field,
+    chain_id: u32,
     block_no: u64,
     address: Address,
     storage_key: Bytes32,

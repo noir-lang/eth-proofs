@@ -1,36 +1,36 @@
 use crate::misc::{
-    arrays::{memcpy_up_to_length, sub_array_equals_up_to_length},
+    arrays::sub_array_equals_up_to_length,
     bytes::{byte_to_nibbles, bytes_to_nibbles, right_pad},
     fragment::Fragment,
     types::{Hash, HASH_LEN},
 };
 use crate::rlp::decode::{decode_list, decode_list_of_small_strings, decode_to_rlp_header};
 use crate::rlp::types::RlpList;
-use dep::std::hash::keccak256;
+use dep::keccak256::keccak256;
 
-global MAX_NODE_LEN: u32 = 532;
-global MAX_NODE_FIELDS: u32 = 17;
-global BRANCH_NODE_NUM_FIELDS: u32 = 17;
-global EXTENSION_NODE_NUM_FIELDS: u32 = 2;
-global EVEN: u32 = 0;
-global ODD: u32 = 1;
+pub(crate) global MAX_NODE_LEN: u32 = 532;
+pub(crate) global MAX_NODE_FIELDS: u32 = 17;
+pub(crate) global BRANCH_NODE_NUM_FIELDS: u32 = 17;
+pub(crate) global EXTENSION_NODE_NUM_FIELDS: u32 = 2;
+pub(crate) global EVEN: u32 = 0;
+pub(crate) global ODD: u32 = 1;
 
-type Node = [u8; MAX_NODE_LEN];
-type Leaf<let MAX_LEAF_LEN: u32> = [u8; MAX_LEAF_LEN];
-type Key<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32> = [u8; MAX_PREFIXED_KEY_NIBBLE_LEN];
-type Value<let MAX_VALUE_LEN: u32> = [u8; MAX_VALUE_LEN];
+pub(crate) type Node = [u8; MAX_NODE_LEN];
+pub(crate) type Leaf<let MAX_LEAF_LEN: u32> = [u8; MAX_LEAF_LEN];
+pub(crate) type Key<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32> = [u8; MAX_PREFIXED_KEY_NIBBLE_LEN];
+pub(crate) type Value<let MAX_VALUE_LEN: u32> = [u8; MAX_VALUE_LEN];
 
-struct Proof<let MAX_DEPTH_NO_LEAF: u32, let MAX_LEAF_LEN: u32> {
-    nodes: [Node; MAX_DEPTH_NO_LEAF],
+pub struct Proof<let MAX_DEPTH_NO_LEAF: u32, let MAX_LEAF_LEN: u32> {
+    pub(crate) nodes: [Node; MAX_DEPTH_NO_LEAF],
     // Leaf has a different max length than internal node as it contains the value of arbitrary length.
-    leaf: Leaf<MAX_LEAF_LEN>,
-    depth: u64,
+    pub(crate) leaf: Leaf<MAX_LEAF_LEN>,
+    pub(crate) depth: u64,
 }
 
-struct ProofInput<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, let MAX_VALUE_LEN: u32, let MAX_DEPTH_NO_LEAF: u32, let MAX_LEAF_LEN: u32> {
-    key: Key<MAX_PREFIXED_KEY_NIBBLE_LEN>,
-    value: Value<MAX_VALUE_LEN>,
-    proof: Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN>,
+pub struct ProofInput<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, let MAX_VALUE_LEN: u32, let MAX_DEPTH_NO_LEAF: u32, let MAX_LEAF_LEN: u32> {
+    pub(crate) key: Key<MAX_PREFIXED_KEY_NIBBLE_LEN>,
+    pub(crate) value: Value<MAX_VALUE_LEN>,
+    pub(crate) proof: Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN>,
 }
 
 impl<let MAX_DEPTH_NO_LEAF: u32, let MAX_LEAF_LEN: u32> Eq for Proof<MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN> {
@@ -137,9 +137,9 @@ pub fn extract_hash<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32>(
     let node_rlp_list: RlpList<MAX_NODE_FIELDS> =
         decode_list_of_small_strings(Fragment::from_array(node));
 
-    if (node_rlp_list.len == BRANCH_NODE_NUM_FIELDS) {
+    if (node_rlp_list.len() == BRANCH_NODE_NUM_FIELDS) {
         hash = extract_hash_from_branch_node(node, node_rlp_list, key_nibbles, key_ptr);
-    } else if (node_rlp_list.len == EXTENSION_NODE_NUM_FIELDS) {
+    } else if (node_rlp_list.len() == EXTENSION_NODE_NUM_FIELDS) {
         hash = extract_hash_from_extension_node(node, node_rlp_list, key_nibbles, key_ptr);
     } else {
         assert(false, "Invalid node type");
@@ -159,7 +159,7 @@ pub fn verify_leaf<let MAX_LEAF_LEN: u32, let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, 
     value: Value<MAX_VALUE_LEN>,
 ) {
     let leaf_rlp_list: RlpList<2> = decode_list(Fragment::from_array(leaf));
-    assert(leaf_rlp_list.len == 2, "Leaf expected to have 2 fields");
+    assert(leaf_rlp_list.len() == 2, "Leaf expected to have 2 fields");
 
     let prefixed_leaf_key_part: Fragment<MAX_PREFIXED_KEY_NIBBLE_LEN, u8> = Fragment::new(
         leaf_rlp_list.get(0).offset,
@@ -179,10 +179,10 @@ pub fn verify_leaf<let MAX_LEAF_LEN: u32, let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, 
     let value = right_pad(value);
     let value_rlp_fragment = leaf_rlp_list.get(1);
     // Verify that extracted value matches the expected value.
-    assert(value_rlp_fragment.length == value.len, "Value length mismatch");
+    assert(value_rlp_fragment.length == value.len(), "Value length mismatch");
     assert(
         sub_array_equals_up_to_length(
-            value.storage,
+            value.storage(),
             leaf,
             value_rlp_fragment.offset,
             value_rlp_fragment.length,

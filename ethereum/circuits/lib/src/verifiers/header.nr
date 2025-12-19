@@ -1,23 +1,22 @@
-use dep::std::hash::keccak256;
+use dep::keccak256::keccak256;
 
 use crate::chain::{ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID};
-use crate::HASH_LEN;
 use crate::header::{BlockHeaderPartial, BlockHeaderRlp};
 use crate::misc::{arrays::sub_array_equals, fragment::Fragment};
 use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
 
-global MAX_HEADER_FIELDS_COUNT = 20;
-global STATE_ROOT_INDEX = 3;
-global TRANSACTIONS_ROOT_INDEX = 4;
-global RECEIPTS_ROOT_INDEX = 5;
-global BLOCK_NUM_INDEX = 8;
+global MAX_HEADER_FIELDS_COUNT: u32 = 20;
+global STATE_ROOT_INDEX: u32 = 3;
+global TRANSACTIONS_ROOT_INDEX: u32 = 4;
+global RECEIPTS_ROOT_INDEX: u32 = 5;
+global BLOCK_NUM_INDEX: u32 = 8;
 
-global LONDON_BLOCK_NUM: u64 = 12_965_000;
-global PARIS_BLOCK_NUM: u64 = 15_537_394;
-global CANCUN_BLOCK_NUM: u64 = 19_426_587;
+pub(crate) global LONDON_BLOCK_NUM: u64 = 12_965_000;
+pub(crate) global PARIS_BLOCK_NUM: u64 = 15_537_394;
+pub(crate) global CANCUN_BLOCK_NUM: u64 = 19_426_587;
 
-pub(crate) fn get_header_fields_count(chain_id: Field, block_number: u64) -> u32 {
+pub(crate) fn get_header_fields_count(chain_id: u32, block_number: u64) -> u32 {
     let mut fields_count = 15;
     if chain_id == ETHEREUM_MAINNET_ID {
         if block_number >= LONDON_BLOCK_NUM {
@@ -38,7 +37,7 @@ pub(crate) fn get_header_fields_count(chain_id: Field, block_number: u64) -> u32
 }
 
 pub fn verify_header(
-    chain_id: Field,
+    chain_id: u32,
     block_header_partial: BlockHeaderPartial,
     block_header_rlp: BlockHeaderRlp,
 ) {
@@ -48,10 +47,9 @@ pub fn verify_header(
         get_header_fields_count(chain_id, block_header_partial.number);
 
     assert(
-        expected_header_fields_count == header_rlp_list.len,
+        expected_header_fields_count == header_rlp_list.len(),
         "number of header RLP fields does not match",
     );
-
     header_rlp_list.get(BLOCK_NUM_INDEX).assert_eq_u64(
         "Block number",
         block_header_rlp,

@@ -1,4 +1,3 @@
-mod account;
-mod state_proof;
-mod storage;
-mod storage_proof;
+pub(crate) mod account;
+pub(crate) mod storage;
+pub(crate) mod storage_proof;

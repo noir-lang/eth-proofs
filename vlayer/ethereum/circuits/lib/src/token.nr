@@ -23,11 +23,11 @@ impl ERC20Token {
 }
 
 trait ERC20 {
-    fn get_balance(self, wallet_address: Address, block_number: u64, recursive: bool) -> U128;
+    fn get_balance(self, wallet_address: Address, block_number: u64, recursive: bool) -> u128;
 }
 
 impl ERC20 for ERC20Token {
-    fn get_balance(self, wallet_address: Address, block_number: u64, recursive: bool) -> U128 {
+    fn get_balance(self, wallet_address: Address, block_number: u64, recursive: bool) -> u128 {
         let storage_key = self.calculate_balance_storage_key(wallet_address);
         let account = if recursive {
             get_account_with_storage_recursive(
@@ -46,6 +46,6 @@ impl ERC20 for ERC20Token {
         };
         let balance = account.values[TOKEN_BALANCE_INDEX];
 
-        U128::from_integer(bytes32_to_field(balance))
+        bytes32_to_field(balance) as u128
     }
 }
