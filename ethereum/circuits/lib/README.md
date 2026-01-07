@@ -237,22 +237,33 @@ U256 is a structure to use as a type for big numbers.
 It is used when dealing with numbers up to 2<sup>256</sup>. They can exceed Field maximum value.
 In particular it is a word size in ETH and therefore it is a basic type used in both storage and slot values calculations.
 
-[There](.src/uint256.nr) is an unoptimized implementation of this type using two U128 structures. Optimized version will appear in Noir.
+This library uses `U256` from the [noir-bignum](https://github.com/noir-lang/noir-bignum) library. The [`uint256.nr`](./src/uint256.nr) module provides conversion utilities between `U256` and `Bytes32`/`Field` types.
 
-Traits implemented for U256:
+Traits implemented for U256 (from bignum library):
 
 - Add
 - Eq
-- Serde
+- Serde (via this library's implementation)
 
 ```rust
-global u128_number = 0x10000000000000000000000000000000;
+use dep::bignum::bignum::BigNum;
+use dep::bignum::U256;
+use crate::uint256::{from, from_field};
 
-let big_number = U256::new(u128_number, u128_number);
+// Create U256 values
+let zero = U256::zero();
+let one = U256::from(1);
+let big_number = U256::modulus().udiv(U256::from(16));
 
-let sum = big_number + U256::one();
-assert_eq(sum, U256 { high: u128_number, low: u128_number + U128::one()});
+// Convert from Bytes32
+let bytes: Bytes32 = [0x10; 32];
+let u256_from_bytes = from(bytes);
 
-let serialized: [Field; 4] = big_number.serialize();
+// Convert from Field
+let field_value: Field = 100;
+let u256_from_field = from_field(field_value);
+
+// Serialization (uses 3 limbs)
+let serialized: [Field; 3] = big_number.serialize();
 assert_eq(U256::deserialize(serialized), big_number);
 ```
