@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767904630098,
+  "lastUpdate": 1767904633539,
   "repoUrl": "https://github.com/noir-lang/eth-proofs",
   "entries": {
     "ACIR Opcodes": [
@@ -248,6 +248,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "benchmark_get_transaction",
             "value": 11098,
+            "unit": "opcodes"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26174818+jialinli98@users.noreply.github.com",
+            "name": "Jialin Li",
+            "username": "jialinli98"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5d9d5373bcd7949779c52811db27d56bb3e724a8",
+          "message": "chore: consolidate RLP numeric assertions with ToBEBytes trait (#14)",
+          "timestamp": "2026-01-08T12:34:58-08:00",
+          "tree_id": "bee0e98c67b94f3f3f4bb6893b531bc2639aa928",
+          "url": "https://github.com/noir-lang/eth-proofs/commit/5d9d5373bcd7949779c52811db27d56bb3e724a8"
+        },
+        "date": 1767904633455,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "benchmark_get_account",
+            "value": 8895,
+            "unit": "opcodes"
+          },
+          {
+            "name": "benchmark_get_header",
+            "value": 2470,
+            "unit": "opcodes"
+          },
+          {
+            "name": "benchmark_get_log",
+            "value": 12894,
+            "unit": "opcodes"
+          },
+          {
+            "name": "benchmark_get_receipt",
+            "value": 9509,
+            "unit": "opcodes"
+          },
+          {
+            "name": "benchmark_get_transaction",
+            "value": 10929,
             "unit": "opcodes"
           }
         ]
