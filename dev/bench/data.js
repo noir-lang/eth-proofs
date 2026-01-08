@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767877142284,
+  "lastUpdate": 1767877145736,
   "repoUrl": "https://github.com/noir-lang/eth-proofs",
   "entries": {
     "ACIR Opcodes": [
@@ -100,6 +100,57 @@ window.BENCHMARK_DATA = {
             "name": "benchmark_get_transaction.json/main",
             "value": 1276784,
             "unit": "circuit_size"
+          }
+        ]
+      }
+    ],
+    "Brillig Bytecode Size": [
+      {
+        "commit": {
+          "author": {
+            "email": "26174818+jialinli98@users.noreply.github.com",
+            "name": "Jialin Li",
+            "username": "jialinli98"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "85fb44a8d313ea8fbeef46f64df777597fbbc5d0",
+          "message": "feat: add benchmarks + update library version (#13)",
+          "timestamp": "2026-01-08T12:56:36Z",
+          "tree_id": "d171552acae7156ec0175eef5ec3b28d84010893",
+          "url": "https://github.com/noir-lang/eth-proofs/commit/85fb44a8d313ea8fbeef46f64df777597fbbc5d0"
+        },
+        "date": 1767877145680,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "benchmark_get_account",
+            "value": 8982,
+            "unit": "opcodes"
+          },
+          {
+            "name": "benchmark_get_header",
+            "value": 2514,
+            "unit": "opcodes"
+          },
+          {
+            "name": "benchmark_get_log",
+            "value": 13011,
+            "unit": "opcodes"
+          },
+          {
+            "name": "benchmark_get_receipt",
+            "value": 9626,
+            "unit": "opcodes"
+          },
+          {
+            "name": "benchmark_get_transaction",
+            "value": 11098,
+            "unit": "opcodes"
           }
         ]
       }
