@@ -20,26 +20,26 @@ pub(crate) fn assert_receipt_rlp_equals<let MAX_ENCODED_LEN: u32>(
         "Invalid number of fields in receipt RLP",
     );
     if (is_pre_byzantium) {
-        receipt_rlp_list.get(STATE_ROOT_INDEX).assert_eq_bytes32(
+        receipt_rlp_list.get(STATE_ROOT_INDEX).assert_eq_value(
             "State root",
             receipt_rlp,
             receipt.state_root.expect(f"State root is missing"),
         );
     } else {
-        receipt_rlp_list.get(STATUS_INDEX).assert_eq_u1(
+        receipt_rlp_list.get(STATUS_INDEX).assert_eq_value(
             "Status",
             receipt_rlp,
             receipt.status.expect(f"Status is missing"),
         );
     }
 
-    receipt_rlp_list.get(CUMULATIVE_GAS_USED_INDEX).assert_eq_u32(
+    receipt_rlp_list.get(CUMULATIVE_GAS_USED_INDEX).assert_eq_value(
         "Cumulative gas used",
         receipt_rlp,
         receipt.cumulative_gas_used,
     );
 
-    receipt_rlp_list.get(LOGS_BLOOM_INDEX).assert_eq_bytes(
+    receipt_rlp_list.get(LOGS_BLOOM_INDEX).assert_eq_value(
         "Logs bloom",
         receipt_rlp,
         Fragment::new_with_length(BLOOM_FILTER_LEN, receipt.logs_bloom),

@@ -5,11 +5,8 @@ mod U128_ {
     #[test]
     fn simple() {
         let value: u128 = 100;
-        let value: u128 = 100;
         let serialized: [Field; U128_SERIALIZED_LEN] = value.serialize();
 
-        assert_eq(serialized[0] as u128, value);
-        assert_eq(u128::deserialize(serialized), value);
         assert_eq(serialized[0] as u128, value);
         assert_eq(u128::deserialize(serialized), value);
     }
@@ -26,6 +23,10 @@ mod U256 {
 
     #[test]
     fn simple() {
+        let value = from_field(u128_number);
+        let serialized: [Field; u256_SERIALIZED_LEN] = value.serialize();
+        let s = serialized.map(|x: Field| x as u128);
+        assert_eq(U256::from_limbs(s), value);
         let value = from_field(u128_number);
         let serialized: [Field; u256_SERIALIZED_LEN] = value.serialize();
         let s = serialized.map(|x: Field| x as u128);
