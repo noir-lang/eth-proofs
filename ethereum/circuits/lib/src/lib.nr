@@ -20,6 +20,7 @@ pub mod serde;
 mod serde_test;
 pub mod uint256;
 mod uint256_test;
+mod benchmark;
 
 pub mod fixtures;
 pub(crate) mod verifiers;
