@@ -43,6 +43,9 @@ impl Serde<u256_SERIALIZED_LEN> for u256 {
     }
 
     fn deserialize(data: [Field; u256_SERIALIZED_LEN]) -> Self {
+        for i in 0..u256_SERIALIZED_LEN {
+            data[i].assert_max_bit_size::<120>();
+        }
         u256::from_limbs(data.map(|x: Field| x as u128))
     }
 }
@@ -85,6 +88,7 @@ impl Serde<ACCOUNT_BLOCK_LEN> for AccountWithinBlock {
     fn serialize(self) -> [Field; ACCOUNT_BLOCK_LEN] {
         let mut data: BoundedVec<Field, ACCOUNT_BLOCK_LEN> = BoundedVec::new();
         data.extend_from_array(self.account.serialize());
+        data.extend_from_array(self.block_hash.serialize());
         data.storage()
     }
 
