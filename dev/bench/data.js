@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1767877145736,
+  "lastUpdate": 1767904629151,
   "repoUrl": "https://github.com/noir-lang/eth-proofs",
   "entries": {
     "ACIR Opcodes": [
@@ -48,6 +48,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "benchmark_get_transaction.json/main",
             "value": 282856,
+            "unit": "acir_opcodes"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26174818+jialinli98@users.noreply.github.com",
+            "name": "Jialin Li",
+            "username": "jialinli98"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5d9d5373bcd7949779c52811db27d56bb3e724a8",
+          "message": "chore: consolidate RLP numeric assertions with ToBEBytes trait (#14)",
+          "timestamp": "2026-01-08T12:34:58-08:00",
+          "tree_id": "bee0e98c67b94f3f3f4bb6893b531bc2639aa928",
+          "url": "https://github.com/noir-lang/eth-proofs/commit/5d9d5373bcd7949779c52811db27d56bb3e724a8"
+        },
+        "date": 1767904628785,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "benchmark_get_account.json/main",
+            "value": 217575,
+            "unit": "acir_opcodes"
+          },
+          {
+            "name": "benchmark_get_header.json/main",
+            "value": 35392,
+            "unit": "acir_opcodes"
+          },
+          {
+            "name": "benchmark_get_log.json/main",
+            "value": 355780,
+            "unit": "acir_opcodes"
+          },
+          {
+            "name": "benchmark_get_receipt.json/main",
+            "value": 217734,
+            "unit": "acir_opcodes"
+          },
+          {
+            "name": "benchmark_get_transaction.json/main",
+            "value": 282682,
             "unit": "acir_opcodes"
           }
         ]
