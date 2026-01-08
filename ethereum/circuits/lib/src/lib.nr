@@ -20,11 +20,11 @@ pub mod serde;
 mod serde_test;
 pub mod uint256;
 mod uint256_test;
+mod benchmark;
 
 pub mod fixtures;
 pub(crate) mod verifiers;
 pub(crate) mod merkle_patricia_proofs;
 pub(crate) mod rlp;
-mod benchmark;
 
 pub(crate) global HASH_LEN: u32 = 32;

@@ -20,10 +20,5 @@ pub fn into(u256: u256) -> Bytes32 {
 }
 
 pub fn from_field(field: Field) -> u256 {
-    let bytes = field.to_be_bytes::<32>();
-    let mut bytes33 = [0; 33];
-    for i in 0..32 {
-        bytes33[i + 1] = bytes[i];
-    }
-    u256::from_be_bytes(bytes33)
+    u256::from(field)
 }

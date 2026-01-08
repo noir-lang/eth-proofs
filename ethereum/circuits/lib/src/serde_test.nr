@@ -27,6 +27,10 @@ mod U256 {
         let serialized: [Field; u256_SERIALIZED_LEN] = value.serialize();
         let s = serialized.map(|x: Field| x as u128);
         assert_eq(U256::from_limbs(s), value);
+        let value = from_field(u128_number);
+        let serialized: [Field; u256_SERIALIZED_LEN] = value.serialize();
+        let s = serialized.map(|x: Field| x as u128);
+        assert_eq(U256::from_limbs(s), value);
         assert_eq(U256::deserialize(serialized), value);
     }
 }

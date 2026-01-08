@@ -5,7 +5,6 @@ use crate::misc::types::{Address, Bytes32};
 // Enum for RLP data type
 pub(crate) global STRING: u32 = 0;
 pub(crate) global LIST: u32 = 1;
-
 pub type RlpList<let MAX_FIELDS: u32> = BoundedVec<RlpFragment, MAX_FIELDS>;
 
 pub struct RlpHeader {

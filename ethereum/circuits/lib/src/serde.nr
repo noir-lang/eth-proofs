@@ -85,7 +85,6 @@ impl Serde<ACCOUNT_BLOCK_LEN> for AccountWithinBlock {
     fn serialize(self) -> [Field; ACCOUNT_BLOCK_LEN] {
         let mut data: BoundedVec<Field, ACCOUNT_BLOCK_LEN> = BoundedVec::new();
         data.extend_from_array(self.account.serialize());
-        data.extend_from_array(self.block_hash.serialize());
         data.storage()
     }
 
