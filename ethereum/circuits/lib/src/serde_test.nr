@@ -5,8 +5,11 @@ mod U128_ {
     #[test]
     fn simple() {
         let value: u128 = 100;
+        let value: u128 = 100;
         let serialized: [Field; U128_SERIALIZED_LEN] = value.serialize();
 
+        assert_eq(serialized[0] as u128, value);
+        assert_eq(u128::deserialize(serialized), value);
         assert_eq(serialized[0] as u128, value);
         assert_eq(u128::deserialize(serialized), value);
     }

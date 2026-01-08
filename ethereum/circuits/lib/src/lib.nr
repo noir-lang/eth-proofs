@@ -25,6 +25,5 @@ pub mod fixtures;
 pub(crate) mod verifiers;
 pub(crate) mod merkle_patricia_proofs;
 pub(crate) mod rlp;
-mod benchmark;
 
 pub(crate) global HASH_LEN: u32 = 32;
