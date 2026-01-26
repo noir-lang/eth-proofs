@@ -16,11 +16,7 @@ mod assert_tx_equals {
 
     #[test]
     fn legacy_tx() {
-        assert_tx_equals(
-            legacy_tx_type,
-            Fragment::from_array(legacy_encoded_tx),
-            legacy_transaction,
-        );
+        assert_tx_equals(legacy_tx_type, legacy_encoded_tx, legacy_transaction);
     }
 
     #[test(should_fail_with = "Invalid tx type")]
@@ -34,14 +30,14 @@ mod verify_tx {
     use crate::fixtures::mainnet::{
         cancun::small_block::{
             header::transactions_root,
-            transaction::{encoded_tx, transaction, tx_idx, tx_type},
+            transaction::{transaction, tx_idx, tx_type},
             transaction_proof::proof_input,
         },
         homestead::fork::{
             header::transactions_root as legacy_transactions_root,
             transaction::{
-                encoded_tx as legacy_encoded_tx, transaction as legacy_transaction,
-                tx_idx as legacy_tx_idx, tx_type as legacy_tx_type,
+                transaction as legacy_transaction, tx_idx as legacy_tx_idx,
+                tx_type as legacy_tx_type,
             },
             transaction_proof::proof_input as legacy_proof_input,
         },

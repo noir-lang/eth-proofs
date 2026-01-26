@@ -1,4 +1,4 @@
-use crate::{account::MAX_ACCOUNT_STATE_LEN, account_with_storage::{Account, verify_account}};
+use crate::{account::MAX_ACCOUNT_STATE_LEN, account_with_storage::Account};
 use crate::fixtures::mainnet::london::crypto_punks::{
     account::{
         account, address, balance, code_hash, nonce, rlp_encoded_left_padded_account, storage_root,
@@ -8,13 +8,14 @@ use crate::fixtures::mainnet::london::crypto_punks::{
 };
 use crate::misc::arrays::alter_array;
 use crate::verifiers::account::assert_account_equals;
+use crate::verifiers::account::verify_account;
 
 #[test]
 fn test_assert_account_equals() {
     assert_account_equals(rlp_encoded_left_padded_account, account);
 }
 
-global RLP_SHORT_STRING_TYPE = 0x80;
+global RLP_SHORT_STRING_TYPE: u8 = 0x80;
 
 #[test(should_fail_with = "Expected a list")]
 fn test_account_rlp_invalid_type() {

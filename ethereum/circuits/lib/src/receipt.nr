@@ -1,34 +1,27 @@
 use crate::header::get_header;
-use crate::merkle_patricia_proofs::proof::{Proof, ProofInput};
-use crate::misc::{
-    bytes::byte_value,
-    fragment::Fragment,
-    option::make_option,
-    types::{Address, Bytes32},
-};
+use crate::merkle_patricia_proofs::proof::ProofInput;
+use crate::misc::{bytes::byte_value, fragment::Fragment, option::make_option, types::Bytes32};
 use crate::serde::Serde;
 use crate::verifiers::{receipt::verify_receipt, tx_helpers::split::split_into_tx_type_and_rlp};
-use dep::std::mem::zeroed;
 
-global BLOOM_FILTER_LEN: u32 = 256;
+pub(crate) global BLOOM_FILTER_LEN: u32 = 256;
+pub(crate) global MAX_KEY_LEN: u32 = 3;
+pub(crate) global MAX_DEPTH_NO_LEAF: u32 = 6;
+pub(crate) global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = (MAX_KEY_LEN + 1) * 2;
 
-global MAX_KEY_LEN: u32 = 3;
-global MAX_DEPTH_NO_LEAF = 6;
-global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 8; // (MAX_KEY_LEN + 1) * 2
+pub(crate) global MAX_VALUE_LEN_M: u32 = 1000; // Values taken from receiptProofConfigM in receipt.ts.
+pub(crate) global MAX_LEAF_LEN_M: u32 = 1011;
 
-global MAX_VALUE_LEN_M = 1000; // Values taken from receiptProofConfigM in receipt.ts.
-global MAX_LEAF_LEN_M = 1011;
+pub(crate) global MAX_RECEIPT_ENCODED_LEN_M: u32 = MAX_VALUE_LEN_M;
+pub(crate) global MAX_RECEIPT_RLP_LEN_M: u32 = MAX_RECEIPT_ENCODED_LEN_M - 1;
 
-global MAX_RECEIPT_ENCODED_LEN_M = MAX_VALUE_LEN_M;
-global MAX_RECEIPT_RLP_LEN_M = MAX_RECEIPT_ENCODED_LEN_M - 1;
+pub(crate) type TxType = u8;
 
-type TxType = u8;
-
-struct TxReceiptPartial {
-    status: Option<u1>,
-    state_root: Option<Bytes32>,
-    cumulative_gas_used: u32,
-    logs_bloom: [u8; BLOOM_FILTER_LEN],
+pub struct TxReceiptPartial {
+    pub(crate) status: Option<u1>,
+    pub(crate) state_root: Option<Bytes32>,
+    pub(crate) cumulative_gas_used: u32,
+    pub(crate) logs_bloom: [u8; BLOOM_FILTER_LEN],
 }
 
 impl Eq for TxReceiptPartial {
@@ -40,7 +33,7 @@ impl Eq for TxReceiptPartial {
     }
 }
 
-struct ForeignCallTxReceiptPartial {
+pub(crate) struct ForeignCallTxReceiptPartial {
     status: u1,
     status_is_some: bool,
     state_root: Bytes32,
@@ -75,14 +68,15 @@ impl From<TxReceiptPartial> for ForeignCallTxReceiptPartial {
 
 type ProofInputSerialized<let LEN: u32> = [Field; LEN];
 
-struct TxReceiptWithinBlock {
-    receipt: TxReceiptPartial,
-    block_hash: Bytes32,
+pub struct TxReceiptWithinBlock {
+    pub(crate) receipt: TxReceiptPartial,
+    pub(crate) block_hash: Bytes32,
 }
 
-pub fn get_receipt(chain_id: Field, block_number: u64, tx_idx: Field) -> TxReceiptWithinBlock {
+pub fn get_receipt(chain_id: u32, block_number: u64, tx_idx: Field) -> TxReceiptWithinBlock {
     let (tx_type, receipt, proof_input) =
-        get_receipt_unconstrained_M(chain_id, block_number, tx_idx);
+        // Safety: test
+        unsafe { get_receipt_unconstrained_M(chain_id, block_number, tx_idx) };
     let header = get_header(chain_id, block_number);
     verify_receipt(
         block_number,
@@ -97,13 +91,13 @@ pub fn get_receipt(chain_id: Field, block_number: u64, tx_idx: Field) -> TxRecei
 
 #[oracle(get_receipt)]
 unconstrained fn get_receipt_oracle<let PROOF_INPUT_LEN: u32>(
-    _chain_id: Field,
+    _chain_id: u32,
     _block_number: u64,
     _tx_idx: Field,
 ) -> (TxType, ForeignCallTxReceiptPartial, ProofInputSerialized<PROOF_INPUT_LEN>) {}
 
 pub(crate) unconstrained fn get_receipt_unconstrained_M(
-    chain_id: Field,
+    chain_id: u32,
     block_number: u64,
     tx_idx: Field,
     ) -> (TxType, TxReceiptPartial, ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN_M, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN_M>) {

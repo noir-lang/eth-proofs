@@ -11,3 +11,4 @@ contract
 dist
 coverage
 .DS_Store
+.vscode/

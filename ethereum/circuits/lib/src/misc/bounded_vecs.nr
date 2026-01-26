@@ -21,7 +21,7 @@ pub fn bounded_vec_map<U, T, let N: u32, Env>(
 impl<T, let N: u32> Iterator<T> for BoundedVec<T, N> {
     fn each<Env>(self, f: fn[Env](T, u32) -> ()) {
         for i in 0..N {
-            if i < self.len {
+            if i < self.len() {
                 f(self.get(i), i);
             }
         }

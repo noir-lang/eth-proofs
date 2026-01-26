@@ -180,8 +180,8 @@ mod byte_value {
     fn small() {
         let actual = byte_value([0, 0, 0, 1, 2, 3]);
 
-        assert_eq(actual.len, 3);
-        assert_eq(actual.storage, [1, 2, 3, 0, 0, 0]);
+        assert_eq(actual.len(), 3);
+        assert_eq(actual.storage(), [1, 2, 3, 0, 0, 0]);
     }
 
     #[test]
@@ -191,9 +191,9 @@ mod byte_value {
             25, 26, 27, 28, 29, 0, 0, 0,
         ]);
 
-        assert_eq(actual.len, 32);
+        assert_eq(actual.len(), 32);
         assert_eq(
-            actual.storage,
+            actual.storage(),
             [
                 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
                 24, 25, 26, 27, 28, 29, 0, 0, 0,
@@ -208,9 +208,9 @@ mod byte_value {
             0, 0, 0, 0, 0, 0,
         ]);
 
-        assert_eq(actual.len, 22);
+        assert_eq(actual.len(), 22);
         assert_eq(
-            actual.storage,
+            actual.storage(),
             [
                 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 0, 0, 0, 0, 0, 0,

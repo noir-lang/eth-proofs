@@ -10,7 +10,7 @@ import { BYTE_HEX_LEN } from '../util/const.js';
 import { createTopLevelProofFixtureWithRoot } from './noir_fixtures/proof.js';
 
 const NOIR_PROOF_FIXTURES_DIRECTORY = '../circuits/lib/src/fixtures/merkle_proofs';
-const MAX_VALUE_LEN: u32 = 100;
+const MAX_VALUE_LEN = 100;
 const MAX_DEPTH = 10;
 
 let fixtureModule = ``;

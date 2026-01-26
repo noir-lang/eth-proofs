@@ -20,10 +20,15 @@ use crate::{
 
 #[test]
 fn get_log_success() {
-    let _ = OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp));
-    let _ = OracleMock::mock("get_receipt").returns((
-        tx_type, foreign_call_receipt, proof_input_serialized,
-    ));
+    // Safety: test
+    let _ =
+        unsafe { OracleMock::mock("get_header").returns((block_header_partial, block_header_rlp)) };
+    // Safety: test
+    let _ = unsafe {
+        OracleMock::mock("get_receipt").returns((
+            tx_type, foreign_call_receipt, proof_input_serialized,
+        ))
+    };
 
     let log_within_block = get_log::<32, 4>(ETHEREUM_MAINNET_ID, number, tx_idx, log_idx);
 
@@ -33,12 +38,18 @@ fn get_log_success() {
 
 #[test(should_fail_with = "Block number does not match the argument")]
 fn get_log_invalid_block_number() {
-    let _ = OracleMock::mock("get_header").returns((
-        another_block_header_partial, another_block_header_rlp,
-    ));
-    let _ = OracleMock::mock("get_receipt").returns((
-        tx_type, foreign_call_receipt, proof_input_serialized,
-    ));
+    // Safety: test
+    let _ = unsafe {
+        OracleMock::mock("get_header").returns((
+            another_block_header_partial, another_block_header_rlp,
+        ))
+    };
+    // Safety: test
+    let _ = unsafe {
+        OracleMock::mock("get_receipt").returns((
+            tx_type, foreign_call_receipt, proof_input_serialized,
+        ))
+    };
 
     let _ = get_log::<32, 4>(ETHEREUM_MAINNET_ID, number, tx_idx, log_idx);
 }

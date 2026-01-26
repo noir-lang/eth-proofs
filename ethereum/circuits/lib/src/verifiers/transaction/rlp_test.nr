@@ -6,11 +6,10 @@ use crate::fixtures::mainnet::{
         transaction as legacy_tx, tx_rlp as legacy_tx_rlp, tx_type as legacy_tx_type,
     },
 };
-use crate::misc::{arrays::{alter_array, resize}, fragment::Fragment};
+use crate::misc::{arrays::alter_array, fragment::Fragment};
 use crate::verifiers::transaction::rlp::assert_tx_rlp_equals;
-use dep::std::wrapping_add;
 
-global eip1559_tx_rlp_fragment = Fragment::from_array(eip1559_tx_rlp);
+global eip1559_tx_rlp_fragment: Fragment<999, u8> = Fragment::from_array(eip1559_tx_rlp);
 
 #[test]
 fn legacy() {
@@ -69,14 +68,7 @@ fn invalid_to_value() {
 #[test(should_fail_with = "Value: Invalid RLP value")]
 fn invalid_value_value() {
     let mut tx = eip1559_tx;
-    tx.value += U128::from_integer(1);
-    assert_tx_rlp_equals(eip1559_tx_rlp_fragment, eip1559_tx_type, tx);
-}
-
-#[test(should_fail_with = "Data: Invalid RLP length")]
-fn invalid_data_length() {
-    let mut tx = eip1559_tx;
-    tx.data.len += 1;
+    tx.value += 1;
     assert_tx_rlp_equals(eip1559_tx_rlp_fragment, eip1559_tx_type, tx);
 }
 

@@ -8,7 +8,7 @@ on:
 
 env:
     CARGO_TERM_COLOR: always
-    MINIMUM_NOIR_VERSION: 1.0.0-beta.16
+    MINIMUM_NOIR_VERSION: 1.0.0-beta.17
 
 jobs:
     noir-version-list:
@@ -47,8 +47,8 @@ jobs:
               with:
                   toolchain: ${{ matrix.toolchain }}
 
-            - name: Run Noir tests
-              run: nargo test
+            - name: Run Ethereum Noir tests
+              run: nargo test --workspace
 
     format:
         runs-on: ubuntu-latest

@@ -1,4 +1,4 @@
-mod rlp;
+pub(crate) mod rlp;
 mod rlp_test;
 
 use crate::merkle_patricia_proofs::proof::{ProofInput, verify_merkle_proof};
@@ -9,7 +9,7 @@ use crate::verifiers::{
     tx_helpers::{idx::assert_tx_idx_equals, split::split_into_tx_type_and_rlp},
 };
 
-global BYZANTIUM_BLOCK_NUM = 4_370_000;
+pub(crate) global BYZANTIUM_BLOCK_NUM: u64 = 4_370_000;
 
 pub(crate) fn is_pre_byzantium(block_number: u64) -> bool {
     block_number < BYZANTIUM_BLOCK_NUM
@@ -40,7 +40,7 @@ pub fn verify_receipt<let MAX_ENCODED_LEN: u32, let MAX_LEAF_LEN: u32>(
     let key = Fragment::from_vec(right_pad(receipt_proof_input.key));
     assert_tx_idx_equals(key, tx_idx);
 
-    let value = right_pad(receipt_proof_input.value).storage;
+    let value = right_pad(receipt_proof_input.value).storage();
     assert_receipt_equals(block_number, tx_type, Fragment::from_array(value), receipt);
     verify_merkle_proof(
         receipt_proof_input.key,

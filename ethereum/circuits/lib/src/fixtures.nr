@@ -1,2 +1,2 @@
-mod mainnet;
-mod merkle_proofs;
+pub mod mainnet;
+pub mod merkle_proofs;

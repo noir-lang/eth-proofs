@@ -1,4 +1,4 @@
-mod rlp;
+pub(crate) mod rlp;
 mod rlp_test;
 
 use crate::merkle_patricia_proofs::proof::{ProofInput, verify_merkle_proof};
@@ -8,9 +8,6 @@ use crate::verifiers::{
     transaction::rlp::assert_tx_rlp_equals,
     tx_helpers::{idx::assert_tx_idx_equals, split::split_into_tx_type_and_rlp},
 };
-
-global MAX_ENCODED_TX_LENGTH: u32 = 525;
-global MAX_TX_RLP_LENGTH: u32 = MAX_ENCODED_TX_LENGTH - 1;
 
 pub(crate) fn assert_tx_equals<let MAX_DATA_LEN: u32, let MAX_ENCODED_LEN: u32>(
     tx_type: TxType,
@@ -34,7 +31,7 @@ pub fn verify_tx<let MAX_DATA_LEN: u32, let MAX_ENCODED_LEN: u32, let MAX_LEAF_L
     let key = Fragment::from_vec(right_pad(tx_proof_input.key));
     assert_tx_idx_equals(key, tx_idx);
 
-    let value = right_pad(tx_proof_input.value).storage;
+    let value = right_pad(tx_proof_input.value).storage();
     assert_tx_equals(tx_type, Fragment::from_array(value), tx);
     verify_merkle_proof(
         tx_proof_input.key,
