@@ -27,3 +27,16 @@ function encodeForeignCallResultValue(noirOutput: ForeignCallOutput): ForeignCal
     };
   }
 }
+
+// New Nargo 1.0+ protocol encoder
+export function encodeForeignCallResultNew(noirOutputs: ForeignCallOutput[]): { values: (string | string[])[] } {
+  return {
+    values: noirOutputs.map(output => {
+      if (typeof output === 'string') {
+        return output;  // Return string directly
+      } else {
+        return output;  // Return array directly
+      }
+    })
+  };
+}
