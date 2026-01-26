@@ -33,6 +33,11 @@ jobs:
         with:
           toolchain: 1.0.0-beta.17
 
+      - name: Install Barretenberg
+        run: |
+          curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/cpp/installation/install | bash
+          echo "$HOME/.bb" >> $GITHUB_PATH
+
       - name: Compile Circuit
         run: |
           nargo compile --package get_header --deny-warnings
@@ -56,39 +61,64 @@ jobs:
           ORACLE_SERVER_PID=$!
           echo "ORACLE_SERVER_PID=$ORACLE_SERVER_PID" >> $GITHUB_ENV
 
-      - name: Generate Proof
+      - name: Generate Witnesses
         run: |
-          nargo prove --package get_header --oracle-resolver=http://localhost:5555
-          nargo prove --package get_account --oracle-resolver=http://localhost:5555
-          nargo prove --package get_storage --oracle-resolver=http://localhost:5555
-          nargo prove --package get_receipt --oracle-resolver=http://localhost:5555
-          nargo prove --package get_transaction --oracle-resolver=http://localhost:5555
-          nargo prove --package get_log --oracle-resolver=http://localhost:5555
-          nargo prove --package is_dao_worthy --oracle-resolver=http://localhost:5555
-          nargo prove --package is_ape_owner --oracle-resolver=http://localhost:5555
+          nargo execute --package get_header --oracle-resolver=http://localhost:5555
+          nargo execute --package get_account --oracle-resolver=http://localhost:5555
+          nargo execute --package get_storage --oracle-resolver=http://localhost:5555
+          nargo execute --package get_receipt --oracle-resolver=http://localhost:5555
+          nargo execute --package get_transaction --oracle-resolver=http://localhost:5555
+          nargo execute --package get_log --oracle-resolver=http://localhost:5555
+          nargo execute --package is_dao_worthy --oracle-resolver=http://localhost:5555
+          nargo execute --package is_ape_owner --oracle-resolver=http://localhost:5555
+
+      - name: Generate Proofs
+        run: |
+          bb prove -b ./ethereum/circuits/get_header/target/get_header.json -w ./ethereum/circuits/get_header/target/get_header.gz -o ./ethereum/circuits/get_header/target/proof
+          bb prove -b ./ethereum/circuits/get_account/target/get_account.json -w ./ethereum/circuits/get_account/target/get_account.gz -o ./ethereum/circuits/get_account/target/proof
+          bb prove -b ./ethereum/circuits/get_storage/target/get_storage.json -w ./ethereum/circuits/get_storage/target/get_storage.gz -o ./ethereum/circuits/get_storage/target/proof
+          bb prove -b ./ethereum/circuits/get_receipt/target/get_receipt.json -w ./ethereum/circuits/get_receipt/target/get_receipt.gz -o ./ethereum/circuits/get_receipt/target/proof
+          bb prove -b ./ethereum/circuits/get_transaction/target/get_transaction.json -w ./ethereum/circuits/get_transaction/target/get_transaction.gz -o ./ethereum/circuits/get_transaction/target/proof
+          bb prove -b ./ethereum/circuits/get_log/target/get_log.json -w ./ethereum/circuits/get_log/target/get_log.gz -o ./ethereum/circuits/get_log/target/proof
+          bb prove -b ./vlayer/examples/circuits/is_dao_worthy/target/is_dao_worthy.json -w ./vlayer/examples/circuits/is_dao_worthy/target/is_dao_worthy.gz -o ./vlayer/examples/circuits/is_dao_worthy/target/proof
+          bb prove -b ./vlayer/examples/circuits/is_ape_owner/target/is_ape_owner.json -w ./vlayer/examples/circuits/is_ape_owner/target/is_ape_owner.gz -o ./vlayer/examples/circuits/is_ape_owner/target/proof
 
       - name: Generate verification key for recursive proof
         working-directory: ethereum/oracles
         run: |
-          # Verification key generation uses Barretenberg backend located at ~/.nargo/backends/acvm-backend-barretenberg/backend_binary. 
-          # It is automatically installed during the execution of the `nargo prove` command in previous step.
+          # Verification key generation uses the TypeScript bindings to generate the VK needed for recursive proofs.
           yarn generate-get-storage-vk
+
+      - name: Generate Recursive Witness
+        run: |
+          export NARGO_FOREIGN_CALL_TIMEOUT=100000 # miliseconds
+          nargo execute --package is_dao_worthy_recursive --oracle-resolver=http://localhost:5555
 
       - name: Generate Recursive Proof
         run: |
-          export NARGO_FOREIGN_CALL_TIMEOUT=100000 # miliseconds
-          nargo prove --package is_dao_worthy_recursive --oracle-resolver=http://localhost:5555
+          bb prove -b ./vlayer/examples/circuits/is_dao_worthy_recursive/target/is_dao_worthy_recursive.json -w ./vlayer/examples/circuits/is_dao_worthy_recursive/target/is_dao_worthy_recursive.gz -o ./vlayer/examples/circuits/is_dao_worthy_recursive/target/proof
 
-      - name: Verify Proof
+      - name: Generate Verification Keys
         run: |
-          nargo verify --package get_header
-          nargo verify --package get_account
-          nargo verify --package get_storage
-          nargo verify --package get_receipt
-          nargo verify --package get_transaction
-          nargo verify --package get_log
-          nargo verify --package is_dao_worthy
-          nargo verify --package is_ape_owner
+          bb write_vk -b ./ethereum/circuits/get_header/target/get_header.json -o ./ethereum/circuits/get_header/target/vk
+          bb write_vk -b ./ethereum/circuits/get_account/target/get_account.json -o ./ethereum/circuits/get_account/target/vk
+          bb write_vk -b ./ethereum/circuits/get_storage/target/get_storage.json -o ./ethereum/circuits/get_storage/target/vk
+          bb write_vk -b ./ethereum/circuits/get_receipt/target/get_receipt.json -o ./ethereum/circuits/get_receipt/target/vk
+          bb write_vk -b ./ethereum/circuits/get_transaction/target/get_transaction.json -o ./ethereum/circuits/get_transaction/target/vk
+          bb write_vk -b ./ethereum/circuits/get_log/target/get_log.json -o ./ethereum/circuits/get_log/target/vk
+          bb write_vk -b ./vlayer/examples/circuits/is_dao_worthy/target/is_dao_worthy.json -o ./vlayer/examples/circuits/is_dao_worthy/target/vk
+          bb write_vk -b ./vlayer/examples/circuits/is_ape_owner/target/is_ape_owner.json -o ./vlayer/examples/circuits/is_ape_owner/target/vk
+
+      - name: Verify Proofs
+        run: |
+          bb verify -k ./ethereum/circuits/get_header/target/vk -p ./ethereum/circuits/get_header/target/proof
+          bb verify -k ./ethereum/circuits/get_account/target/vk -p ./ethereum/circuits/get_account/target/proof
+          bb verify -k ./ethereum/circuits/get_storage/target/vk -p ./ethereum/circuits/get_storage/target/proof
+          bb verify -k ./ethereum/circuits/get_receipt/target/vk -p ./ethereum/circuits/get_receipt/target/proof
+          bb verify -k ./ethereum/circuits/get_transaction/target/vk -p ./ethereum/circuits/get_transaction/target/proof
+          bb verify -k ./ethereum/circuits/get_log/target/vk -p ./ethereum/circuits/get_log/target/proof
+          bb verify -k ./vlayer/examples/circuits/is_dao_worthy/target/vk -p ./vlayer/examples/circuits/is_dao_worthy/target/proof
+          bb verify -k ./vlayer/examples/circuits/is_ape_owner/target/vk -p ./vlayer/examples/circuits/is_ape_owner/target/proof
 
       - name: Stop Oracle Server
         if: always()
