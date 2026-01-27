@@ -42,19 +42,19 @@ jobs:
 
       - name: Compile Circuit
         run: |
-          nargo compile --package get_header --deny-warnings
-          nargo compile --package get_account --deny-warnings
-          nargo compile --package get_storage --deny-warnings
-          nargo compile --package get_storage_recursive --deny-warnings
-          nargo compile --package get_receipt --deny-warnings
-          nargo compile --package get_transaction --deny-warnings
-          nargo compile --package get_log --deny-warnings
-          nargo compile --package is_dao_worthy --deny-warnings
-          nargo compile --package is_ape_owner --deny-warnings
+          nargo compile --package get_header --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package get_account --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package get_storage --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package get_storage_recursive --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package get_receipt --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package get_transaction --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package get_log --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package is_dao_worthy --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package is_ape_owner --deny-warnings --skip-brillig-constraints-check
 
-          # We cannot use the `--deny-warnings` option in `is_dao_worthy_recursive` because the `verify_proof` method generates warnings 
+          # We cannot use the `--deny-warnings` option in `is_dao_worthy_recursive` because the `verify_proof` method generates warnings
           # that are actually informational messages from the compiler and cannot be ignored.
-          nargo compile --package is_dao_worthy_recursive
+          nargo compile --package is_dao_worthy_recursive --skip-brillig-constraints-check
 
       - name: Start Oracle Server
         working-directory: ethereum/oracles

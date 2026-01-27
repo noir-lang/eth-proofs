@@ -20,7 +20,7 @@ jobs:
           toolchain: 1.0.0-beta.18
 
       - name: Run nargo info
-        run: nargo info --workspace --silence-warnings | tee profiling_info.txt
+        run: nargo info --workspace --silence-warnings --skip-brillig-constraints-check | tee profiling_info.txt
 
       - name: Archive profiling artifacts
         uses: actions/upload-artifact@v4

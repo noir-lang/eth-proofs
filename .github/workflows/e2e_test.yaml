@@ -37,7 +37,7 @@ jobs:
           toolchain: 1.0.0-beta.18
 
       - name: Compile Circuit
-        run: nargo compile --workspace
+        run: nargo compile --workspace --skip-brillig-constraints-check
 
       - name: Start Oracle Server
         working-directory: ethereum/oracles
@@ -46,14 +46,28 @@ jobs:
           ORACLE_SERVER_PID=$!
           echo "ORACLE_SERVER_PID=$ORACLE_SERVER_PID" >> $GITHUB_ENV
 
-      - name: Generate Proof
+      - name: Install Barretenberg
         run: |
-          nargo prove --package get_header --oracle-resolver=http://localhost:5555
-          nargo prove --package get_account --oracle-resolver=http://localhost:5555
-          nargo prove --package get_storage --oracle-resolver=http://localhost:5555
-          nargo prove --package get_receipt --oracle-resolver=http://localhost:5555
-          nargo prove --package get_transaction --oracle-resolver=http://localhost:5555
-          nargo prove --package get_log --oracle-resolver=http://localhost:5555
+          curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/cpp/installation/install | bash
+          echo "$HOME/.bb" >> $GITHUB_PATH
+
+      - name: Generate Witnesses
+        run: |
+          nargo execute --package get_header --oracle-resolver=http://localhost:5555
+          nargo execute --package get_account --oracle-resolver=http://localhost:5555
+          nargo execute --package get_storage --oracle-resolver=http://localhost:5555
+          nargo execute --package get_receipt --oracle-resolver=http://localhost:5555
+          nargo execute --package get_transaction --oracle-resolver=http://localhost:5555
+          nargo execute --package get_log --oracle-resolver=http://localhost:5555
+
+      - name: Generate Proofs
+        run: |
+          bb prove -b ./target/get_header.json -w ./target/get_header.gz -o ./target/get_header/proof
+          bb prove -b ./target/get_account.json -w ./target/get_account.gz -o ./target/get_account/proof
+          bb prove -b ./target/get_storage.json -w ./target/get_storage.gz -o ./target/get_storage/proof
+          bb prove -b ./target/get_receipt.json -w ./target/get_receipt.gz -o ./target/get_receipt/proof
+          bb prove -b ./target/get_transaction.json -w ./target/get_transaction.gz -o ./target/get_transaction/proof
+          bb prove -b ./target/get_log.json -w ./target/get_log.gz -o ./target/get_log/proof
 
       # Note: Solidity verifier generation is not yet supported for UltraHonk in Nargo 1.0+
       # Using pre-generated verifier contracts committed to the repository

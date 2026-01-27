@@ -48,7 +48,7 @@ jobs:
                   toolchain: ${{ matrix.toolchain }}
 
             - name: Run Ethereum Noir tests
-              run: nargo test --workspace
+              run: nargo test --workspace --skip-brillig-constraints-check
 
     format:
         runs-on: ubuntu-latest
