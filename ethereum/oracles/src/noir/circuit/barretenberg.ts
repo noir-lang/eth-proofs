@@ -11,9 +11,10 @@ export class Barretenberg {
   public async writeVK(acirPath: string, vkPath: string) {
     await $`${this.binaryPath} write_vk -b ${acirPath} -o ${vkPath}`;
   }
-  public async vkAsFields(vkPath: string, vkAsFieldsPath: string) {
-    await $`${this.binaryPath} vk_as_fields -k ${vkPath} -o ${vkAsFieldsPath}`;
-  }
+
+  // Note: vk_as_fields CLI command was removed in newer bb versions
+  // VK conversion to fields is now handled in TypeScript (see vk.ts)
+
   public async proofAsFields(vkPath: string, proofWithInputsPath: string, proofAsFieldsPath: string) {
     await $`${this.binaryPath} proof_as_fields -k ${vkPath} -p ${proofWithInputsPath} -o ${proofAsFieldsPath}`;
   }

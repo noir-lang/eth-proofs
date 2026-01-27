@@ -77,14 +77,14 @@ jobs:
       - name: Generate Proofs
         run: |
           export PATH="$HOME/.bb:$PATH"
-          bb prove -b ./ethereum/circuits/get_header/target/get_header.json -w ./ethereum/circuits/get_header/target/get_header.gz -o ./ethereum/circuits/get_header/target/proof
-          bb prove -b ./ethereum/circuits/get_account/target/get_account.json -w ./ethereum/circuits/get_account/target/get_account.gz -o ./ethereum/circuits/get_account/target/proof
-          bb prove -b ./ethereum/circuits/get_storage/target/get_storage.json -w ./ethereum/circuits/get_storage/target/get_storage.gz -o ./ethereum/circuits/get_storage/target/proof
-          bb prove -b ./ethereum/circuits/get_receipt/target/get_receipt.json -w ./ethereum/circuits/get_receipt/target/get_receipt.gz -o ./ethereum/circuits/get_receipt/target/proof
-          bb prove -b ./ethereum/circuits/get_transaction/target/get_transaction.json -w ./ethereum/circuits/get_transaction/target/get_transaction.gz -o ./ethereum/circuits/get_transaction/target/proof
-          bb prove -b ./ethereum/circuits/get_log/target/get_log.json -w ./ethereum/circuits/get_log/target/get_log.gz -o ./ethereum/circuits/get_log/target/proof
-          bb prove -b ./vlayer/examples/circuits/is_dao_worthy/target/is_dao_worthy.json -w ./vlayer/examples/circuits/is_dao_worthy/target/is_dao_worthy.gz -o ./vlayer/examples/circuits/is_dao_worthy/target/proof
-          bb prove -b ./vlayer/examples/circuits/is_ape_owner/target/is_ape_owner.json -w ./vlayer/examples/circuits/is_ape_owner/target/is_ape_owner.gz -o ./vlayer/examples/circuits/is_ape_owner/target/proof
+          bb prove -b ./target/get_header.json -w ./target/get_header.gz --write_vk -o ./target/get_header
+          bb prove -b ./target/get_account.json -w ./target/get_account.gz --write_vk -o ./target/get_account
+          bb prove -b ./target/get_storage.json -w ./target/get_storage.gz --write_vk -o ./target/get_storage
+          bb prove -b ./target/get_receipt.json -w ./target/get_receipt.gz --write_vk -o ./target/get_receipt
+          bb prove -b ./target/get_transaction.json -w ./target/get_transaction.gz --write_vk -o ./target/get_transaction
+          bb prove -b ./target/get_log.json -w ./target/get_log.gz --write_vk -o ./target/get_log
+          bb prove -b ./target/is_dao_worthy.json -w ./target/is_dao_worthy.gz --write_vk -o ./target/is_dao_worthy
+          bb prove -b ./target/is_ape_owner.json -w ./target/is_ape_owner.gz --write_vk -o ./target/is_ape_owner
 
       - name: Generate verification key for recursive proof
         working-directory: ethereum/oracles
@@ -100,31 +100,31 @@ jobs:
       - name: Generate Recursive Proof
         run: |
           export PATH="$HOME/.bb:$PATH"
-          bb prove -b ./vlayer/examples/circuits/is_dao_worthy_recursive/target/is_dao_worthy_recursive.json -w ./vlayer/examples/circuits/is_dao_worthy_recursive/target/is_dao_worthy_recursive.gz -o ./vlayer/examples/circuits/is_dao_worthy_recursive/target/proof
+          bb prove -b ./target/is_dao_worthy_recursive.json -w ./target/is_dao_worthy_recursive.gz --write_vk -o ./target/is_dao_worthy_recursive
 
       - name: Generate Verification Keys
         run: |
           export PATH="$HOME/.bb:$PATH"
-          bb write_vk -b ./ethereum/circuits/get_header/target/get_header.json -o ./ethereum/circuits/get_header/target/vk
-          bb write_vk -b ./ethereum/circuits/get_account/target/get_account.json -o ./ethereum/circuits/get_account/target/vk
-          bb write_vk -b ./ethereum/circuits/get_storage/target/get_storage.json -o ./ethereum/circuits/get_storage/target/vk
-          bb write_vk -b ./ethereum/circuits/get_receipt/target/get_receipt.json -o ./ethereum/circuits/get_receipt/target/vk
-          bb write_vk -b ./ethereum/circuits/get_transaction/target/get_transaction.json -o ./ethereum/circuits/get_transaction/target/vk
-          bb write_vk -b ./ethereum/circuits/get_log/target/get_log.json -o ./ethereum/circuits/get_log/target/vk
-          bb write_vk -b ./vlayer/examples/circuits/is_dao_worthy/target/is_dao_worthy.json -o ./vlayer/examples/circuits/is_dao_worthy/target/vk
-          bb write_vk -b ./vlayer/examples/circuits/is_ape_owner/target/is_ape_owner.json -o ./vlayer/examples/circuits/is_ape_owner/target/vk
+          bb write_vk -b ./target/get_header.json -o ./target/get_header_vk
+          bb write_vk -b ./target/get_account.json -o ./target/get_account_vk
+          bb write_vk -b ./target/get_storage.json -o ./target/get_storage_vk
+          bb write_vk -b ./target/get_receipt.json -o ./target/get_receipt_vk
+          bb write_vk -b ./target/get_transaction.json -o ./target/get_transaction_vk
+          bb write_vk -b ./target/get_log.json -o ./target/get_log_vk
+          bb write_vk -b ./target/is_dao_worthy.json -o ./target/is_dao_worthy_vk
+          bb write_vk -b ./target/is_ape_owner.json -o ./target/is_ape_owner_vk
 
       - name: Verify Proofs
         run: |
           export PATH="$HOME/.bb:$PATH"
-          bb verify -k ./ethereum/circuits/get_header/target/vk -p ./ethereum/circuits/get_header/target/proof
-          bb verify -k ./ethereum/circuits/get_account/target/vk -p ./ethereum/circuits/get_account/target/proof
-          bb verify -k ./ethereum/circuits/get_storage/target/vk -p ./ethereum/circuits/get_storage/target/proof
-          bb verify -k ./ethereum/circuits/get_receipt/target/vk -p ./ethereum/circuits/get_receipt/target/proof
-          bb verify -k ./ethereum/circuits/get_transaction/target/vk -p ./ethereum/circuits/get_transaction/target/proof
-          bb verify -k ./ethereum/circuits/get_log/target/vk -p ./ethereum/circuits/get_log/target/proof
-          bb verify -k ./vlayer/examples/circuits/is_dao_worthy/target/vk -p ./vlayer/examples/circuits/is_dao_worthy/target/proof
-          bb verify -k ./vlayer/examples/circuits/is_ape_owner/target/vk -p ./vlayer/examples/circuits/is_ape_owner/target/proof
+          bb verify -k ./target/get_header_vk -p ./target/get_header
+          bb verify -k ./target/get_account_vk -p ./target/get_account
+          bb verify -k ./target/get_storage_vk -p ./target/get_storage
+          bb verify -k ./target/get_receipt_vk -p ./target/get_receipt
+          bb verify -k ./target/get_transaction_vk -p ./target/get_transaction
+          bb verify -k ./target/get_log_vk -p ./target/get_log
+          bb verify -k ./target/is_dao_worthy_vk -p ./target/is_dao_worthy
+          bb verify -k ./target/is_ape_owner_vk -p ./target/is_ape_owner
 
       - name: Stop Oracle Server
         if: always()

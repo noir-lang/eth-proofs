@@ -10,16 +10,30 @@ import { type Hex } from 'viem';
 // IMPORTANT: The proof paths used here are not unique to the `proofId` - therefore they can be overridden in parallel proof generation.
 // https://github.com/noir-lang/noir/issues/5037
 export class NargoProver {
-  private proverName = `Prover_${this.proofId}`;
-  private proverTomlPath = path.join(this.circuit.packagePath(), `${this.proverName}.toml`);
-  private verifierName = `Verifier_${this.proofId}`;
-  public verifierTomlPath = path.join(this.circuit.packagePath(), `${this.verifierName}.toml`);
-  private proofPath = path.join(this.circuit.root, 'proofs', `${this.circuit.name}.proof`);
-
   constructor(
     public circuit: MonorepoCircuit,
     public proofId: string
   ) {}
+
+  private get proverName(): string {
+    return `Prover_${this.proofId}`;
+  }
+
+  private get proverTomlPath(): string {
+    return path.join(this.circuit.packagePath(), `${this.proverName}.toml`);
+  }
+
+  private get verifierName(): string {
+    return `Verifier_${this.proofId}`;
+  }
+
+  public get verifierTomlPath(): string {
+    return path.join(this.circuit.packagePath(), `${this.verifierName}.toml`);
+  }
+
+  private get proofPath(): string {
+    return path.join(this.circuit.root, 'proofs', `${this.circuit.name}.proof`);
+  }
 
   public async executeProveCommand(): Promise<void> {
     await $`nargo prove --package ${this.circuit.name} --oracle-resolver http://localhost:5555 -p ${this.proverName} -v ${this.verifierName}`;

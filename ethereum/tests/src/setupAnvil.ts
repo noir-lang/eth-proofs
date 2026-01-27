@@ -5,7 +5,7 @@ let anvil: ChildProcess;
 
 export function setup() {
   assert(anvil === undefined, 'Anvil already running');
-  anvil = spawn('anvil');
+  anvil = spawn('anvil', ['--code-size-limit', '100000']);
 }
 
 export function teardown() {
