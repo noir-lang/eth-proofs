@@ -15,6 +15,7 @@ const HTTP_STATUS_NO_CONTENT = 204;
 const jsonRPCServer: TypedJSONRPCServer<JSONRPCServerMethods, ServerParams> = new JSONRPCServer();
 
 // New Nargo 1.0+ protocol: resolve_foreign_call
+// @ts-ignore - resolve_foreign_call has a different signature than other methods
 jsonRPCServer.addMethod('resolve_foreign_call', async (params: any, serverParams: ServerParams) => {
   const { function: functionName, inputs } = params[0];
 

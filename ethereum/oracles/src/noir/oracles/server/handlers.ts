@@ -1,4 +1,4 @@
-import { ForeignCallResult, ForeignCallParams } from './types.js';
+import { ForeignCallResult, ForeignCallParams, ResolveForeignCallResult } from './types.js';
 import { decodeNoirArguments, encodeForeignCallResult, encodeForeignCallResultNew } from './encode.js';
 import { MultiChainClient } from '../../../ethereum/client.js';
 import { Oracle, RpcOracle } from '../types.js';
@@ -12,7 +12,8 @@ import { Oracle, RpcOracle } from '../types.js';
 // This needs to be a type, not an interface because TypedJSONRPCServer requires it to have an index signature.
 /* eslint-disable-next-line @typescript-eslint/consistent-type-definitions */
 export type JSONRPCServerMethods = {
-  resolve_foreign_call(params: any, serverParams: ServerParams): Promise<ForeignCallResult>;
+  // Note: resolve_foreign_call is not included here as it has a different signature (requires serverParams)
+  // It's added directly in app.ts using jsonRPCServer.addMethod()
   get_header(params: ForeignCallParams): ForeignCallResult;
   get_account(params: ForeignCallParams): ForeignCallResult;
   get_proof(params: ForeignCallParams): ForeignCallResult;
@@ -42,7 +43,7 @@ export async function getOracleHandler(oracle: Oracle, params: ForeignCallParams
 }
 
 // New protocol handler (for resolve_foreign_call)
-export async function getOracleHandlerNew(oracle: Oracle, params: ForeignCallParams): Promise<{ values: (string | string[])[] }> {
+export async function getOracleHandlerNew(oracle: Oracle, params: ForeignCallParams): Promise<ResolveForeignCallResult> {
   const noirArguments = decodeNoirArguments(params);
   const noirOutputs = await oracle(noirArguments);
   const result = encodeForeignCallResultNew(noirOutputs);
@@ -53,7 +54,7 @@ export async function getRpcOracleHandlerNew(
   rpcOracle: RpcOracle,
   params: ForeignCallParams,
   { client }: ServerParams
-): Promise<{ values: (string | string[])[] }> {
+): Promise<ResolveForeignCallResult> {
   const oracle = rpcOracle.bind(null, client);
   return getOracleHandlerNew(oracle, params);
 }

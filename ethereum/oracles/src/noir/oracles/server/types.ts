@@ -14,3 +14,8 @@ export type ForeignCallParams = ForeignCallParam[];
 export interface ForeignCallResult {
   values: ForeignCallParams;
 }
+
+// New Nargo 1.0+ protocol response format
+export interface ResolveForeignCallResult {
+  values: (string | string[])[];
+}
