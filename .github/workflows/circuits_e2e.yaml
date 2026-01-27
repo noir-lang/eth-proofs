@@ -37,9 +37,9 @@ jobs:
 
       - name: Install Barretenberg
         run: |
-          curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/cpp/installation/install | bash
-          echo "$HOME/.bb" >> $GITHUB_PATH
-
+          curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/refs/heads/next/barretenberg/bbup/install | bash
+          ~/.bb/bbup -nv 1.0.0-beta.18
+          sudo apt install libc++-dev
       - name: Compile Circuit
         run: |
           nargo compile --package get_header --deny-warnings --skip-brillig-constraints-check
@@ -65,14 +65,14 @@ jobs:
 
       - name: Generate Witnesses
         run: |
-          nargo execute --package get_header --oracle-resolver=http://localhost:5555
-          nargo execute --package get_account --oracle-resolver=http://localhost:5555
-          nargo execute --package get_storage --oracle-resolver=http://localhost:5555
-          nargo execute --package get_receipt --oracle-resolver=http://localhost:5555
-          nargo execute --package get_transaction --oracle-resolver=http://localhost:5555
-          nargo execute --package get_log --oracle-resolver=http://localhost:5555
-          nargo execute --package is_dao_worthy --oracle-resolver=http://localhost:5555
-          nargo execute --package is_ape_owner --oracle-resolver=http://localhost:5555
+          nargo execute --package get_header --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package get_account --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package get_storage --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package get_receipt --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package get_transaction --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package get_log --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package is_dao_worthy --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package is_ape_owner --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
 
       - name: Generate Proofs
         run: |

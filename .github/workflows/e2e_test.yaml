@@ -48,26 +48,37 @@ jobs:
 
       - name: Install Barretenberg
         run: |
-          curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/master/barretenberg/cpp/installation/install | bash
-          echo "$HOME/.bb" >> $GITHUB_PATH
+          curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/refs/heads/next/barretenberg/bbup/install | bash
+          ~/.bb/bbup -nv 1.0.0-beta.18
+          sudo apt install libc++-dev
 
       - name: Generate Witnesses
         run: |
-          nargo execute --package get_header --oracle-resolver=http://localhost:5555
-          nargo execute --package get_account --oracle-resolver=http://localhost:5555
-          nargo execute --package get_storage --oracle-resolver=http://localhost:5555
-          nargo execute --package get_receipt --oracle-resolver=http://localhost:5555
-          nargo execute --package get_transaction --oracle-resolver=http://localhost:5555
-          nargo execute --package get_log --oracle-resolver=http://localhost:5555
+          nargo execute --package get_header --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package get_account --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package get_storage --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package get_receipt --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package get_transaction --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package get_log --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+
+      - name: Debug - List Generated Files
+        run: |
+          echo "=== Checking target directories ==="
+          find . -name "*.json" -path "*/target/*" -type f
+          echo "=== Checking for .gz files ==="
+          find . -name "*.gz" -path "*/target/*" -type f
+          echo "=== Directory structure of ethereum/circuits/get_header/target ==="
+          ls -la ethereum/circuits/get_header/target/ || echo "Directory not found"
 
       - name: Generate Proofs
         run: |
-          bb prove -b ./target/get_header.json -w ./target/get_header.gz -o ./target/get_header/proof
-          bb prove -b ./target/get_account.json -w ./target/get_account.gz -o ./target/get_account/proof
-          bb prove -b ./target/get_storage.json -w ./target/get_storage.gz -o ./target/get_storage/proof
-          bb prove -b ./target/get_receipt.json -w ./target/get_receipt.gz -o ./target/get_receipt/proof
-          bb prove -b ./target/get_transaction.json -w ./target/get_transaction.gz -o ./target/get_transaction/proof
-          bb prove -b ./target/get_log.json -w ./target/get_log.gz -o ./target/get_log/proof
+          export PATH="$HOME/.bb:$PATH"
+          bb prove -b ./ethereum/circuits/get_header/target/get_header.json -w ./ethereum/circuits/get_header/target/get_header.gz -o ./ethereum/circuits/get_header/target/proof
+          bb prove -b ./ethereum/circuits/get_account/target/get_account.json -w ./ethereum/circuits/get_account/target/get_account.gz -o ./ethereum/circuits/get_account/target/proof
+          bb prove -b ./ethereum/circuits/get_storage/target/get_storage.json -w ./ethereum/circuits/get_storage/target/get_storage.gz -o ./ethereum/circuits/get_storage/target/proof
+          bb prove -b ./ethereum/circuits/get_receipt/target/get_receipt.json -w ./ethereum/circuits/get_receipt/target/get_receipt.gz -o ./ethereum/circuits/get_receipt/target/proof
+          bb prove -b ./ethereum/circuits/get_transaction/target/get_transaction.json -w ./ethereum/circuits/get_transaction/target/get_transaction.gz -o ./ethereum/circuits/get_transaction/target/proof
+          bb prove -b ./ethereum/circuits/get_log/target/get_log.json -w ./ethereum/circuits/get_log/target/get_log.gz -o ./ethereum/circuits/get_log/target/proof
 
       # Note: Solidity verifier generation is not yet supported for UltraHonk in Nargo 1.0+
       # Using pre-generated verifier contracts committed to the repository
