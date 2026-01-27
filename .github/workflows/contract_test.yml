@@ -31,18 +31,34 @@ jobs:
         with:
           toolchain: 1.0.0-beta.18
 
-      # Note: Solidity verifier generation is not yet supported for UltraHonk in Nargo 1.0+
-      # Using pre-generated verifier contracts committed to the repository
-      # TODO: Re-enable when bb write_solidity_verifier supports Honk
-      # - name: Generate Verifier Contracts
-      #   run: |
-      #     nargo compile --workspace
-      #     bb write_solidity_verifier -k ./target/get_storage/vk/vk -o ./contract/get_storage/plonk_vk.sol
-      #     bb write_solidity_verifier -k ./target/get_account/vk/vk -o ./contract/get_account/plonk_vk.sol
-      #     bb write_solidity_verifier -k ./target/get_header/vk/vk -o ./contract/get_header/plonk_vk.sol
-      #     bb write_solidity_verifier -k ./target/get_receipt/vk/vk -o ./contract/get_receipt/plonk_vk.sol
-      #     bb write_solidity_verifier -k ./target/get_transaction/vk/vk -o ./contract/get_transaction/plonk_vk.sol
-      #     bb write_solidity_verifier -k ./target/get_log/vk/vk -o ./contract/get_log/plonk_vk.sol
+      - name: Install Barretenberg
+        run: |
+          curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/refs/heads/next/barretenberg/bbup/install | bash
+          ~/.bb/bbup -nv 1.0.0-beta.18
+          sudo apt install libc++-dev
+
+      - name: Compile Circuits
+        run: nargo compile --workspace --skip-brillig-constraints-check
+
+      - name: Generate Verification Keys
+        run: |
+          export PATH="$HOME/.bb:$PATH"
+          bb write_vk -b ./target/get_header.json -o ./target/get_header
+          bb write_vk -b ./target/get_account.json -o ./target/get_account
+          bb write_vk -b ./target/get_storage.json -o ./target/get_storage
+          bb write_vk -b ./target/get_receipt.json -o ./target/get_receipt
+          bb write_vk -b ./target/get_transaction.json -o ./target/get_transaction
+          bb write_vk -b ./target/get_log.json -o ./target/get_log
+
+      - name: Generate Solidity Verifier Contracts
+        run: |
+          export PATH="$HOME/.bb:$PATH"
+          bb write_solidity_verifier -k ./target/get_header -o ./ethereum/contracts/src/generated-verifier/GetHeaderUltraPLONKVerifier.sol
+          bb write_solidity_verifier -k ./target/get_account -o ./ethereum/contracts/src/generated-verifier/GetAccountUltraPLONKVerifier.sol
+          bb write_solidity_verifier -k ./target/get_storage -o ./ethereum/contracts/src/generated-verifier/GetStorageUltraPLONKVerifier.sol
+          bb write_solidity_verifier -k ./target/get_receipt -o ./ethereum/contracts/src/generated-verifier/GetReceiptUltraPLONKVerifier.sol
+          bb write_solidity_verifier -k ./target/get_transaction -o ./ethereum/contracts/src/generated-verifier/GetTransactionUltraPLONKVerifier.sol
+          bb write_solidity_verifier -k ./target/get_log -o ./ethereum/contracts/src/generated-verifier/GetLogUltraPLONKVerifier.sol
 
       - name: Run Forge build
         run: |
