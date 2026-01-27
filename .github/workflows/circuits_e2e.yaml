@@ -76,6 +76,7 @@ jobs:
 
       - name: Generate Proofs
         run: |
+          export PATH="$HOME/.bb:$PATH"
           bb prove -b ./ethereum/circuits/get_header/target/get_header.json -w ./ethereum/circuits/get_header/target/get_header.gz -o ./ethereum/circuits/get_header/target/proof
           bb prove -b ./ethereum/circuits/get_account/target/get_account.json -w ./ethereum/circuits/get_account/target/get_account.gz -o ./ethereum/circuits/get_account/target/proof
           bb prove -b ./ethereum/circuits/get_storage/target/get_storage.json -w ./ethereum/circuits/get_storage/target/get_storage.gz -o ./ethereum/circuits/get_storage/target/proof
@@ -98,10 +99,12 @@ jobs:
 
       - name: Generate Recursive Proof
         run: |
+          export PATH="$HOME/.bb:$PATH"
           bb prove -b ./vlayer/examples/circuits/is_dao_worthy_recursive/target/is_dao_worthy_recursive.json -w ./vlayer/examples/circuits/is_dao_worthy_recursive/target/is_dao_worthy_recursive.gz -o ./vlayer/examples/circuits/is_dao_worthy_recursive/target/proof
 
       - name: Generate Verification Keys
         run: |
+          export PATH="$HOME/.bb:$PATH"
           bb write_vk -b ./ethereum/circuits/get_header/target/get_header.json -o ./ethereum/circuits/get_header/target/vk
           bb write_vk -b ./ethereum/circuits/get_account/target/get_account.json -o ./ethereum/circuits/get_account/target/vk
           bb write_vk -b ./ethereum/circuits/get_storage/target/get_storage.json -o ./ethereum/circuits/get_storage/target/vk
@@ -113,6 +116,7 @@ jobs:
 
       - name: Verify Proofs
         run: |
+          export PATH="$HOME/.bb:$PATH"
           bb verify -k ./ethereum/circuits/get_header/target/vk -p ./ethereum/circuits/get_header/target/proof
           bb verify -k ./ethereum/circuits/get_account/target/vk -p ./ethereum/circuits/get_account/target/proof
           bb verify -k ./ethereum/circuits/get_storage/target/vk -p ./ethereum/circuits/get_storage/target/proof
