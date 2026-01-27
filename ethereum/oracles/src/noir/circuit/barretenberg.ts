@@ -4,8 +4,8 @@ import os from 'os';
 
 export class Barretenberg {
   public static async create(): Promise<Barretenberg> {
-    const { stdout: currentBackend } = await $`nargo backend current`;
-    const binaryPath = path.join(os.homedir(), '.nargo/backends', currentBackend, 'backend_binary');
+    // In Nargo 1.0+, use bb directly from ~/.bb/bb
+    const binaryPath = path.join(os.homedir(), '.bb/bb');
     return new Barretenberg(binaryPath);
   }
   public async writeVK(acirPath: string, vkPath: string) {

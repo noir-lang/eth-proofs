@@ -805,10 +805,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noir-lang/acvm_js@npm:0.45.0-a5b7df1.nightly":
-  version: 0.45.0-a5b7df1.nightly
-  resolution: "@noir-lang/acvm_js@npm:0.45.0-a5b7df1.nightly"
-  checksum: 10c0/43f313347dde9faa1697a86c374527a7437fbf1f5486279c27ffa4312c356fa3308e9919fc49b56032b8d28f06e359b1d4e41136b4e9349c8e6ad9f5e2142ef9
+"@noir-lang/acvm_js@npm:1.0.0-beta.18":
+  version: 1.0.0-beta.18
+  resolution: "@noir-lang/acvm_js@npm:1.0.0-beta.18"
+  checksum: 10c0/74b61a6a17379d247acd9a515dcbf01ceb6d5c4547bcc47d309a9636966b7369feb1468ca021f196aa45257524a77fa05e31324372071ba97e6627c5b75bf7ab
   languageName: node
   linkType: hard
 
@@ -823,14 +823,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noir-lang/noir_js@npm:0.30.0":
-  version: 0.30.0
-  resolution: "@noir-lang/noir_js@npm:0.30.0"
+"@noir-lang/noir_js@npm:1.0.0-beta.18":
+  version: 1.0.0-beta.18
+  resolution: "@noir-lang/noir_js@npm:1.0.0-beta.18"
   dependencies:
-    "@noir-lang/acvm_js": "npm:0.45.0-a5b7df1.nightly"
-    "@noir-lang/noirc_abi": "npm:0.30.0"
-    "@noir-lang/types": "npm:0.30.0"
-  checksum: 10c0/87677839044585392572fb754b8c22a76512e0ddecd3dafc0842ab6d2d73913eddbc751d95bf3cfb609c0da5d4d5f1e3a0ea8c8e62c68e4998718078dfc41fb6
+    "@noir-lang/acvm_js": "npm:1.0.0-beta.18"
+    "@noir-lang/noirc_abi": "npm:1.0.0-beta.18"
+    "@noir-lang/types": "npm:1.0.0-beta.18"
+    pako: "npm:^2.1.0"
+  checksum: 10c0/7da4079f1ae3fb69d733dd93caf603816a14970f31964d5969120b275c8edb0908e1f43d101df48c3bef6015c50dad3428242218a875bc0484e0a173579e7575
   languageName: node
   linkType: hard
 
@@ -843,10 +844,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@noir-lang/noirc_abi@npm:1.0.0-beta.18":
+  version: 1.0.0-beta.18
+  resolution: "@noir-lang/noirc_abi@npm:1.0.0-beta.18"
+  dependencies:
+    "@noir-lang/types": "npm:1.0.0-beta.18"
+  checksum: 10c0/3bf49a837b39885971f15a9f14213ae7bc219277528a7df9589a991cd8fc0d8e8db9c394f9b6583d06a72e4c0e2f2d8c2e0f26a65ff4a73d0dd3d41a50bd47e1
+  languageName: node
+  linkType: hard
+
 "@noir-lang/types@npm:0.30.0":
   version: 0.30.0
   resolution: "@noir-lang/types@npm:0.30.0"
   checksum: 10c0/585fd260f4a3054056d33ee37c75eca338a6fdff350df5187bde8da2a35bb53444737a438be4bd990329f80384cc57683ac19f2b36c800c9bfec15a951e14a4c
+  languageName: node
+  linkType: hard
+
+"@noir-lang/types@npm:1.0.0-beta.18":
+  version: 1.0.0-beta.18
+  resolution: "@noir-lang/types@npm:1.0.0-beta.18"
+  checksum: 10c0/6c735036ed1dbe88d85652c65de36d4857d1f3868e90400307bddf61bbeba7e155fd7160cc943a817771e96e8c6105a586a5454dd4b4f52adbccd511628e74ec
   languageName: node
   linkType: hard
 
@@ -4754,9 +4771,8 @@ __metadata:
   dependencies:
     "@ethereumjs/trie": "npm:^6.2.0"
     "@iarna/toml": "npm:^2.2.5"
-    "@noir-lang/backend_barretenberg": "npm:0.30.0"
-    "@noir-lang/noir_js": "npm:0.30.0"
-    "@noir-lang/noirc_abi": "npm:0.30.0"
+    "@noir-lang/noir_js": "npm:1.0.0-beta.18"
+    "@noir-lang/noirc_abi": "npm:1.0.0-beta.18"
     "@types/iarna__toml": "npm:^2.0.5"
     "@types/json-bigint": "npm:^1.0.4"
     "@types/lodash.isequal": "npm:^4.5.8"
@@ -4997,6 +5013,13 @@ __metadata:
   version: 2.2.0
   resolution: "p-try@npm:2.2.0"
   checksum: 10c0/c36c19907734c904b16994e6535b02c36c2224d433e01a2f1ab777237f4d86e6289fd5fd464850491e940379d4606ed850c03e0f9ab600b0ebddb511312e177f
+  languageName: node
+  linkType: hard
+
+"pako@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "pako@npm:2.1.0"
+  checksum: 10c0/8e8646581410654b50eb22a5dfd71159cae98145bd5086c9a7a816ec0370b5f72b4648d08674624b3870a521e6a3daffd6c2f7bc00fdefc7063c9d8232ff5116
   languageName: node
   linkType: hard
 
