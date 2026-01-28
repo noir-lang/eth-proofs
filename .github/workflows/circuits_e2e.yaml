@@ -45,7 +45,7 @@ jobs:
           nargo compile --package get_header --deny-warnings --skip-brillig-constraints-check
           nargo compile --package get_account --deny-warnings --skip-brillig-constraints-check
           nargo compile --package get_storage --deny-warnings --skip-brillig-constraints-check
-          # nargo compile --package get_storage_recursive --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package get_storage_recursive --deny-warnings --skip-brillig-constraints-check
           nargo compile --package get_receipt --deny-warnings --skip-brillig-constraints-check
           nargo compile --package get_transaction --deny-warnings --skip-brillig-constraints-check
           nargo compile --package get_log --deny-warnings --skip-brillig-constraints-check
@@ -74,29 +74,17 @@ jobs:
           nargo execute --package is_dao_worthy --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
           nargo execute --package is_ape_owner --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
 
-      - name: Generate Verification Keys
+      - name: Generate Proofs and Verification Keys
         run: |
           export PATH="$HOME/.bb:$PATH"
-          bb write_vk -b ./target/get_header.json -o ./target/get_header_vk
-          bb write_vk -b ./target/get_account.json -o ./target/get_account_vk
-          bb write_vk -b ./target/get_storage.json -o ./target/get_storage_vk
-          bb write_vk -b ./target/get_receipt.json -o ./target/get_receipt_vk
-          bb write_vk -b ./target/get_transaction.json -o ./target/get_transaction_vk
-          bb write_vk -b ./target/get_log.json -o ./target/get_log_vk
-          bb write_vk -b ./target/is_dao_worthy.json -o ./target/is_dao_worthy_vk
-          bb write_vk -b ./target/is_ape_owner.json -o ./target/is_ape_owner_vk
-
-      - name: Generate Proofs
-        run: |
-          export PATH="$HOME/.bb:$PATH"
-          bb prove -b ./target/get_header.json -w ./target/get_header.gz -o ./target/get_header -k ./target/get_header_vk
-          bb prove -b ./target/get_account.json -w ./target/get_account.gz -o ./target/get_account -k ./target/get_account_vk
-          bb prove -b ./target/get_storage.json -w ./target/get_storage.gz -o ./target/get_storage -k ./target/get_storage_vk
-          bb prove -b ./target/get_receipt.json -w ./target/get_receipt.gz -o ./target/get_receipt -k ./target/get_receipt_vk
-          bb prove -b ./target/get_transaction.json -w ./target/get_transaction.gz -o ./target/get_transaction -k ./target/get_transaction_vk
-          bb prove -b ./target/get_log.json -w ./target/get_log.gz -o ./target/get_log -k ./target/get_log_vk
-          bb prove -b ./target/is_dao_worthy.json -w ./target/is_dao_worthy.gz -o ./target/is_dao_worthy -k ./target/is_dao_worthy_vk
-          bb prove -b ./target/is_ape_owner.json -w ./target/is_ape_owner.gz -o ./target/is_ape_owner -k ./target/is_ape_owner_vk
+          bb prove -b ./target/get_header.json -w ./target/get_header.gz -o ./target/get_header --write_vk
+          bb prove -b ./target/get_account.json -w ./target/get_account.gz -o ./target/get_account --write_vk
+          bb prove -b ./target/get_storage.json -w ./target/get_storage.gz -o ./target/get_storage --write_vk
+          bb prove -b ./target/get_receipt.json -w ./target/get_receipt.gz -o ./target/get_receipt --write_vk
+          bb prove -b ./target/get_transaction.json -w ./target/get_transaction.gz -o ./target/get_transaction --write_vk
+          bb prove -b ./target/get_log.json -w ./target/get_log.gz -o ./target/get_log --write_vk
+          bb prove -b ./target/is_dao_worthy.json -w ./target/is_dao_worthy.gz -o ./target/is_dao_worthy --write_vk
+          bb prove -b ./target/is_ape_owner.json -w ./target/is_ape_owner.gz -o ./target/is_ape_owner --write_vk
 
       # - name: Generate verification key for recursive proof
       #   working-directory: ethereum/oracles
@@ -112,7 +100,7 @@ jobs:
       # - name: Generate Recursive Proof
       #   run: |
       #     export PATH="$HOME/.bb:$PATH"
-      #     bb prove -b ./target/is_dao_worthy_recursive.json -w ./target/is_dao_worthy_recursive.gz -o ./target/is_dao_worthy_recursive -k ./target/is_dao_worthy_recursive_vk
+      #     bb prove -b ./target/is_dao_worthy_recursive.json -w ./target/is_dao_worthy_recursive.gz -o ./target/is_dao_worthy_recursive --write_vk
 
       - name: Verify Proofs
         run: |
