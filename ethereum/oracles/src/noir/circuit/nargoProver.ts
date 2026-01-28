@@ -44,16 +44,41 @@ export class NargoProver {
     return path.join(this.circuit.root, 'target', `${this.circuit.name}.json`);
   }
 
+  // Paths relative to workspace root (for use when cwd is set to workspace root)
+  private get workspaceRelativeProofPath(): string {
+    return path.join('proofs', `${this.circuit.name}.proof`);
+  }
+
+  private get workspaceRelativeWitnessPath(): string {
+    return path.join('target', `${this.proverName}.gz`);
+  }
+
+  private get workspaceRelativeBytecodePath(): string {
+    return path.join('target', `${this.circuit.name}.json`);
+  }
+
+  private get workspaceRelativeVkPath(): string {
+    return path.join('target', `${this.circuit.name}.vk.bin`);
+  }
+
   public async executeProveCommand(): Promise<void> {
+    // Both nargo and bb run from the workspace root
+    // All paths are relative to the workspace root
+    const workspaceRoot = path.resolve(this.circuit.root);
+
     // Generate witness using nargo execute
-    // Run from the workspace root (circuit.root) where nargo can find the packages
-    // The witness name is specified as a positional argument and will be written to workspace target/
-    await $({ cwd: this.circuit.root })`nargo execute --package ${this.circuit.name} --oracle-resolver http://localhost:5555 -p ${this.proverName} ${this.proverName}`;
+    await $({ cwd: workspaceRoot })`nargo execute --package ${this.circuit.name} --oracle-resolver http://localhost:5555 -p ${this.proverName} ${this.proverName}`;
 
     // Generate proof from witness using bb
-    // Also run from workspace root so relative paths work correctly
+    // Pass paths relative to workspace root since we're running from there
     const bb = await Barretenberg.create();
-    await bb.prove(this.bytecodePath, this.witnessPath, this.proofPath, this.circuit.vkPath(), this.circuit.root);
+    await bb.prove(
+      this.workspaceRelativeBytecodePath,
+      this.workspaceRelativeWitnessPath,
+      this.workspaceRelativeProofPath,
+      this.workspaceRelativeVkPath,
+      workspaceRoot
+    );
   }
 
   public async prove(inputs: InputMap): Promise<Hex> {
