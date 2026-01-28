@@ -74,17 +74,17 @@ jobs:
           nargo execute --package is_dao_worthy --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
           nargo execute --package is_ape_owner --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
 
-      - name: Generate Proofs
-        run: |
-          export PATH="$HOME/.bb:$PATH"
-          bb prove -b ./target/get_header.json -w ./target/get_header.gz --write_vk -o ./target/get_header
-          bb prove -b ./target/get_account.json -w ./target/get_account.gz --write_vk -o ./target/get_account
-          bb prove -b ./target/get_storage.json -w ./target/get_storage.gz --write_vk -o ./target/get_storage
-          bb prove -b ./target/get_receipt.json -w ./target/get_receipt.gz --write_vk -o ./target/get_receipt
-          bb prove -b ./target/get_transaction.json -w ./target/get_transaction.gz --write_vk -o ./target/get_transaction
-          bb prove -b ./target/get_log.json -w ./target/get_log.gz --write_vk -o ./target/get_log
-          bb prove -b ./target/is_dao_worthy.json -w ./target/is_dao_worthy.gz --write_vk -o ./target/is_dao_worthy
-          bb prove -b ./target/is_ape_owner.json -w ./target/is_ape_owner.gz --write_vk -o ./target/is_ape_owner
+      # - name: Generate Proofs
+      #   run: |
+      #     export PATH="$HOME/.bb:$PATH"
+      #     bb prove -b ./target/get_header.json -w ./target/get_header.gz --write_vk -o ./target/get_header
+      #     bb prove -b ./target/get_account.json -w ./target/get_account.gz --write_vk -o ./target/get_account
+      #     bb prove -b ./target/get_storage.json -w ./target/get_storage.gz --write_vk -o ./target/get_storage
+      #     bb prove -b ./target/get_receipt.json -w ./target/get_receipt.gz --write_vk -o ./target/get_receipt
+      #     bb prove -b ./target/get_transaction.json -w ./target/get_transaction.gz --write_vk -o ./target/get_transaction
+      #     bb prove -b ./target/get_log.json -w ./target/get_log.gz --write_vk -o ./target/get_log
+      #     bb prove -b ./target/is_dao_worthy.json -w ./target/is_dao_worthy.gz --write_vk -o ./target/is_dao_worthy
+      #     bb prove -b ./target/is_ape_owner.json -w ./target/is_ape_owner.gz --write_vk -o ./target/is_ape_owner
 
       - name: Generate verification key for recursive proof
         working-directory: ethereum/oracles

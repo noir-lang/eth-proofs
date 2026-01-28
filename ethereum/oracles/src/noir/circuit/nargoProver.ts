@@ -51,8 +51,9 @@ export class NargoProver {
     await $({ cwd: this.circuit.root })`nargo execute --package ${this.circuit.name} --oracle-resolver http://localhost:5555 -p ${this.proverName} ${this.proverName}`;
 
     // Generate proof from witness using bb
+    // Also run from workspace root so relative paths work correctly
     const bb = await Barretenberg.create();
-    await bb.prove(this.bytecodePath, this.witnessPath, this.proofPath);
+    await bb.prove(this.bytecodePath, this.witnessPath, this.proofPath, this.circuit.vkPath(), this.circuit.root);
   }
 
   public async prove(inputs: InputMap): Promise<Hex> {
