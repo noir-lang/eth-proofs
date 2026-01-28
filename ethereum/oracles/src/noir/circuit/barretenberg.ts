@@ -19,5 +19,9 @@ export class Barretenberg {
     await $`${this.binaryPath} proof_as_fields -k ${vkPath} -p ${proofWithInputsPath} -o ${proofAsFieldsPath}`;
   }
 
+  public async prove(bytecodePath: string, witnessPath: string, proofPath: string) {
+    await $`${this.binaryPath} prove -b ${bytecodePath} -w ${witnessPath} -o ${proofPath}`;
+  }
+
   private constructor(private binaryPath: string) {}
 }
