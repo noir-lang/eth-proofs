@@ -1,5 +1,5 @@
 import { ForeignCallOutput } from '@noir-lang/noir_js';
-import { ForeignCallParam, ForeignCallParams, ForeignCallResult } from './types.js';
+import { ForeignCallParams } from './types.js';
 import { NoirArguments } from '../types.js';
 
 /// DECODE
@@ -14,22 +14,7 @@ export function decodeNoirArguments(params: ForeignCallParams): NoirArguments {
 }
 
 /// ENCODE
-export function encodeForeignCallResult(noirOutputs: ForeignCallOutput[]): ForeignCallResult {
-  return { values: noirOutputs.map(encodeForeignCallResultValue) };
-}
-
-function encodeForeignCallResultValue(noirOutput: ForeignCallOutput): ForeignCallParam {
-  if (typeof noirOutput === 'string') {
-    return { Single: noirOutput };
-  } else {
-    return {
-      Array: noirOutput
-    };
-  }
-}
-
-// New Nargo 1.0+ protocol encoder
-export function encodeForeignCallResultNew(noirOutputs: ForeignCallOutput[]): { values: (string | string[])[] } {
+export function encodeForeignCallResult(noirOutputs: ForeignCallOutput[]): { values: (string | string[])[] } {
   return {
     values: noirOutputs.map(output => {
       if (typeof output === 'string') {

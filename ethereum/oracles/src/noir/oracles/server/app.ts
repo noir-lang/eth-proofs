@@ -1,7 +1,12 @@
 import { JSONRPCRequest, JSONRPCServer, TypedJSONRPCServer } from 'json-rpc-2.0';
 import Fastify from 'fastify';
 import http from 'http';
-import { JSONRPCServerMethods, ServerParams, getOracleHandler, getRpcOracleHandler, getOracleHandlerNew, getRpcOracleHandlerNew } from './handlers.js';
+import {
+  JSONRPCServerMethods,
+  ServerParams,
+  getOracleHandler,
+  getRpcOracleHandler
+} from './handlers.js';
 import { MultiChainClient } from '../../../ethereum/client.js';
 import { getHeaderOracle } from '../rpc/headerOracle.js';
 import { getAccountOracle } from '../rpc/accountOracle.js';
@@ -14,8 +19,6 @@ const HTTP_STATUS_NO_CONTENT = 204;
 
 const jsonRPCServer: TypedJSONRPCServer<JSONRPCServerMethods, ServerParams> = new JSONRPCServer();
 
-// New Nargo 1.0+ protocol: resolve_foreign_call
-// @ts-ignore - resolve_foreign_call has a different signature than other methods
 jsonRPCServer.addMethod('resolve_foreign_call', async (params: any, serverParams: ServerParams) => {
   const { function: functionName, inputs } = params[0];
 
@@ -35,26 +38,26 @@ jsonRPCServer.addMethod('resolve_foreign_call', async (params: any, serverParams
     }
   });
 
-  // Dispatch to the appropriate oracle handler (using new protocol handlers)
+  // Dispatch to the appropriate oracle handler
   let result;
   switch (functionName) {
     case 'get_header':
-      result = await getRpcOracleHandlerNew(getHeaderOracle, foreignCallParams, serverParams);
+      result = await getRpcOracleHandler(getHeaderOracle, foreignCallParams, serverParams);
       break;
     case 'get_account':
-      result = await getRpcOracleHandlerNew(getAccountOracle, foreignCallParams, serverParams);
+      result = await getRpcOracleHandler(getAccountOracle, foreignCallParams, serverParams);
       break;
     case 'get_proof':
-      result = await getRpcOracleHandlerNew(getProofOracle, foreignCallParams, serverParams);
+      result = await getRpcOracleHandler(getProofOracle, foreignCallParams, serverParams);
       break;
     case 'get_receipt':
-      result = await getRpcOracleHandlerNew(getReceiptOracle, foreignCallParams, serverParams);
+      result = await getRpcOracleHandler(getReceiptOracle, foreignCallParams, serverParams);
       break;
     case 'get_transaction':
-      result = await getRpcOracleHandlerNew(getTransactionOracle, foreignCallParams, serverParams);
+      result = await getRpcOracleHandler(getTransactionOracle, foreignCallParams, serverParams);
       break;
     case 'get_storage_recursive':
-      result = await getOracleHandlerNew(getStorageOracle, foreignCallParams);
+      result = await getOracleHandler(getStorageOracle, foreignCallParams);
       break;
     default:
       throw new Error(`Unknown oracle function: ${functionName}`);
@@ -62,14 +65,6 @@ jsonRPCServer.addMethod('resolve_foreign_call', async (params: any, serverParams
 
   return result;
 });
-
-// Old protocol support (for direct testing)
-jsonRPCServer.addMethod('get_header', getRpcOracleHandler.bind(this, getHeaderOracle));
-jsonRPCServer.addMethod('get_account', getRpcOracleHandler.bind(this, getAccountOracle));
-jsonRPCServer.addMethod('get_proof', getRpcOracleHandler.bind(this, getProofOracle));
-jsonRPCServer.addMethod('get_receipt', getRpcOracleHandler.bind(this, getReceiptOracle));
-jsonRPCServer.addMethod('get_transaction', getRpcOracleHandler.bind(this, getTransactionOracle));
-jsonRPCServer.addMethod('get_storage_recursive', getOracleHandler.bind(this, getStorageOracle));
 
 export function buildOracleServer(
   opts: Fastify.FastifyHttpOptions<http.Server> = {},
