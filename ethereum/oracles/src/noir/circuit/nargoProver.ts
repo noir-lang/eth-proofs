@@ -46,7 +46,9 @@ export class NargoProver {
 
   public async executeProveCommand(): Promise<void> {
     // Generate witness using nargo execute
-    await $`nargo execute --package ${this.circuit.name} --oracle-resolver http://localhost:5555 -p ${this.proverName}`;
+    // Run from the workspace root (circuit.root) where nargo can find the packages
+    // The witness name is specified as a positional argument and will be written to workspace target/
+    await $({ cwd: this.circuit.root })`nargo execute --package ${this.circuit.name} --oracle-resolver http://localhost:5555 -p ${this.proverName} ${this.proverName}`;
 
     // Generate proof from witness using bb
     const bb = await Barretenberg.create();
