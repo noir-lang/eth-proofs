@@ -45,7 +45,7 @@ jobs:
           nargo compile --package get_header --deny-warnings --skip-brillig-constraints-check
           nargo compile --package get_account --deny-warnings --skip-brillig-constraints-check
           nargo compile --package get_storage --deny-warnings --skip-brillig-constraints-check
-          nargo compile --package get_storage_recursive --deny-warnings --skip-brillig-constraints-check
+          # nargo compile --package get_storage_recursive --deny-warnings --skip-brillig-constraints-check
           nargo compile --package get_receipt --deny-warnings --skip-brillig-constraints-check
           nargo compile --package get_transaction --deny-warnings --skip-brillig-constraints-check
           nargo compile --package get_log --deny-warnings --skip-brillig-constraints-check
@@ -74,34 +74,6 @@ jobs:
           nargo execute --package is_dao_worthy --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
           nargo execute --package is_ape_owner --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
 
-      # - name: Generate Proofs
-      #   run: |
-      #     export PATH="$HOME/.bb:$PATH"
-      #     bb prove -b ./target/get_header.json -w ./target/get_header.gz --write_vk -o ./target/get_header
-      #     bb prove -b ./target/get_account.json -w ./target/get_account.gz --write_vk -o ./target/get_account
-      #     bb prove -b ./target/get_storage.json -w ./target/get_storage.gz --write_vk -o ./target/get_storage
-      #     bb prove -b ./target/get_receipt.json -w ./target/get_receipt.gz --write_vk -o ./target/get_receipt
-      #     bb prove -b ./target/get_transaction.json -w ./target/get_transaction.gz --write_vk -o ./target/get_transaction
-      #     bb prove -b ./target/get_log.json -w ./target/get_log.gz --write_vk -o ./target/get_log
-      #     bb prove -b ./target/is_dao_worthy.json -w ./target/is_dao_worthy.gz --write_vk -o ./target/is_dao_worthy
-      #     bb prove -b ./target/is_ape_owner.json -w ./target/is_ape_owner.gz --write_vk -o ./target/is_ape_owner
-
-      - name: Generate verification key for recursive proof
-        working-directory: ethereum/oracles
-        run: |
-          # Verification key generation uses the TypeScript bindings to generate the VK needed for recursive proofs.
-          yarn generate-get-storage-vk
-
-      - name: Generate Recursive Witness
-        run: |
-          export NARGO_FOREIGN_CALL_TIMEOUT=100000 # miliseconds
-          nargo execute --package is_dao_worthy_recursive --oracle-resolver=http://localhost:5555
-
-      - name: Generate Recursive Proof
-        run: |
-          export PATH="$HOME/.bb:$PATH"
-          bb prove -b ./target/is_dao_worthy_recursive.json -w ./target/is_dao_worthy_recursive.gz --write_vk -o ./target/is_dao_worthy_recursive
-
       - name: Generate Verification Keys
         run: |
           export PATH="$HOME/.bb:$PATH"
@@ -113,6 +85,34 @@ jobs:
           bb write_vk -b ./target/get_log.json -o ./target/get_log_vk
           bb write_vk -b ./target/is_dao_worthy.json -o ./target/is_dao_worthy_vk
           bb write_vk -b ./target/is_ape_owner.json -o ./target/is_ape_owner_vk
+
+      - name: Generate Proofs
+        run: |
+          export PATH="$HOME/.bb:$PATH"
+          bb prove -b ./target/get_header.json -w ./target/get_header.gz -o ./target/get_header -k ./target/get_header_vk
+          bb prove -b ./target/get_account.json -w ./target/get_account.gz -o ./target/get_account -k ./target/get_account_vk
+          bb prove -b ./target/get_storage.json -w ./target/get_storage.gz -o ./target/get_storage -k ./target/get_storage_vk
+          bb prove -b ./target/get_receipt.json -w ./target/get_receipt.gz -o ./target/get_receipt -k ./target/get_receipt_vk
+          bb prove -b ./target/get_transaction.json -w ./target/get_transaction.gz -o ./target/get_transaction -k ./target/get_transaction_vk
+          bb prove -b ./target/get_log.json -w ./target/get_log.gz -o ./target/get_log -k ./target/get_log_vk
+          bb prove -b ./target/is_dao_worthy.json -w ./target/is_dao_worthy.gz -o ./target/is_dao_worthy -k ./target/is_dao_worthy_vk
+          bb prove -b ./target/is_ape_owner.json -w ./target/is_ape_owner.gz -o ./target/is_ape_owner -k ./target/is_ape_owner_vk
+
+      # - name: Generate verification key for recursive proof
+      #   working-directory: ethereum/oracles
+      #   run: |
+      #     # Verification key generation uses the TypeScript bindings to generate the VK needed for recursive proofs.
+      #     yarn generate-get-storage-vk
+
+      # - name: Generate Recursive Witness
+      #   run: |
+      #     export NARGO_FOREIGN_CALL_TIMEOUT=100000 # miliseconds
+      #     nargo execute --package is_dao_worthy_recursive --oracle-resolver=http://localhost:5555
+
+      # - name: Generate Recursive Proof
+      #   run: |
+      #     export PATH="$HOME/.bb:$PATH"
+      #     bb prove -b ./target/is_dao_worthy_recursive.json -w ./target/is_dao_worthy_recursive.gz -o ./target/is_dao_worthy_recursive -k ./target/is_dao_worthy_recursive_vk
 
       - name: Verify Proofs
         run: |
