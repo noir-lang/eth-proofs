@@ -1,4 +1,4 @@
-// Taken from here: https://noir-lang.org/docs/how_to/how-to-oracles
+// Nargo 1.0+ foreign call protocol types
 
 export interface SingleForeignCallParam {
   Single: string;
@@ -11,6 +11,6 @@ export interface ArrayForeignCallParam {
 export type ForeignCallParam = SingleForeignCallParam | ArrayForeignCallParam;
 export type ForeignCallParams = ForeignCallParam[];
 
-export interface ForeignCallResult {
-  values: ForeignCallParams;
+export interface ResolveForeignCallResult {
+  values: (string | string[])[];
 }

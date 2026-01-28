@@ -4,18 +4,30 @@ import os from 'os';
 
 export class Barretenberg {
   public static async create(): Promise<Barretenberg> {
-    const { stdout: currentBackend } = await $`nargo backend current`;
-    const binaryPath = path.join(os.homedir(), '.nargo/backends', currentBackend, 'backend_binary');
+    const binaryPath = path.join(os.homedir(), '.bb/bb');
     return new Barretenberg(binaryPath);
   }
   public async writeVK(acirPath: string, vkPath: string) {
     await $`${this.binaryPath} write_vk -b ${acirPath} -o ${vkPath}`;
   }
-  public async vkAsFields(vkPath: string, vkAsFieldsPath: string) {
-    await $`${this.binaryPath} vk_as_fields -k ${vkPath} -o ${vkAsFieldsPath}`;
-  }
+
+  // Note: vk_as_fields CLI command was removed in newer bb versions
+  // VK conversion to fields is now handled in TypeScript
+
   public async proofAsFields(vkPath: string, proofWithInputsPath: string, proofAsFieldsPath: string) {
     await $`${this.binaryPath} proof_as_fields -k ${vkPath} -p ${proofWithInputsPath} -o ${proofAsFieldsPath}`;
+  }
+
+  public async prove(bytecodePath: string, witnessPath: string, proofPath: string, vkPath?: string, cwd?: string) {
+    const options = cwd ? { cwd } : {};
+    if (vkPath) {
+      await $({
+        ...options
+      })`${this.binaryPath} prove -b ${bytecodePath} -w ${witnessPath} -o ${proofPath} -k ${vkPath}`;
+    } else {
+      // Use --write_vk to auto-generate VK if not provided
+      await $({ ...options })`${this.binaryPath} prove -b ${bytecodePath} -w ${witnessPath} -o ${proofPath} --write_vk`;
+    }
   }
 
   private constructor(private binaryPath: string) {}

@@ -5,7 +5,7 @@
 - [Circuits tests](./circuits_test.yml)
   - Runs `nargo test`
 - [Circuits E2E tests](./circuits_e2e.yml)
-  - Runs `nargo prove` & `nargo verify`
+  - Runs `nargo execute` & `bb prove` & `bb verify`
 - [Solidity tests](./contract_test.yml)
   - Runs `forge test`
 - [TypeScript E2E tests using solidity verifiers](./e2e_test.yml)

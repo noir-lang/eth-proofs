@@ -19,15 +19,19 @@ Unfortunately `nargo` does not generate any of the recursion artifacts. Noir tea
 - Compiled artifact - `target/${name}.json`
   - generated from code using `nargo compile --package ${name}`
   - It's a JSON that contains [`base64`](https://en.wikipedia.org/wiki/Base64) encoded bytecode under the `.bytecode` key
-- Acir bytecode
-  - generated from **compiled artifact** by taking the bytecode and decoding it as `base64`, as **bb** expects it in plain binary form. We use a temp file for it as it's fast to generate and we only use it during **VK** generation
+  - The bytecode is gzip-compressed before base64 encoding
+- Circuit artifact for bb
+  - the **compiled artifact** is written as-is (as JSON) to a temp file
+  - **bb** expects circuit JSON format (not raw bytecode) when the file has a `.json` extension
+  - **bb** handles decompression of the gzipped bytecode field internally
 - VK - `target/${name}.vk.bin`
   - verification key is generated from **acir bytecode** by running:
     - `./bb write_vk -b ${acirPath} -o ${vkPath}`
   - We cache it in a file as it's slow to generate
 - VK.json - `target/${name}.vk.json`
-  - generated from VK by running:
-    - `./bb vk_as_fields  -k ${vkPath} -o ${vkJsonPath}`
+  - generated from VK binary files using the official @aztec/bb.js API
+  - the `vk_as_fields` CLI command was removed in newer bb versions (moved to msgpack API)
+  - we use `Barretenberg.vkAsFields()` from @aztec/bb.js to convert VK to field elements
   - JSON array that contains `vkHash` as the first element and `vkAsFields` after it
 
 ## Usage
@@ -35,8 +39,8 @@ Unfortunately `nargo` does not generate any of the recursion artifacts. Noir tea
 ```TS
 // Read circuit compilation artifact
 const circuit = await MonorepoCircuit.create('../../', 'get_header');
-// Generate VK - slow.
-await generateVk(circuit);
+// Generate VK - slow. Pass the full artifact, not just bytecode.
+await generateVk(circuit.artefact, circuit.vkPath(), circuit.vkAsFieldsPath());
 // Read generated VK
-const vk = await VerificationKey.create(circuit);
+const vk = await VerificationKey.create(circuit.vkAsFieldsPath());
 ```

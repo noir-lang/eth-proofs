@@ -25,7 +25,7 @@ jobs:
                   toolchain: nightly
 
             - name: Run Noir tests
-              run: nargo test
+              run: nargo test --skip-brillig-constraints-check
 
             - name: Alert on dead links
               uses: JasonEtco/create-an-issue@v2

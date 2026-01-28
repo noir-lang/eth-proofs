@@ -14,8 +14,7 @@ export enum TX_OFFSETS {
   GAS_LIMIT,
   TO,
   TO_IS_SOME,
-  VALUE_HI,
-  VALUE_LO,
+  VALUE,
   DATA,
   DATA_LEN
 }
@@ -34,7 +33,7 @@ export function encodeTx(transaction: Transaction): ForeignCallOutput[] {
   const r = encodeHex(transaction.r);
   const s = encodeHex(transaction.s);
 
-  return [nonce, gasLimit, to, toIsSome, ...value, data, data_len, v, r, s];
+  return [nonce, gasLimit, to, toIsSome, value, data, data_len, v, r, s];
 }
 
 export function encodeTxProof(txProof: Proof): ForeignCallOutput {

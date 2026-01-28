@@ -82,7 +82,7 @@ export class TxRlpEncoder {
   }
 
   private static accessListToFields(accessList: AccessList): RecursiveArray<Hex> {
-    return accessList.map(({ address, storageKeys }) => [address, storageKeys]);
+    return accessList.map(({ address, storageKeys }) => [address, [...storageKeys]]);
   }
 
   private static signatureToFields(baseTx: TxBase): Hex[] {
