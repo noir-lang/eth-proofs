@@ -86,6 +86,15 @@ jobs:
           bb prove -b ./target/is_dao_worthy.json -w ./target/is_dao_worthy.gz -o ./target/is_dao_worthy --write_vk
           bb prove -b ./target/is_ape_owner.json -w ./target/is_ape_owner.gz -o ./target/is_ape_owner --write_vk
 
+      - name: Debug - List generated files
+        run: |
+          echo "=== Contents of target directory ==="
+          ls -la ./target/ | head -30
+          echo "=== Looking for VK directories ==="
+          find ./target -name "*vk*" -type d | head -10
+          echo "=== Looking for proof files ==="
+          ls -la ./target/get_header* || true
+
       # - name: Generate verification key for recursive proof
       #   working-directory: ethereum/oracles
       #   run: |
@@ -105,14 +114,14 @@ jobs:
       - name: Verify Proofs
         run: |
           export PATH="$HOME/.bb:$PATH"
-          bb verify -k ./target/get_header_vk -p ./target/get_header
-          bb verify -k ./target/get_account_vk -p ./target/get_account
-          bb verify -k ./target/get_storage_vk -p ./target/get_storage
-          bb verify -k ./target/get_receipt_vk -p ./target/get_receipt
-          bb verify -k ./target/get_transaction_vk -p ./target/get_transaction
-          bb verify -k ./target/get_log_vk -p ./target/get_log
-          bb verify -k ./target/is_dao_worthy_vk -p ./target/is_dao_worthy
-          bb verify -k ./target/is_ape_owner_vk -p ./target/is_ape_owner
+          bb verify -k ./target/get_header/vk -p ./target/get_header/proof -i ./target/get_header/public_inputs
+          bb verify -k ./target/get_account/vk -p ./target/get_account/proof -i ./target/get_account/public_inputs
+          bb verify -k ./target/get_storage/vk -p ./target/get_storage/proof -i ./target/get_storage/public_inputs
+          bb verify -k ./target/get_receipt/vk -p ./target/get_receipt/proof -i ./target/get_receipt/public_inputs
+          bb verify -k ./target/get_transaction/vk -p ./target/get_transaction/proof -i ./target/get_transaction/public_inputs
+          bb verify -k ./target/get_log/vk -p ./target/get_log/proof -i ./target/get_log/public_inputs
+          bb verify -k ./target/is_dao_worthy/vk -p ./target/is_dao_worthy/proof -i ./target/is_dao_worthy/public_inputs
+          bb verify -k ./target/is_ape_owner/vk -p ./target/is_ape_owner/proof -i ./target/is_ape_owner/public_inputs
 
       - name: Stop Oracle Server
         if: always()
