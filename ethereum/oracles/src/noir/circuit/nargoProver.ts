@@ -37,7 +37,7 @@ export class NargoProver {
   }
 
   private get witnessPath(): string {
-    return path.join(this.circuit.packagePath(), 'target', `${this.proverName}.gz`);
+    return path.join(this.circuit.root, 'target', `${this.proverName}.gz`);
   }
 
   private get bytecodePath(): string {
