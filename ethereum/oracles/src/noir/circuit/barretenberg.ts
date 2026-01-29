@@ -20,8 +20,21 @@ export interface ProofJsonOutput {
 }
 
 export class Barretenberg {
+  private static readonly EXPECTED_VERSION = '3.0.0-nightly.20260102';
+
   public static async create(): Promise<Barretenberg> {
     const binaryPath = path.join(os.homedir(), '.bb/bb');
+
+    // Verify bb version matches expected version
+    const { stdout } = await $`${binaryPath} --version`;
+    const installedVersion = stdout.trim();
+
+    if (installedVersion !== this.EXPECTED_VERSION) {
+      throw new Error(
+        `bb version mismatch: expected ${this.EXPECTED_VERSION}, found ${installedVersion}. Run: bbup -v ${this.EXPECTED_VERSION}`
+      );
+    }
+
     return new Barretenberg(binaryPath);
   }
 
