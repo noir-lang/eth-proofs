@@ -28,8 +28,5 @@
   },
   "dependencies": {
     "@changesets/cli": "^2.27.2"
-  },
-  "resolutions": {
-    "@noir-lang/noirc_abi": "1.0.0-beta.18"
   }
 }
