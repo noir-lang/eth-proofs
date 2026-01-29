@@ -23,7 +23,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@aztec/bb.js": "3.0.3",
+    "@aztec/bb.js": "4.0.0-nightly.20260128",
     "@ethereumjs/trie": "^6.2.0",
     "@iarna/toml": "^2.2.5",
     "@noir-lang/noir_js": "1.0.0-beta.18",

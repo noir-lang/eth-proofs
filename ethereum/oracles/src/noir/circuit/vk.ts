@@ -1,36 +1,21 @@
-import { readObject, withTempFile, writeObject } from '../../util/file.js';
-import { writeFile, readFile } from 'fs/promises';
+import { readObject, writeObject, withTempFile } from '../../util/file.js';
+import { writeFile } from 'fs/promises';
 import { Barretenberg } from './barretenberg.js';
-import { Barretenberg as BarretenbergAPI } from '@aztec/bb.js';
 import { CompiledCircuit } from '@noir-lang/noir_js';
-import path from 'path';
 
 /**
- * Converts binary VK files to field representation for recursive verification.
- * Uses @aztec/bb.js API to convert verification keys to field elements.
+ * Converts VK to field representation using BB CLI JSON output.
+ * Uses the new --output_format json flag from BB v4.0.0+
  */
-async function convertVkBinaryToFields(vkDirPath: string, vkAsFieldsPath: string): Promise<void> {
-  const vkPath = path.join(vkDirPath, 'vk');
-  const vkHashPath = path.join(vkDirPath, 'vk_hash');
+async function generateVkAsFieldsJson(acirPath: string, vkAsFieldsPath: string): Promise<void> {
+  const barretenberg = await Barretenberg.create();
 
-  const vkBinary = await readFile(vkPath);
-  const vkHashBinary = await readFile(vkHashPath);
+  // Use new JSON output format to get VK fields directly
+  const vkJsonPath = vkAsFieldsPath + '.tmp.json';
+  const vkJson = await barretenberg.writeVKJson(acirPath, vkJsonPath);
 
-  // convert VK to fields
-  const api = await BarretenbergAPI.new({ threads: 1 });
-  try {
-    const result = await api.vkAsFields({ verificationKey: vkBinary });
-
-    // Convert Fr objects to hex strings
-    const vkAsFields = result.fields.map((field) => '0x' + Buffer.from(field).toString('hex'));
-
-    const vkHash = '0x' + vkHashBinary.toString('hex');
-
-    // write as JSON
-    await writeObject([vkHash, ...vkAsFields], vkAsFieldsPath);
-  } finally {
-    await api.destroy();
-  }
+  // Format: [vk_hash, ...vk_fields]
+  await writeObject([vkJson.vk_hash, ...vkJson.fields], vkAsFieldsPath);
 }
 
 export async function generateVk(bytecode: string, vkPath: string, vkAsFieldsPath: string): Promise<void>;
@@ -60,8 +45,8 @@ export async function generateVk(
     const barretenberg = await Barretenberg.create();
     await barretenberg.writeVK(acirPath, vkPath);
 
-    // Convert binary VK files to field representation
-    await convertVkBinaryToFields(vkPath, vkAsFieldsPath);
+    // Generate VK as fields using new JSON output format
+    await generateVkAsFieldsJson(acirPath, vkAsFieldsPath);
   });
 }
 

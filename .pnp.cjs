@@ -76,10 +76,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@aztec/bb.js", [\
-      ["npm:3.0.3", {\
-        "packageLocation": "./.yarn/unplugged/@aztec-bb.js-npm-3.0.3-8f0ce3e9d0/node_modules/@aztec/bb.js/",\
+      ["npm:4.0.0-nightly.20260128", {\
+        "packageLocation": "./.yarn/unplugged/@aztec-bb.js-npm-4.0.0-nightly.20260128-1477f59c05/node_modules/@aztec/bb.js/",\
         "packageDependencies": [\
-          ["@aztec/bb.js", "npm:3.0.3"],\
+          ["@aztec/bb.js", "npm:4.0.0-nightly.20260128"],\
           ["comlink", "npm:4.4.2"],\
           ["commander", "npm:12.1.0"],\
           ["idb-keyval", "npm:6.2.2"],\
@@ -5675,7 +5675,7 @@ const RAW_RUNTIME_STATE =
       ["workspace:ethereum/oracles", {\
         "packageLocation": "./ethereum/oracles/",\
         "packageDependencies": [\
-          ["@aztec/bb.js", "npm:3.0.3"],\
+          ["@aztec/bb.js", "npm:4.0.0-nightly.20260128"],\
           ["@ethereumjs/trie", "npm:6.2.1"],\
           ["@iarna/toml", "npm:2.2.5"],\
           ["@noir-lang/noir_js", "npm:1.0.0-beta.18"],\

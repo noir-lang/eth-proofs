@@ -22,9 +22,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aztec/bb.js@npm:3.0.3":
-  version: 3.0.3
-  resolution: "@aztec/bb.js@npm:3.0.3"
+"@aztec/bb.js@npm:4.0.0-nightly.20260128":
+  version: 4.0.0-nightly.20260128
+  resolution: "@aztec/bb.js@npm:4.0.0-nightly.20260128"
   dependencies:
     comlink: "npm:^4.4.1"
     commander: "npm:^12.1.0"
@@ -34,7 +34,7 @@ __metadata:
     tslib: "npm:^2.4.0"
   bin:
     bb: dest/node/bin/index.js
-  checksum: 10c0/8ba743fd2628fdaa531d97110caa5374b72ccce0c424061a97fd750cacae93ec77011e42e938c225165d34bb51f514bd2d4204f16411e91346a47abcf3262e0e
+  checksum: 10c0/84d96f13c73945929db4e14eaa76335fe4183c4f1a52e4f8750c20c59275f035d4406ad936c0524b003d5fdad1d177d57eb510d0a9bb9f6efacb99aa2d6930f4
   languageName: node
   linkType: hard
 
@@ -4815,7 +4815,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "noir-ethereum-api-oracles@workspace:ethereum/oracles"
   dependencies:
-    "@aztec/bb.js": "npm:3.0.3"
+    "@aztec/bb.js": "npm:4.0.0-nightly.20260128"
     "@ethereumjs/trie": "npm:^6.2.0"
     "@iarna/toml": "npm:^2.2.5"
     "@noir-lang/noir_js": "npm:1.0.0-beta.18"
