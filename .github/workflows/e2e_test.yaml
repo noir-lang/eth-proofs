@@ -64,12 +64,13 @@ jobs:
       - name: Generate Proofs
         run: |
           export PATH="$HOME/.bb:$PATH"
-          bb prove -b ./target/get_header.json -w ./target/get_header.gz --write_vk -o ./target/get_header
-          bb prove -b ./target/get_account.json -w ./target/get_account.gz --write_vk -o ./target/get_account
-          bb prove -b ./target/get_storage.json -w ./target/get_storage.gz --write_vk -o ./target/get_storage
-          bb prove -b ./target/get_receipt.json -w ./target/get_receipt.gz --write_vk -o ./target/get_receipt
-          bb prove -b ./target/get_transaction.json -w ./target/get_transaction.gz --write_vk -o ./target/get_transaction
-          bb prove -b ./target/get_log.json -w ./target/get_log.gz --write_vk -o ./target/get_log
+          mkdir -p proofs
+          bb prove -b ./target/get_header.json -w ./target/get_header.gz --write_vk -o ./proofs/get_header.proof
+          bb prove -b ./target/get_account.json -w ./target/get_account.gz --write_vk -o ./proofs/get_account.proof
+          bb prove -b ./target/get_storage.json -w ./target/get_storage.gz --write_vk -o ./proofs/get_storage.proof
+          bb prove -b ./target/get_receipt.json -w ./target/get_receipt.gz --write_vk -o ./proofs/get_receipt.proof
+          bb prove -b ./target/get_transaction.json -w ./target/get_transaction.gz --write_vk -o ./proofs/get_transaction.proof
+          bb prove -b ./target/get_log.json -w ./target/get_log.gz --write_vk -o ./proofs/get_log.proof
 
       # Note: Solidity verifiers are pre-generated and committed to ethereum/contracts/src/generated-verifier/
       # Generating them in CI causes OOM errors due to high memory requirements
