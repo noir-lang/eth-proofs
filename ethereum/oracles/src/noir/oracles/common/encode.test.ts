@@ -60,16 +60,16 @@ describe('encodeField', () => {
 
 describe('encodeU128', () => {
   it('should encode 1 correctly', () => {
-    expect(encodeU128(1n)).toStrictEqual(['0x', '0x01']);
+    expect(encodeU128(1n)).toStrictEqual('0x01');
   });
   it('should encode 255 correctly', () => {
-    expect(encodeU128(255n)).toStrictEqual(['0x', '0xff']);
+    expect(encodeU128(255n)).toStrictEqual('0xff');
   });
   it('should encode large values correctly', () => {
-    expect(encodeU128(100500n)).toStrictEqual(['0x', '0x018894']);
+    expect(encodeU128(100500n)).toStrictEqual('0x018894');
   });
   it('should encode values over 64 bits correctly', () => {
-    expect(encodeU128(2n ** 64n)).toStrictEqual(['0x01', '0x']);
+    expect(encodeU128(2n ** 64n)).toStrictEqual('0x010000000000000000');
   });
 });
 

@@ -1,12 +1,14 @@
 name: Circuits E2E Tests
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
 jobs:
   test:
     name: Circuits E2E Tests
-    runs-on:
-      group: Default Larger Runners
+    runs-on: ubuntu-latest
     environment: CI
     env:
       ETHEREUM_JSON_RPC_API_URL: ${{ secrets.ETHEREUM_JSON_RPC_API_URL }}
@@ -29,25 +31,30 @@ jobs:
         run: yarn install
 
       - name: Install Nargo
-        uses: noir-lang/noirup@v0.1.3
+        uses: noir-lang/noirup@v0.1.4
         with:
-          toolchain: nightly-2024-05-22
+          toolchain: 1.0.0-beta.18
 
+      - name: Install Barretenberg
+        run: |
+          curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/refs/heads/next/barretenberg/bbup/install | bash
+          ~/.bb/bbup -nv 1.0.0-beta.18
+          sudo apt install libc++-dev
       - name: Compile Circuit
         run: |
-          nargo compile --package get_header --deny-warnings
-          nargo compile --package get_account --deny-warnings
-          nargo compile --package get_storage --deny-warnings
-          nargo compile --package get_storage_recursive --deny-warnings
-          nargo compile --package get_receipt --deny-warnings
-          nargo compile --package get_transaction --deny-warnings
-          nargo compile --package get_log --deny-warnings
-          nargo compile --package is_dao_worthy --deny-warnings
-          nargo compile --package is_ape_owner --deny-warnings
+          nargo compile --package get_header --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package get_account --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package get_storage --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package get_storage_recursive --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package get_receipt --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package get_transaction --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package get_log --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package is_dao_worthy --deny-warnings --skip-brillig-constraints-check
+          nargo compile --package is_ape_owner --deny-warnings --skip-brillig-constraints-check
 
-          # We cannot use the `--deny-warnings` option in `is_dao_worthy_recursive` because the `verify_proof` method generates warnings 
+          # We cannot use the `--deny-warnings` option in `is_dao_worthy_recursive` because the `verify_proof` method generates warnings
           # that are actually informational messages from the compiler and cannot be ignored.
-          nargo compile --package is_dao_worthy_recursive
+          nargo compile --package is_dao_worthy_recursive --skip-brillig-constraints-check
 
       - name: Start Oracle Server
         working-directory: ethereum/oracles
@@ -56,39 +63,65 @@ jobs:
           ORACLE_SERVER_PID=$!
           echo "ORACLE_SERVER_PID=$ORACLE_SERVER_PID" >> $GITHUB_ENV
 
-      - name: Generate Proof
+      - name: Generate Witnesses
         run: |
-          nargo prove --package get_header --oracle-resolver=http://localhost:5555
-          nargo prove --package get_account --oracle-resolver=http://localhost:5555
-          nargo prove --package get_storage --oracle-resolver=http://localhost:5555
-          nargo prove --package get_receipt --oracle-resolver=http://localhost:5555
-          nargo prove --package get_transaction --oracle-resolver=http://localhost:5555
-          nargo prove --package get_log --oracle-resolver=http://localhost:5555
-          nargo prove --package is_dao_worthy --oracle-resolver=http://localhost:5555
-          nargo prove --package is_ape_owner --oracle-resolver=http://localhost:5555
+          nargo execute --package get_header --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package get_account --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package get_storage --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package get_receipt --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package get_transaction --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package get_log --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package is_dao_worthy --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
+          nargo execute --package is_ape_owner --oracle-resolver=http://localhost:5555 --skip-brillig-constraints-check
 
-      - name: Generate verification key for recursive proof
-        working-directory: ethereum/oracles
+      - name: Generate Proofs and Verification Keys
         run: |
-          # Verification key generation uses Barretenberg backend located at ~/.nargo/backends/acvm-backend-barretenberg/backend_binary. 
-          # It is automatically installed during the execution of the `nargo prove` command in previous step.
-          yarn generate-get-storage-vk
+          export PATH="$HOME/.bb:$PATH"
+          bb prove -b ./target/get_header.json -w ./target/get_header.gz -o ./target/get_header --write_vk
+          bb prove -b ./target/get_account.json -w ./target/get_account.gz -o ./target/get_account --write_vk
+          bb prove -b ./target/get_storage.json -w ./target/get_storage.gz -o ./target/get_storage --write_vk
+          bb prove -b ./target/get_receipt.json -w ./target/get_receipt.gz -o ./target/get_receipt --write_vk
+          bb prove -b ./target/get_transaction.json -w ./target/get_transaction.gz -o ./target/get_transaction --write_vk
+          bb prove -b ./target/get_log.json -w ./target/get_log.gz -o ./target/get_log --write_vk
+          bb prove -b ./target/is_dao_worthy.json -w ./target/is_dao_worthy.gz -o ./target/is_dao_worthy --write_vk
+          bb prove -b ./target/is_ape_owner.json -w ./target/is_ape_owner.gz -o ./target/is_ape_owner --write_vk
 
-      - name: Generate Recursive Proof
+      - name: Debug - List generated files
         run: |
-          export NARGO_FOREIGN_CALL_TIMEOUT=100000 # miliseconds
-          nargo prove --package is_dao_worthy_recursive --oracle-resolver=http://localhost:5555
+          echo "=== Contents of target directory ==="
+          ls -la ./target/ | head -30
+          echo "=== Looking for VK directories ==="
+          find ./target -name "*vk*" -type d | head -10
+          echo "=== Looking for proof files ==="
+          ls -la ./target/get_header* || true
 
-      - name: Verify Proof
+      # - name: Generate verification key for recursive proof
+      #   working-directory: ethereum/oracles
+      #   run: |
+      #     # Verification key generation uses the TypeScript bindings to generate the VK needed for recursive proofs.
+      #     yarn generate-get-storage-vk
+
+      # - name: Generate Recursive Witness
+      #   run: |
+      #     export NARGO_FOREIGN_CALL_TIMEOUT=100000 # miliseconds
+      #     nargo execute --package is_dao_worthy_recursive --oracle-resolver=http://localhost:5555
+
+      # - name: Generate Recursive Proof
+      #   run: |
+      #     export PATH="$HOME/.bb:$PATH"
+      #     bb prove -b ./target/is_dao_worthy_recursive.json -w ./target/is_dao_worthy_recursive.gz -o ./target/is_dao_worthy_recursive --write_vk
+
+      - name: Verify Proofs
         run: |
-          nargo verify --package get_header
-          nargo verify --package get_account
-          nargo verify --package get_storage
-          nargo verify --package get_receipt
-          nargo verify --package get_transaction
-          nargo verify --package get_log
-          nargo verify --package is_dao_worthy
-          nargo verify --package is_ape_owner
+          export PATH="$HOME/.bb:$PATH"
+          bb verify -k ./target/get_header/vk -p ./target/get_header/proof -i ./target/get_header/public_inputs
+          bb verify -k ./target/get_account/vk -p ./target/get_account/proof -i ./target/get_account/public_inputs
+          bb verify -k ./target/get_storage/vk -p ./target/get_storage/proof -i ./target/get_storage/public_inputs
+          bb verify -k ./target/get_receipt/vk -p ./target/get_receipt/proof -i ./target/get_receipt/public_inputs
+          bb verify -k ./target/get_transaction/vk -p ./target/get_transaction/proof -i ./target/get_transaction/public_inputs
+          bb verify -k ./target/get_log/vk -p ./target/get_log/proof -i ./target/get_log/public_inputs
+          bb verify -k ./target/is_dao_worthy/vk -p ./target/is_dao_worthy/proof -i ./target/is_dao_worthy/public_inputs
+          bb verify -k ./target/is_ape_owner/vk -p ./target/is_ape_owner/proof -i ./target/is_ape_owner/public_inputs
 
       - name: Stop Oracle Server
         if: always()

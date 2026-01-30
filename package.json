@@ -12,7 +12,7 @@
     "format:all": "yarn workspaces foreach --all --parallel --verbose run format",
     "format:all:ci": "yarn workspaces foreach --all --parallel --verbose run format:ci"
   },
-  "packageManager": "yarn@4.2.1",
+  "packageManager": "yarn@4.12.0",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.8.0",
     "@typescript-eslint/parser": "^7.8.0",
