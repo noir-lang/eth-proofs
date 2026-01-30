@@ -23,11 +23,18 @@ export function encodeField(arg: number | bigint): Hex {
   return `0x${hex}`;
 }
 
-export function encodeU128(arg: bigint): Hex[] {
+export function encodeU128Split(arg: bigint): Hex[] {
   assert(arg < U128_MAX, 'U128 overflow');
   assert(arg >= 0, 'U128 underflow');
 
   return [encodeField(arg / (U64_MAX + 1n)), encodeField(arg % (U64_MAX + 1n))];
+}
+
+export function encodeU128(arg: bigint): Hex {
+  assert(arg < U128_MAX, 'U128 overflow');
+  assert(arg >= 0, 'U128 underflow');
+
+  return encodeField(arg);
 }
 
 export function encodeBytes32(value: bigint): Hex[] {

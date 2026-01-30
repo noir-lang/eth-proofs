@@ -2,8 +2,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { updateNestedField, incHexStr } from 'noir-ethereum-api-oracles';
 import { Abi, InputMap, abiEncode } from '@noir-lang/noirc_abi';
 
-import getTransactionVerifier from '../../contracts/out/GetTransactionUltraPLONKVerifier.sol/UltraVerifier.json';
-import getTransaction from '../../../target/get_transaction.json';
+import getTransactionVerifier from '../../contracts/out/GetTransactionUltraPLONKVerifier.sol/UltraVerifier.json' with { type: "json" };
+import getTransaction from '../../../target/get_transaction.json' with { type: "json" };
 
 import { readProofData } from './proofDataReader.js';
 import { FoundryArtefact, deploySolidityProofVerifier } from './solidityVerifier.js';

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { loadProofFixture } from '../../../../historyAPIFixtures.js';
-import accountAsFields from './fixtures/accountAsFields.json';
+import accountAsFields from './fixtures/accountAsFields.json' with { type: "json" };
 import { ForeignCallOutput } from '@noir-lang/noir_js';
 import { encodeAccount, getValue } from './encode.js';
 import { Hex } from 'viem';

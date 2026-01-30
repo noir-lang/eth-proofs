@@ -1,4 +1,4 @@
-import { ForeignCallResult, ForeignCallParams } from './types.js';
+import { ForeignCallParams, ResolveForeignCallResult } from './types.js';
 import { decodeNoirArguments, encodeForeignCallResult } from './encode.js';
 import { MultiChainClient } from '../../../ethereum/client.js';
 import { Oracle, RpcOracle } from '../types.js';
@@ -12,30 +12,29 @@ import { Oracle, RpcOracle } from '../types.js';
 // This needs to be a type, not an interface because TypedJSONRPCServer requires it to have an index signature.
 /* eslint-disable-next-line @typescript-eslint/consistent-type-definitions */
 export type JSONRPCServerMethods = {
-  get_header(params: ForeignCallParams): ForeignCallResult;
-  get_account(params: ForeignCallParams): ForeignCallResult;
-  get_proof(params: ForeignCallParams): ForeignCallResult;
-  get_receipt(params: ForeignCallParams): ForeignCallResult;
-  get_transaction(params: ForeignCallParams): ForeignCallResult;
-  get_storage_recursive(params: ForeignCallParams): ForeignCallResult;
+  resolve_foreign_call(params: any[]): ResolveForeignCallResult;
 };
 
 export interface ServerParams {
   client: MultiChainClient;
 }
 
-export async function getRpcOracleHandler(
-  rpcOracle: RpcOracle,
-  params: ForeignCallParams,
-  { client }: ServerParams
-): Promise<ForeignCallResult> {
-  const oracle = rpcOracle.bind(null, client);
-  return getOracleHandler(oracle, params);
-}
-
-export async function getOracleHandler(oracle: Oracle, params: ForeignCallParams): Promise<ForeignCallResult> {
+// Handler for resolve_foreign_call protocol
+export async function getOracleHandler(
+  oracle: Oracle,
+  params: ForeignCallParams
+): Promise<ResolveForeignCallResult> {
   const noirArguments = decodeNoirArguments(params);
   const noirOutputs = await oracle(noirArguments);
   const result = encodeForeignCallResult(noirOutputs);
   return result;
+}
+
+export async function getRpcOracleHandler(
+  rpcOracle: RpcOracle,
+  params: ForeignCallParams,
+  { client }: ServerParams
+): Promise<ResolveForeignCallResult> {
+  const oracle = rpcOracle.bind(null, client);
+  return getOracleHandler(oracle, params);
 }

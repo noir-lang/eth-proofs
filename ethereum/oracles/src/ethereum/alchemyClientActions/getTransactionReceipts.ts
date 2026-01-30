@@ -28,5 +28,5 @@ export async function getTransactionReceipts(
 
   if (!receipts) throw new Error(`No receipts found for block number ${params.blockNumber}`);
 
-  return receipts.map(formatTransactionReceipt);
+  return receipts.map((receipt) => formatTransactionReceipt(receipt));
 }
