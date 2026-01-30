@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1769785228595,
+  "lastUpdate": 1769785232506,
   "repoUrl": "https://github.com/noir-lang/eth-proofs",
   "entries": {
     "ACIR Opcodes": [
@@ -370,6 +370,55 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/noir-lang/eth-proofs/commit/5d9d5373bcd7949779c52811db27d56bb3e724a8"
         },
         "date": 1767904633455,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "benchmark_get_account",
+            "value": 8895,
+            "unit": "opcodes"
+          },
+          {
+            "name": "benchmark_get_header",
+            "value": 2470,
+            "unit": "opcodes"
+          },
+          {
+            "name": "benchmark_get_log",
+            "value": 12894,
+            "unit": "opcodes"
+          },
+          {
+            "name": "benchmark_get_receipt",
+            "value": 9509,
+            "unit": "opcodes"
+          },
+          {
+            "name": "benchmark_get_transaction",
+            "value": 10929,
+            "unit": "opcodes"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26174818+jialinli98@users.noreply.github.com",
+            "name": "Jialin Li",
+            "username": "jialinli98"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8e1a90bcff8f4464a6019a9036d5237fb7a5c1d4",
+          "message": "fix: fix deprecated proving system commands (#20)",
+          "timestamp": "2026-01-30T14:58:43Z",
+          "tree_id": "98723acc662d6f434335c09c12f81ce006a21779",
+          "url": "https://github.com/noir-lang/eth-proofs/commit/8e1a90bcff8f4464a6019a9036d5237fb7a5c1d4"
+        },
+        "date": 1769785232420,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
