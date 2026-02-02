@@ -1,4 +1,3 @@
-import { decodeHexString } from 'noir-ethereum-api-oracles/src/noir/noir_js/encode.js';
 import { privateKeyToAccount } from 'viem/accounts';
 import { Abi, Address, Hex, TransactionExecutionError } from 'viem';
 import { WitnessMap } from '@noir-lang/noirc_abi';
@@ -135,10 +134,12 @@ export class SolidityProofVerifier {
   async verify(proof: Uint8Array, witnessMap: WitnessMap): Promise<boolean> {
     let hash;
     try {
+      // Convert proof Uint8Array to hex string for viem
+      const proofHex = '0x' + Array.from(proof).map(b => b.toString(16).padStart(2, '0')).join('');
       hash = await client.writeContract({
         ...this.contractParams,
         functionName: 'verify',
-        args: [decodeHexString(proof), Array.from(witnessMap.values())]
+        args: [proofHex, Array.from(witnessMap.values())]
       });
     } catch (e: unknown) {
       if (SolidityProofVerifier.isProofFailureRevert(e)) {
