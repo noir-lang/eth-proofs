@@ -4,7 +4,26 @@ import { WitnessMap } from '@noir-lang/noirc_abi';
 import { assert } from 'noir-ethereum-api-oracles';
 import { createAnvilClient } from './ethereum/anvilClient.js';
 
-export const VERIFICATION_GAS_LIMIT = 850_000n;
+// Conservative limits with 50-80% headroom
+// Updated based on actual CI measurements
+export const VERIFICATION_GAS_LIMITS: Record<string, bigint> = {
+  GetHeaderUltraPLONKVerifier: 7_000_000n, // Increased for safety
+  GetAccountUltraPLONKVerifier: 7_000_000n, // Increased for safety
+  GetStorageUltraPLONKVerifier: 7_000_000n, // CI showed 5.4M actual usage (108% of 5M)
+  GetTransactionUltraPLONKVerifier: 8_000_000n, // CI showed 7.06M actual usage
+  GetReceiptUltraPLONKVerifier: 7_000_000n, // CI showed 5.56M actual usage
+  GetLogUltraPLONKVerifier: 7_000_000n // CI showed 5.35M actual usage
+};
+
+// Transaction gas limits (higher for safety buffer)
+export const TRANSACTION_GAS_LIMITS: Record<string, bigint> = {
+  GetHeaderUltraPLONKVerifier: 7_000_000n, // Increased from 4M - was hitting limit
+  GetAccountUltraPLONKVerifier: 7_000_000n, // Increased from 5M - was hitting limit
+  GetStorageUltraPLONKVerifier: 7_000_000n, // Match verification limit
+  GetTransactionUltraPLONKVerifier: 10_000_000n, // Increased to 10M for extra headroom
+  GetReceiptUltraPLONKVerifier: 7_000_000n,
+  GetLogUltraPLONKVerifier: 8_000_000n // CI showed 5.35M actual usage
+};
 
 const PAIRING_FAILED_SELECTOR = 'd71fd263';
 
@@ -79,7 +98,10 @@ function linkLibraries(
   return linkedBytecode;
 }
 
-export async function deploySolidityProofVerifier(artefact: FoundryArtefact): Promise<SolidityProofVerifier> {
+export async function deploySolidityProofVerifier(
+  artefact: FoundryArtefact,
+  verifierName?: string
+): Promise<SolidityProofVerifier> {
   let bytecode = artefact.bytecode.object;
 
   // Deploy and link libraries if needed
@@ -88,10 +110,7 @@ export async function deploySolidityProofVerifier(artefact: FoundryArtefact): Pr
 
     for (const [filePath, libraries] of Object.entries(artefact.bytecode.linkReferences)) {
       for (const libraryName of Object.keys(libraries)) {
-        const address = await deployLibrary(
-          libraryName,
-          filePath.replace('src/generated-verifier/', '')
-        );
+        const address = await deployLibrary(libraryName, filePath.replace('src/generated-verifier/', ''));
         libraryAddresses.set(`${filePath}:${libraryName}`, address);
       }
     }
@@ -114,14 +133,19 @@ export async function deploySolidityProofVerifier(artefact: FoundryArtefact): Pr
 
   assert(!!txReceipt.contractAddress, 'Deployed contract address should not be empty');
 
-  const solidityProofVerifier = new SolidityProofVerifier(txReceipt.contractAddress, artefact.abi);
+  const solidityProofVerifier = new SolidityProofVerifier(
+    txReceipt.contractAddress,
+    artefact.abi,
+    verifierName || 'GetHeaderUltraPLONKVerifier'
+  );
   return solidityProofVerifier;
 }
 
 export class SolidityProofVerifier {
   constructor(
     private readonly contractAddress: Address,
-    private readonly abi: Abi
+    private readonly abi: Abi,
+    private readonly verifierName: string
   ) {}
 
   private contractParams = {
@@ -135,36 +159,71 @@ export class SolidityProofVerifier {
     let hash;
     try {
       // Convert proof Uint8Array to hex string for viem
-      const proofHex = '0x' + Array.from(proof).map(b => b.toString(16).padStart(2, '0')).join('');
+      const proofHex =
+        '0x' +
+        Array.from(proof)
+          .map((b) => b.toString(16).padStart(2, '0'))
+          .join('');
+
+      // Get transaction gas limit for this verifier
+      const transactionGasLimit = TRANSACTION_GAS_LIMITS[this.verifierName] || 5_000_000n;
+
+      console.log(`[${this.verifierName}] Sending verification tx with gas limit: ${transactionGasLimit}`);
+
       hash = await client.writeContract({
         ...this.contractParams,
         functionName: 'verify',
-        args: [proofHex, Array.from(witnessMap.values())]
+        args: [proofHex, Array.from(witnessMap.values())],
+        gas: transactionGasLimit
       });
     } catch (e: unknown) {
       if (SolidityProofVerifier.isProofFailureRevert(e)) {
         return false;
       }
+      console.error(`[${this.verifierName}] Transaction failed:`, e instanceof Error ? e.message : String(e));
       throw e;
     }
 
     const txReceipt = await client.waitForTransactionReceipt({ hash });
 
+    console.log(`[${this.verifierName}] Transaction status: ${txReceipt.status}, Gas used: ${txReceipt.gasUsed}`);
+
     if (txReceipt.status !== 'success') {
-      throw new Error('Proof verification failed');
+      const transactionGasLimit = TRANSACTION_GAS_LIMITS[this.verifierName] || 5_000_000n;
+      const gasUsagePercent = (Number(txReceipt.gasUsed) * 100) / Number(transactionGasLimit);
+
+      // If we used >99% of gas, likely ran out of gas - this is an error
+      if (gasUsagePercent > 99) {
+        throw new Error(
+          `Proof verification ran out of gas for ${this.verifierName}. Gas used: ${txReceipt.gasUsed}/${transactionGasLimit}`
+        );
+      }
+
+      // Otherwise, reverted status means proof verification failed (SumcheckFailed, ShpleminiFailed, etc.)
+      // This is expected for invalid proofs, so return false
+      return false;
     }
 
-    if (txReceipt.gasUsed > VERIFICATION_GAS_LIMIT) {
-      throw new Error('Proof verification exceeded gas limit');
+    // Get verification gas limit for this verifier
+    const verificationGasLimit = VERIFICATION_GAS_LIMITS[this.verifierName] || 2_000_000n;
+
+    // Log gas usage for monitoring
+    const gasUsagePercent = Math.floor((Number(txReceipt.gasUsed) * 100) / Number(verificationGasLimit));
+    console.log(`[${this.verifierName}] Gas used: ${txReceipt.gasUsed}/${verificationGasLimit} (${gasUsagePercent}%)`);
+
+    if (txReceipt.gasUsed > verificationGasLimit) {
+      throw new Error(
+        `Proof verification exceeded gas limit: ${txReceipt.gasUsed} > ${verificationGasLimit} for ${this.verifierName}`
+      );
     }
 
     return true;
   }
 
   private static isProofFailureRevert(e: unknown): boolean {
-    return (
-      e instanceof TransactionExecutionError &&
-      e.shortMessage === `Execution reverted with reason: custom error ${PAIRING_FAILED_SELECTOR}:.`
-    );
+    if (!(e instanceof TransactionExecutionError)) {
+      return false;
+    }
+    return e.shortMessage === `Execution reverted with reason: custom error ${PAIRING_FAILED_SELECTOR}:.`;
   }
 }

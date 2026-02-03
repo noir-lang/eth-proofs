@@ -13,7 +13,10 @@ export const abi = getHeader.abi as unknown as Abi;
 describe('get_header', async () => {
   let proof: Uint8Array;
   let inputMap: InputMap;
-  const proofVerifier = await deploySolidityProofVerifier(getHeaderVerifier as FoundryArtefact);
+  const proofVerifier = await deploySolidityProofVerifier(
+    getHeaderVerifier as FoundryArtefact,
+    'GetHeaderUltraPLONKVerifier'
+  );
 
   beforeEach(async () => {
     ({ proof, inputMap } = await readProofData('get_header'));

@@ -13,7 +13,10 @@ export const abi = getReceipt.abi as unknown as Abi;
 describe('get_receipt', async () => {
   let proof: Uint8Array;
   let inputMap: InputMap;
-  const proofVerifier = await deploySolidityProofVerifier(getReceiptVerifier as FoundryArtefact);
+  const proofVerifier = await deploySolidityProofVerifier(
+    getReceiptVerifier as FoundryArtefact,
+    'GetReceiptUltraPLONKVerifier'
+  );
 
   beforeEach(async () => {
     ({ proof, inputMap } = await readProofData('get_receipt'));

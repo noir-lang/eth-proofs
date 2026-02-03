@@ -13,7 +13,10 @@ export const abi = getAccount.abi as unknown as Abi;
 describe('get_account', async () => {
   let proof: Uint8Array;
   let inputMap: InputMap;
-  const proofVerifier = await deploySolidityProofVerifier(getAccountVerifier as FoundryArtefact);
+  const proofVerifier = await deploySolidityProofVerifier(
+    getAccountVerifier as FoundryArtefact,
+    'GetAccountUltraPLONKVerifier'
+  );
 
   beforeEach(async () => {
     ({ proof, inputMap } = await readProofData('get_account'));

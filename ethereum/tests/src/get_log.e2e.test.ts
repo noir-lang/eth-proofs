@@ -13,7 +13,10 @@ export const abi = getLog.abi as unknown as Abi;
 describe('get_log', async () => {
   let proof: Uint8Array;
   let inputMap: InputMap;
-  const proofVerifier = await deploySolidityProofVerifier(getLogVerifier as FoundryArtefact);
+  const proofVerifier = await deploySolidityProofVerifier(
+    getLogVerifier as FoundryArtefact,
+    'GetLogUltraPLONKVerifier'
+  );
 
   beforeEach(async () => {
     ({ proof, inputMap } = await readProofData('get_log'));

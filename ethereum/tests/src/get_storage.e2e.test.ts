@@ -13,7 +13,10 @@ export const abi = getStorage.abi as unknown as Abi;
 describe('get_storage', async () => {
   let proof: Uint8Array;
   let inputMap: InputMap;
-  const proofVerifier = await deploySolidityProofVerifier(getStorageVerifier as FoundryArtefact);
+  const proofVerifier = await deploySolidityProofVerifier(
+    getStorageVerifier as FoundryArtefact,
+    'GetStorageUltraPLONKVerifier'
+  );
 
   beforeEach(async () => {
     ({ proof, inputMap } = await readProofData('get_storage'));
