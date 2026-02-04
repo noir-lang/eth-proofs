@@ -4,29 +4,19 @@ import { ChildProcess, spawn } from 'child_process';
 let anvil: ChildProcess;
 
 async function waitForAnvil(maxAttempts = 60, intervalMs = 1000): Promise<void> {
-  const anvilUrl = 'http://127.0.0.1:8545';
-
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const response = await fetch(anvilUrl, {
+      const response = await fetch('http://127.0.0.1:8545', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          jsonrpc: '2.0',
-          method: 'eth_blockNumber',
-          params: [],
-          id: 1
-        })
+        body: JSON.stringify({ jsonrpc: '2.0', method: 'eth_blockNumber', params: [], id: 1 })
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.result !== undefined) {
-          return;
-        }
+      if (response.ok && (await response.json()).result !== undefined) {
+        return;
       }
-    } catch (err) {
-      // Connection refused or other network error - Anvil not ready yet
+    } catch {
+      // Anvil not ready yet
     }
 
     if (attempt === maxAttempts) {
@@ -40,22 +30,18 @@ async function waitForAnvil(maxAttempts = 60, intervalMs = 1000): Promise<void> 
 export async function setup() {
   assert(anvil === undefined, 'Anvil already running');
 
-  const anvilArgs = [
+  anvil = spawn('anvil', [
     '--code-size-limit', '100000',
     '--gas-limit', '15000000',
     '--block-time', '1',
-    '--silent',
-  ];
+    '--silent'
+  ]);
 
-  anvil = spawn('anvil', anvilArgs);
-
-  // Listen for errors
   anvil.on('error', (err: Error) => {
     console.error('Failed to start Anvil:', err);
     throw err;
   });
 
-  // Wait for Anvil to be ready by polling the RPC
   await waitForAnvil();
 }
 

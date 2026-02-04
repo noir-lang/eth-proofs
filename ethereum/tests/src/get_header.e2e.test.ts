@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { updateNestedField, incHexStr } from 'noir-ethereum-api-oracles';
 import { Abi, InputMap, abiEncode } from '@noir-lang/noirc_abi';
 
-import getHeaderVerifier from '../../contracts/out/GetHeaderUltraPLONKVerifier.sol/UltraVerifier.json' with { type: "json" };
+import getHeaderVerifier from '../../contracts/out/GetHeaderUltraPLONKVerifier.sol/HonkVerifier.json' with { type: "json" };
 import getHeader from '../../../target/get_header.json' with { type: "json" };
 
 import { readProofData } from './proofDataReader.js';
@@ -13,10 +13,7 @@ export const abi = getHeader.abi as unknown as Abi;
 describe('get_header', async () => {
   let proof: Uint8Array;
   let inputMap: InputMap;
-  const proofVerifier = await deploySolidityProofVerifier(
-    getHeaderVerifier as FoundryArtefact,
-    'GetHeaderUltraPLONKVerifier'
-  );
+  const proofVerifier = await deploySolidityProofVerifier(getHeaderVerifier as FoundryArtefact);
 
   beforeEach(async () => {
     ({ proof, inputMap } = await readProofData('get_header'));

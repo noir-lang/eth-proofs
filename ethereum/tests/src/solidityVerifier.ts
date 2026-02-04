@@ -5,25 +5,9 @@ import { WitnessMap } from '@noir-lang/noirc_abi';
 import { assert } from 'noir-ethereum-api-oracles';
 import { createAnvilClient } from './ethereum/anvilClient.js';
 
-// Gas limits for monitoring successful verifications
-export const VERIFICATION_GAS_LIMITS: Record<string, bigint> = {
-  GetHeaderUltraPLONKVerifier: 7_000_000n,
-  GetAccountUltraPLONKVerifier: 7_000_000n,
-  GetStorageUltraPLONKVerifier: 7_000_000n,
-  GetTransactionUltraPLONKVerifier: 8_000_000n,
-  GetReceiptUltraPLONKVerifier: 7_000_000n,
-  GetLogUltraPLONKVerifier: 7_000_000n
-};
-
-// Gas limits for transaction execution
-export const TRANSACTION_GAS_LIMITS: Record<string, bigint> = {
-  GetHeaderUltraPLONKVerifier: 7_000_000n,
-  GetAccountUltraPLONKVerifier: 7_000_000n,
-  GetStorageUltraPLONKVerifier: 7_000_000n,
-  GetTransactionUltraPLONKVerifier: 10_000_000n,
-  GetReceiptUltraPLONKVerifier: 7_000_000n,
-  GetLogUltraPLONKVerifier: 8_000_000n
-};
+// Gas limits for all verifiers (using maximum across all verifier types)
+const VERIFICATION_GAS_LIMIT = 8_000_000n;
+const TRANSACTION_GAS_LIMIT = 10_000_000n;
 
 const PAIRING_FAILED_SELECTOR = 'd71fd263';
 
@@ -99,8 +83,7 @@ function linkLibraries(
 }
 
 export async function deploySolidityProofVerifier(
-  artefact: FoundryArtefact,
-  verifierName?: string
+  artefact: FoundryArtefact
 ): Promise<SolidityProofVerifier> {
   let bytecode = artefact.bytecode.object;
 
@@ -133,19 +116,14 @@ export async function deploySolidityProofVerifier(
 
   assert(!!txReceipt.contractAddress, 'Deployed contract address should not be empty');
 
-  const solidityProofVerifier = new SolidityProofVerifier(
-    txReceipt.contractAddress,
-    artefact.abi,
-    verifierName || 'GetHeaderUltraPLONKVerifier'
-  );
+  const solidityProofVerifier = new SolidityProofVerifier(txReceipt.contractAddress, artefact.abi);
   return solidityProofVerifier;
 }
 
 export class SolidityProofVerifier {
   constructor(
     private readonly contractAddress: Address,
-    private readonly abi: Abi,
-    private readonly verifierName: string
+    private readonly abi: Abi
   ) {}
 
   private contractParams = {
@@ -158,14 +136,11 @@ export class SolidityProofVerifier {
   async verify(proof: Uint8Array, witnessMap: WitnessMap): Promise<boolean> {
     let hash;
     try {
-      // Get transaction gas limit for this verifier
-      const transactionGasLimit = TRANSACTION_GAS_LIMITS[this.verifierName] || 5_000_000n;
-
       hash = await client.writeContract({
         ...this.contractParams,
         functionName: 'verify',
         args: [decodeHexString(proof), Array.from(witnessMap.values())],
-        gas: transactionGasLimit
+        gas: TRANSACTION_GAS_LIMIT
       });
     } catch (e: unknown) {
       if (SolidityProofVerifier.isProofFailureRevert(e)) {
@@ -177,13 +152,12 @@ export class SolidityProofVerifier {
     const txReceipt = await client.waitForTransactionReceipt({ hash });
 
     if (txReceipt.status !== 'success') {
-      const transactionGasLimit = TRANSACTION_GAS_LIMITS[this.verifierName] || 5_000_000n;
-      const gasUsagePercent = (Number(txReceipt.gasUsed) * 100) / Number(transactionGasLimit);
+      const gasUsagePercent = (Number(txReceipt.gasUsed) * 100) / Number(TRANSACTION_GAS_LIMIT);
 
       // If we used >99% of gas, likely ran out of gas - this is an error
       if (gasUsagePercent > 99) {
         throw new Error(
-          `Proof verification ran out of gas for ${this.verifierName}. Gas used: ${txReceipt.gasUsed}/${transactionGasLimit}`
+          `Proof verification ran out of gas. Gas used: ${txReceipt.gasUsed}/${TRANSACTION_GAS_LIMIT}`
         );
       }
 
@@ -192,12 +166,9 @@ export class SolidityProofVerifier {
       return false;
     }
 
-    // Get verification gas limit for this verifier
-    const verificationGasLimit = VERIFICATION_GAS_LIMITS[this.verifierName] || 2_000_000n;
-
-    if (txReceipt.gasUsed > verificationGasLimit) {
+    if (txReceipt.gasUsed > VERIFICATION_GAS_LIMIT) {
       throw new Error(
-        `Proof verification exceeded gas limit: ${txReceipt.gasUsed} > ${verificationGasLimit} for ${this.verifierName}`
+        `Proof verification exceeded gas limit: ${txReceipt.gasUsed} > ${VERIFICATION_GAS_LIMIT}`
       );
     }
 
