@@ -5,7 +5,7 @@ import { WitnessMap } from '@noir-lang/noirc_abi';
 import { assert } from 'noir-ethereum-api-oracles';
 import { createAnvilClient } from './ethereum/anvilClient.js';
 
-// Gas limits for all verifiers (using maximum across all verifier types)
+// gas limits for all verifiers
 const VERIFICATION_GAS_LIMIT = 8_000_000n;
 const TRANSACTION_GAS_LIMIT = 10_000_000n;
 
@@ -69,8 +69,8 @@ function linkLibraries(
 
       // Replace all occurrences of the library placeholder
       for (const ref of references) {
-        // Each reference has a start position (in bytes, so multiply by 2 for hex string)
-        // Add 2 to skip '0x' prefix
+        // Each reference has a start position in bytes, so multiply by 2 for hex string
+        // add 2 to skip '0x'
         const startPos = ref.start * 2 + 2;
         const endPos = startPos + ref.length * 2;
 
@@ -82,9 +82,7 @@ function linkLibraries(
   return linkedBytecode;
 }
 
-export async function deploySolidityProofVerifier(
-  artefact: FoundryArtefact
-): Promise<SolidityProofVerifier> {
+export async function deploySolidityProofVerifier(artefact: FoundryArtefact): Promise<SolidityProofVerifier> {
   let bytecode = artefact.bytecode.object;
 
   // Deploy and link libraries if needed
@@ -154,22 +152,17 @@ export class SolidityProofVerifier {
     if (txReceipt.status !== 'success') {
       const gasUsagePercent = (Number(txReceipt.gasUsed) * 100) / Number(TRANSACTION_GAS_LIMIT);
 
-      // If we used >99% of gas, likely ran out of gas - this is an error
+      // if we used >99% of gas, it is likely we ran out of gas. need to increase gas limit
       if (gasUsagePercent > 99) {
-        throw new Error(
-          `Proof verification ran out of gas. Gas used: ${txReceipt.gasUsed}/${TRANSACTION_GAS_LIMIT}`
-        );
+        throw new Error(`Proof verification ran out of gas. Gas used: ${txReceipt.gasUsed}/${TRANSACTION_GAS_LIMIT}`);
       }
 
-      // Otherwise, reverted status means proof verification failed (SumcheckFailed, ShpleminiFailed, etc.)
-      // This is expected for invalid proofs, so return false
+      // proof verification failed, such as SumcheckFailed, etc.
       return false;
     }
 
     if (txReceipt.gasUsed > VERIFICATION_GAS_LIMIT) {
-      throw new Error(
-        `Proof verification exceeded gas limit: ${txReceipt.gasUsed} > ${VERIFICATION_GAS_LIMIT}`
-      );
+      throw new Error(`Proof verification exceeded gas limit: ${txReceipt.gasUsed} > ${VERIFICATION_GAS_LIMIT}`);
     }
 
     return true;

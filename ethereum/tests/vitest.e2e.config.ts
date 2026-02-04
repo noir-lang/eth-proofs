@@ -6,7 +6,7 @@ export default defineConfig({
     globalSetup: 'src/setupAnvil.ts',
     pool: 'forks',
     fileParallelism: false,
-    testTimeout: 90000, // ZK proof verification can be slow
-    hookTimeout: 30000 // Contract deployment needs extra time
+    testTimeout: 90000, // proof verification can be slow
+    hookTimeout: 30000 // deployment needs extra time
   }
 });

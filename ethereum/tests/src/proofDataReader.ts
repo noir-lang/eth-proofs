@@ -16,15 +16,7 @@ async function readProof(path: string): Promise<Uint8Array> {
 
 async function readInputMap(path: string): Promise<InputMap> {
   const verifierData = await fs.readFile(path, 'utf-8');
-  const inputMap = toml.parse(verifierData) as InputMap;
-
-  // Ensure chain_id is present if it's missing (for backward compatibility)
-  if (!('chain_id' in inputMap) && 'return' in inputMap) {
-    // Default to mainnet chain_id if not specified
-    inputMap.chain_id = '0x0000000000000000000000000000000000000000000000000000000000000001';
-  }
-
-  return inputMap;
+  return toml.parse(verifierData) as InputMap;
 }
 
 export async function readProofData(packageName: string): Promise<ProofData> {
