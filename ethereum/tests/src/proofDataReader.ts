@@ -28,7 +28,7 @@ async function readInputMap(path: string): Promise<InputMap> {
 }
 
 export async function readProofData(packageName: string): Promise<ProofData> {
-  const proofPath = `../../proofs/${packageName}.proof/proof`;
+  const proofPath = `../../proofs/${packageName}/proof`;
   const inputMapPath = `../circuits/${packageName}/Verifier.toml`;
 
   return {
