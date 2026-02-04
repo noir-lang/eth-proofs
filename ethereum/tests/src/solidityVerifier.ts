@@ -151,14 +151,6 @@ export class SolidityProofVerifier {
     const txReceipt = await client.waitForTransactionReceipt({ hash });
 
     if (txReceipt.status !== 'success') {
-      const gasUsagePercent = (Number(txReceipt.gasUsed) * 100) / Number(TRANSACTION_GAS_LIMIT);
-
-      // if we used >99% of gas, it is likely we ran out of gas. need to increase gas limit
-      if (gasUsagePercent > 99) {
-        throw new Error(`Proof verification ran out of gas. Gas used: ${txReceipt.gasUsed}/${TRANSACTION_GAS_LIMIT}`);
-      }
-
-      // proof verification failed, such as SumcheckFailed, etc.
       return false;
     }
 
