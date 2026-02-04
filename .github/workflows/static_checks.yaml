@@ -43,17 +43,17 @@ jobs:
         working-directory: .
         run: |
           mkdir -p ethereum/contracts/out/GetStorageUltraPLONKVerifier.sol
-          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetStorageUltraPLONKVerifier.sol/UltraVerifier.json
+          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetStorageUltraPLONKVerifier.sol/HonkVerifier.json
           mkdir -p ethereum/contracts/out/GetAccountUltraPLONKVerifier.sol
-          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetAccountUltraPLONKVerifier.sol/UltraVerifier.json
+          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetAccountUltraPLONKVerifier.sol/HonkVerifier.json
           mkdir -p ethereum/contracts/out/GetHeaderUltraPLONKVerifier.sol
-          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetHeaderUltraPLONKVerifier.sol/UltraVerifier.json
+          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetHeaderUltraPLONKVerifier.sol/HonkVerifier.json
           mkdir -p ethereum/contracts/out/GetReceiptUltraPLONKVerifier.sol
-          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetReceiptUltraPLONKVerifier.sol/UltraVerifier.json
+          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetReceiptUltraPLONKVerifier.sol/HonkVerifier.json
           mkdir -p ethereum/contracts/out/GetTransactionUltraPLONKVerifier.sol
-          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetTransactionUltraPLONKVerifier.sol/UltraVerifier.json
+          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetTransactionUltraPLONKVerifier.sol/HonkVerifier.json
           mkdir -p ethereum/contracts/out/GetLogUltraPLONKVerifier.sol
-          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetLogUltraPLONKVerifier.sol/UltraVerifier.json
+          echo '{ "abi": [], "bytecode": { "object": "" } }' > ethereum/contracts/out/GetLogUltraPLONKVerifier.sol/HonkVerifier.json
 
       - name: Run TypeScript Build
         run: yarn build
