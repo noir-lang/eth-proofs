@@ -22,7 +22,6 @@ async function waitForAnvil(maxAttempts = 60, intervalMs = 1000): Promise<void> 
       if (response.ok) {
         const data = await response.json();
         if (data.result !== undefined) {
-          console.log(`Anvil ready after ${attempt} attempts (${attempt * intervalMs}ms)`);
           return;
         }
       }
@@ -52,11 +51,10 @@ export async function setup() {
     anvilArgs.push('--silent');
   }
 
-  console.log('Starting Anvil with args:', anvilArgs);
   anvil = spawn('anvil', anvilArgs);
 
   // Listen for errors
-  anvil.on('error', (err) => {
+  anvil.on('error', (err: Error) => {
     console.error('Failed to start Anvil:', err);
     throw err;
   });

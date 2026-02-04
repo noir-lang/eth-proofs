@@ -6,8 +6,7 @@ export default defineConfig({
     globalSetup: 'src/setupAnvil.ts',
     pool: 'forks',
     fileParallelism: false,
-    testTimeout: 90000,       // 90s for largest circuits
-    hookTimeout: 30000,       // 30s for setup/teardown
-    teardownTimeout: 10000,   // 10s for cleanup
+    testTimeout: 90000, // ZK proof verification can be slow
+    hookTimeout: 30000 // Contract deployment needs extra time
   }
 });
