@@ -40,16 +40,12 @@ async function waitForAnvil(maxAttempts = 60, intervalMs = 1000): Promise<void> 
 export async function setup() {
   assert(anvil === undefined, 'Anvil already running');
 
-  const isCI = process.env.CI === 'true';
   const anvilArgs = [
     '--code-size-limit', '100000',
-    '--gas-limit', isCI ? '15000000' : '10000000',
+    '--gas-limit', '15000000',
     '--block-time', '1',
+    '--silent',
   ];
-
-  if (isCI) {
-    anvilArgs.push('--silent');
-  }
 
   anvil = spawn('anvil', anvilArgs);
 

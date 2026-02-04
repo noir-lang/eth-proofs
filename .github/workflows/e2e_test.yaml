@@ -96,9 +96,6 @@ jobs:
       - name: Run e2e Tests
         working-directory: ethereum/tests
         run: yarn test:e2e
-        timeout-minutes: 20
-        env:
-          CI: true
 
       - name: Stop Oracle Server
         if: always()

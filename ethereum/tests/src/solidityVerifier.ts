@@ -1,3 +1,4 @@
+import { decodeHexString } from 'noir-ethereum-api-oracles/src/noir/noir_js/encode.js';
 import { privateKeyToAccount } from 'viem/accounts';
 import { Abi, Address, Hex, TransactionExecutionError } from 'viem';
 import { WitnessMap } from '@noir-lang/noirc_abi';
@@ -157,20 +158,13 @@ export class SolidityProofVerifier {
   async verify(proof: Uint8Array, witnessMap: WitnessMap): Promise<boolean> {
     let hash;
     try {
-      // Convert proof Uint8Array to hex string for viem
-      const proofHex =
-        '0x' +
-        Array.from(proof)
-          .map((b) => b.toString(16).padStart(2, '0'))
-          .join('');
-
       // Get transaction gas limit for this verifier
       const transactionGasLimit = TRANSACTION_GAS_LIMITS[this.verifierName] || 5_000_000n;
 
       hash = await client.writeContract({
         ...this.contractParams,
         functionName: 'verify',
-        args: [proofHex, Array.from(witnessMap.values())],
+        args: [decodeHexString(proof), Array.from(witnessMap.values())],
         gas: transactionGasLimit
       });
     } catch (e: unknown) {
@@ -211,9 +205,9 @@ export class SolidityProofVerifier {
   }
 
   private static isProofFailureRevert(e: unknown): boolean {
-    if (!(e instanceof TransactionExecutionError)) {
-      return false;
-    }
-    return e.shortMessage === `Execution reverted with reason: custom error ${PAIRING_FAILED_SELECTOR}:.`;
+    return (
+      e instanceof TransactionExecutionError &&
+      e.shortMessage === `Execution reverted with reason: custom error ${PAIRING_FAILED_SELECTOR}:.`
+    );
   }
 }
