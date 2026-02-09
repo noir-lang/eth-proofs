@@ -19,30 +19,29 @@ pub(crate) fn assert_account_equals(
     account_rlp_left_padded: [u8; MAX_ACCOUNT_STATE_LEN],
     account: Account,
 ) {
-    let account_rlp_right_padded = right_pad(account_rlp_left_padded).storage();
+    let account_rlp_fragment = right_pad(account_rlp_left_padded);
     let account_rlp_list: RlpList<ACCOUNT_FIELDS_COUNT> =
-        decode_list_of_small_strings(Fragment::from_array(account_rlp_right_padded));
+        decode_list_of_small_strings(account_rlp_fragment);
     assert(
         account_rlp_list.len() == ACCOUNT_FIELDS_COUNT,
         "Invalid number of fields in account RLP",
     );
 
-    let account_rlp = Fragment::from_array(account_rlp_right_padded);
-    account_rlp_list.get(NONCE_INDEX).assert_eq_value("Nonce", account_rlp, account.nonce);
+    account_rlp_list.get(NONCE_INDEX).assert_eq_value("Nonce", account_rlp_fragment, account.nonce);
     account_rlp_list.get(BALANCE_INDEX).assert_eq_value(
         "Balance",
-        account_rlp,
+        account_rlp_fragment,
         account.balance as u128,
     );
 
     account_rlp_list.get(STORAGE_ROOT_INDEX).assert_eq_value(
         "Storage root",
-        account_rlp,
+        account_rlp_fragment,
         account.storage_root,
     );
     account_rlp_list.get(CODE_HASH_INDEX).assert_eq_value(
         "Code hash",
-        account_rlp,
+        account_rlp_fragment,
         account.code_hash,
     );
 }

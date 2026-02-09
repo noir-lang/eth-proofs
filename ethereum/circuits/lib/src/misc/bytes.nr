@@ -49,47 +49,8 @@ pub fn nibbles_to_bytes<let BYTES_LEN: u32, let NIB_LEN: u32>(
     bytes
 }
 
-pub fn right_pad<let N: u32>(arr: [u8; N]) -> BoundedVec<u8, N> {
-    byte_value(arr)
-}
-
-pub fn left_to_right_padding<let N: u32>(nibbles: [u8; N]) -> ([u8; N], u32) {
-    let mut vec = right_pad(nibbles);
-    let mut len = vec.len();
-    let mut shifted = vec.storage();
-    if (len % 2 == 1) {
-        shift_right_by_one(&mut shifted);
-        len += 1;
-    }
-
-    let shifted_by = N - len;
-    (shifted, shifted_by)
-}
-
-pub fn shift_right_by_one<let N: u32>(arr: &mut [u8; N]) {
-    assert(arr[N - 1] == 0, "Last element must be zero to shift the array right by one");
-
-    let mut last = 0;
-    for i in 0..N {
-        let tmp = (*arr)[i];
-        (*arr)[i] = last;
-        last = tmp;
-    }
-}
-
-pub(crate) fn left_byte_shift<let N: u32>(input: [u8; N], n: u32) -> [u8; N] {
-    let mut out = [0; N];
-
-    for i in 0..N {
-        let index_ind = (((i + n) as u32) < (N as u32)) as u32;
-        out[i] = (index_ind as u8) * input[index_ind * (i + n)];
-    }
-
-    out
-}
-
-// Converts big-endian byte array to a right-padded one.
-pub(crate) fn byte_value<let N: u32>(in_value: [u8; N]) -> BoundedVec<u8, N> {
+// converts big-endian byte array to a Fragment with offset (no shifting).
+pub fn right_pad<let N: u32>(in_value: [u8; N]) -> Fragment<N, u8> {
     let mut value_length = 0;
 
     for i in 0..N {
@@ -98,9 +59,8 @@ pub(crate) fn byte_value<let N: u32>(in_value: [u8; N]) -> BoundedVec<u8, N> {
         value_length = num_bytes_ind * byte_ind * (N - i) + (1 - num_bytes_ind) * value_length;
     }
 
-    let value = left_byte_shift(in_value, N - value_length);
-
-    BoundedVec::from_parts(value, value_length)
+    let offset = N - value_length;
+    Fragment::new(offset, value_length, in_value)
 }
 
 pub fn add_bigint<let N: u32>(left: [u8; N], right: [u8; N]) -> [u8; N] {

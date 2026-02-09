@@ -50,21 +50,21 @@ mod sub_array_equals_up_to_length {
     fn success_small() {
         let value: [Field; 4] = [1, 2, 0, 0];
         let array: [Field; 6] = [42, 1, 2, 3, 4, 5];
-        assert(sub_array_equals_up_to_length(value, array, 1, 2));
+        assert(sub_array_equals_up_to_length(value, array, 1, 0, 2));
     }
 
     #[test]
     fn success_full_length() {
         let value: [Field; 4] = [1, 2, 0, 0];
         let array: [Field; 6] = [42, 1, 2, 0, 0, 5];
-        assert(sub_array_equals_up_to_length(value, array, 1, 4));
+        assert(sub_array_equals_up_to_length(value, array, 1, 0, 4));
     }
 
     #[test]
     fn success_big_subarray() {
         let subarray: [Field; 4] = [1, 2, 0, 0];
         let array: [Field; 5] = [0, 0, 1, 2, 0];
-        assert(sub_array_equals_up_to_length(subarray, array, 2, 3));
+        assert(sub_array_equals_up_to_length(subarray, array, 2, 0, 3));
     }
 
     #[test]
@@ -81,28 +81,28 @@ mod sub_array_equals_up_to_length {
             9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7,
             8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0,
         ];
-        assert(sub_array_equals_up_to_length(subarray, array, 20, 80));
+        assert(sub_array_equals_up_to_length(subarray, array, 20, 0, 80));
     }
 
     #[test(should_fail_with = "Not equals")]
     fn full_length_not_equals() {
         let value: [Field; 4] = [1, 2, 0, 0];
         let array: [Field; 6] = [42, 1, 2, 3, 4, 5];
-        assert(sub_array_equals_up_to_length(value, array, 1, 4), "Not equals");
+        assert(sub_array_equals_up_to_length(value, array, 1, 0, 4), "Not equals");
     }
 
     #[test(should_fail_with = "Subarray index out of bound")]
     fn subarray_out_of_bound() {
         let value: [Field; 4] = [1, 2, 0, 0];
         let array: [Field; 6] = [42, 1, 2, 0, 0, 5];
-        assert(sub_array_equals_up_to_length(value, array, 1, 5));
+        assert(sub_array_equals_up_to_length(value, array, 1, 0, 5));
     }
 
     #[test(should_fail)] // Unfortunately in-loop index access happens before the assert
     fn array_out_of_bound() {
         let value: [Field; 5] = [1, 2, 0, 0, 5];
         let array: [Field; 5] = [42, 1, 2, 0, 0];
-        assert(sub_array_equals_up_to_length(value, array, 1, 5));
+        assert(sub_array_equals_up_to_length(value, array, 1, 0, 5));
     }
 }
 

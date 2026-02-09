@@ -179,12 +179,13 @@ pub fn verify_leaf<let MAX_LEAF_LEN: u32, let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, 
     let value = right_pad(value);
     let value_rlp_fragment = leaf_rlp_list.get(1);
     // Verify that extracted value matches the expected value.
-    assert(value_rlp_fragment.length == value.len(), "Value length mismatch");
+    assert(value_rlp_fragment.length == value.length, "Value length mismatch");
     assert(
         sub_array_equals_up_to_length(
-            value.storage(),
+            value.data,
             leaf,
             value_rlp_fragment.offset,
+            value.offset,
             value_rlp_fragment.length,
         ),
         "Value mismatch",
@@ -198,7 +199,7 @@ pub fn verify_merkle_proof<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, let MAX_VALUE_L
     proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>,
 ) {
     let key = right_pad(key);
-    let key_nibbles = bytes_to_nibbles(Fragment::from_vec(key));
+    let key_nibbles = bytes_to_nibbles(key);
     let mut key_ptr = 0;
 
     // Verify hashes of all the nodes in the proof path.

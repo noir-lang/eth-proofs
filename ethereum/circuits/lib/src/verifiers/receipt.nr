@@ -37,11 +37,11 @@ pub fn verify_receipt<let MAX_ENCODED_LEN: u32, let MAX_LEAF_LEN: u32>(
     receipt_proof_input: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_ENCODED_LEN, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN>,
     receipt_root: [u8; HASH_LEN],
 ) {
-    let key = Fragment::from_vec(right_pad(receipt_proof_input.key));
+    let key = right_pad(receipt_proof_input.key);
     assert_tx_idx_equals(key, tx_idx);
 
-    let value = right_pad(receipt_proof_input.value).storage();
-    assert_receipt_equals(block_number, tx_type, Fragment::from_array(value), receipt);
+    let value = right_pad(receipt_proof_input.value);
+    assert_receipt_equals(block_number, tx_type, value, receipt);
     verify_merkle_proof(
         receipt_proof_input.key,
         receipt_proof_input.value,

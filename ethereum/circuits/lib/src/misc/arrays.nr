@@ -61,17 +61,18 @@ pub fn sub_array_equals_up_to_length<TItem, let SUBARRAY_LEN: u32, let ARRAY_LEN
     subarray: [TItem; SUBARRAY_LEN],
     array: [TItem; ARRAY_LEN],
     offset: u32,
+    subarray_offset: u32,
     length: u32,
 ) -> bool
 where
     TItem: Eq,
 {
-    assert(length <= SUBARRAY_LEN, "Subarray index out of bound");
+    assert(length + subarray_offset <= SUBARRAY_LEN, "Subarray index out of bound");
     assert(offset + length <= ARRAY_LEN, "Array index out of bound");
     let mut result = true;
     for i in 0..SUBARRAY_LEN {
         if i < length {
-            result &= subarray[i] == array[offset + i];
+            result &= subarray[i + subarray_offset] == array[offset + i];
         }
     }
     result

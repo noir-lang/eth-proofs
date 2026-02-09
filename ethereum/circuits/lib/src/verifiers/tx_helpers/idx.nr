@@ -12,7 +12,7 @@ pub fn assert_tx_idx_equals<let MAX_KEY_LEN: u32>(
     if (length == 0) {
         assert(tx_idx == 0, "Key does not match rlp-encoded transaction index");
     } else {
-        let tx_idx_bytes = Fragment::from_vec(right_pad((tx_idx as Field).to_be_bytes::<4>()));
+        let tx_idx_bytes = right_pad((tx_idx as Field).to_be_bytes::<4>());
         assert(
             key_as_rlp.subfragment(offset, length).eq(tx_idx_bytes),
             "Key does not match rlp-encoded transaction index",
