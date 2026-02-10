@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1769785232506,
+  "lastUpdate": 1770705333958,
   "repoUrl": "https://github.com/noir-lang/eth-proofs",
   "entries": {
     "ACIR Opcodes": [
@@ -121,6 +121,55 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/noir-lang/eth-proofs/commit/8e1a90bcff8f4464a6019a9036d5237fb7a5c1d4"
         },
         "date": 1769785226253,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "benchmark_get_account.json/main",
+            "value": 217575,
+            "unit": "acir_opcodes"
+          },
+          {
+            "name": "benchmark_get_header.json/main",
+            "value": 35392,
+            "unit": "acir_opcodes"
+          },
+          {
+            "name": "benchmark_get_log.json/main",
+            "value": 355780,
+            "unit": "acir_opcodes"
+          },
+          {
+            "name": "benchmark_get_receipt.json/main",
+            "value": 217734,
+            "unit": "acir_opcodes"
+          },
+          {
+            "name": "benchmark_get_transaction.json/main",
+            "value": 282682,
+            "unit": "acir_opcodes"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26174818+jialinli98@users.noreply.github.com",
+            "name": "Jialin Li",
+            "username": "jialinli98"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b0962c951782c97c2a634bdbe94966a15634ece8",
+          "message": "feat: use correct sepolia chain id (#26)",
+          "timestamp": "2026-02-09T22:33:51-08:00",
+          "tree_id": "59688829af824ff2710ea7db6a27ed88fed69f2f",
+          "url": "https://github.com/noir-lang/eth-proofs/commit/b0962c951782c97c2a634bdbe94966a15634ece8"
+        },
+        "date": 1770705332956,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
