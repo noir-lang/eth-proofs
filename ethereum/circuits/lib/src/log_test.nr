@@ -46,7 +46,6 @@ mod extract_log {
             small_block_log.data.storage(),
             log.data.storage(),
             0,
-            0,
             log.data.len(),
         ));
     }

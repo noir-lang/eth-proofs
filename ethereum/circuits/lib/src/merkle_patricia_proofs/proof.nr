@@ -180,12 +180,12 @@ pub fn verify_leaf<let MAX_LEAF_LEN: u32, let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, 
     let value_rlp_fragment = leaf_rlp_list.get(1);
     // Verify that extracted value matches the expected value.
     assert(value_rlp_fragment.length == value.length, "Value length mismatch");
+    let value_array: [u8; MAX_VALUE_LEN] = value.to_bounded_vec().storage();
     assert(
         sub_array_equals_up_to_length(
-            value.data,
+            value_array,
             leaf,
             value_rlp_fragment.offset,
-            value.offset,
             value_rlp_fragment.length,
         ),
         "Value mismatch",
