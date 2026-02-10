@@ -1,10 +1,10 @@
-mod right_pad {
+mod skip_leading_zeros {
 
-    use crate::misc::bytes::right_pad;
+    use crate::misc::bytes::skip_leading_zeros;
 
     #[test]
     fn small() {
-        let actual = right_pad([0, 0, 0, 1, 2, 3]);
+        let actual = skip_leading_zeros([0, 0, 0, 1, 2, 3]);
 
         assert_eq(actual.length, 3);
         assert_eq(actual.offset, 3);
@@ -13,7 +13,7 @@ mod right_pad {
 
     #[test]
     fn full_array() {
-        let actual = right_pad([
+        let actual = skip_leading_zeros([
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
             25, 26, 27, 28, 29, 30, 31, 32,
         ]);
@@ -31,7 +31,7 @@ mod right_pad {
 
     #[test]
     fn middle_values() {
-        let actual = right_pad([
+        let actual = skip_leading_zeros([
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0,
         ]);
@@ -49,7 +49,7 @@ mod right_pad {
 
     #[test]
     fn all_zeros() {
-        let actual = right_pad([0, 0, 0, 0]);
+        let actual = skip_leading_zeros([0, 0, 0, 0]);
 
         assert_eq(actual.length, 0);
         assert_eq(actual.offset, 4);
@@ -58,7 +58,7 @@ mod right_pad {
 
     #[test]
     fn single_byte() {
-        let actual = right_pad([0, 0, 0, 42]);
+        let actual = skip_leading_zeros([0, 0, 0, 42]);
 
         assert_eq(actual.length, 1);
         assert_eq(actual.offset, 3);

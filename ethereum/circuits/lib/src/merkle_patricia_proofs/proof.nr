@@ -1,9 +1,10 @@
 use crate::misc::{
     arrays::sub_array_equals_up_to_length,
-    bytes::{byte_to_nibbles, bytes_to_nibbles, right_pad},
+    bytes::{byte_to_nibbles, bytes_to_nibbles, skip_leading_zeros},
     fragment::Fragment,
     types::{Hash, HASH_LEN},
 };
+use crate::misc::bytes::trim_leading_zeros;
 use crate::rlp::decode::{decode_list, decode_list_of_small_strings, decode_to_rlp_header};
 use crate::rlp::types::RlpList;
 use dep::keccak256::keccak256;
@@ -176,14 +177,13 @@ pub fn verify_leaf<let MAX_LEAF_LEN: u32, let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, 
     *key_ptr += leaf_key_part.length;
     assert(*key_ptr == key_nibbles.length, "Expected to consume all key nibbles");
 
-    let value = right_pad(value);
+    let value = trim_leading_zeros(value);
     let value_rlp_fragment = leaf_rlp_list.get(1);
     // Verify that extracted value matches the expected value.
-    assert(value_rlp_fragment.length == value.length, "Value length mismatch");
-    let value_array: [u8; MAX_VALUE_LEN] = value.to_bounded_vec().storage();
+    assert(value_rlp_fragment.length == value.len(), "Value length mismatch");
     assert(
         sub_array_equals_up_to_length(
-            value_array,
+            value.storage(),
             leaf,
             value_rlp_fragment.offset,
             value_rlp_fragment.length,
@@ -198,7 +198,7 @@ pub fn verify_merkle_proof<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, let MAX_VALUE_L
     root: Hash,
     proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>,
 ) {
-    let key = right_pad(key);
+    let key = skip_leading_zeros(key);
     let key_nibbles = bytes_to_nibbles(key);
     let mut key_ptr = 0;
 

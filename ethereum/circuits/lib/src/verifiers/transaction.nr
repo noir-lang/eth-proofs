@@ -2,7 +2,7 @@ pub(crate) mod rlp;
 mod rlp_test;
 
 use crate::merkle_patricia_proofs::proof::{ProofInput, verify_merkle_proof};
-use crate::misc::{bytes::right_pad, fragment::Fragment, types::HASH_LEN};
+use crate::misc::{bytes::skip_leading_zeros, fragment::Fragment, types::HASH_LEN};
 use crate::transaction::{MAX_DEPTH_NO_LEAF, MAX_PREFIXED_KEY_NIBBLE_LEN, TxPartial, TxType};
 use crate::verifiers::{
     transaction::rlp::assert_tx_rlp_equals,
@@ -28,10 +28,10 @@ pub fn verify_tx<let MAX_DATA_LEN: u32, let MAX_ENCODED_LEN: u32, let MAX_LEAF_L
     tx_proof_input: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_ENCODED_LEN, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN>,
     tx_root: [u8; HASH_LEN],
 ) {
-    let key = right_pad(tx_proof_input.key);
+    let key = skip_leading_zeros(tx_proof_input.key);
     assert_tx_idx_equals(key, tx_idx);
 
-    let value = right_pad(tx_proof_input.value);
+    let value = skip_leading_zeros(tx_proof_input.value);
     assert_tx_equals(tx_type, value, tx);
     verify_merkle_proof(
         tx_proof_input.key,

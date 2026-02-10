@@ -1,4 +1,4 @@
-use crate::misc::bytes::right_pad;
+use crate::misc::bytes::trim_leading_zeros;
 use crate::misc::fragment::Fragment;
 use crate::misc::types::{Address, Bytes32};
 
@@ -81,25 +81,27 @@ impl ToRlpFragment<1> for u1 {
 
 impl ToRlpFragment<1> for u8 {
     fn to_fragment(self) -> Fragment<1, u8> {
-        right_pad([self])
+        Fragment::from_vec(trim_leading_zeros::<1>([self]))
     }
 }
 
 impl ToRlpFragment<4> for u32 {
     fn to_fragment(self) -> Fragment<4, u8> {
-        right_pad((self as Field).to_be_bytes::<4>())
+        Fragment::from_vec(trim_leading_zeros::<4>((self as Field).to_be_bytes::<4>()))
     }
 }
 
 impl ToRlpFragment<8> for u64 {
     fn to_fragment(self) -> Fragment<8, u8> {
-        right_pad((self as Field).to_be_bytes::<8>())
+        Fragment::from_vec(trim_leading_zeros::<8>((self as Field).to_be_bytes::<8>()))
     }
 }
 
 impl ToRlpFragment<16> for u128 {
     fn to_fragment(self) -> Fragment<16, u8> {
-        right_pad((self as Field).to_be_bytes::<16>())
+        Fragment::from_vec(
+            trim_leading_zeros::<16>((self as Field).to_be_bytes::<16>()),
+        )
     }
 }
 

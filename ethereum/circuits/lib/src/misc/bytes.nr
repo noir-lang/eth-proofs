@@ -50,7 +50,7 @@ pub fn nibbles_to_bytes<let BYTES_LEN: u32, let NIB_LEN: u32>(
 }
 
 // converts big-endian byte array to a Fragment with offset (no shifting).
-pub fn right_pad<let N: u32>(in_value: [u8; N]) -> Fragment<N, u8> {
+pub fn skip_leading_zeros<let N: u32>(in_value: [u8; N]) -> Fragment<N, u8> {
     let mut value_length = 0;
 
     for i in 0..N {
@@ -77,4 +77,29 @@ pub fn add_bigint<let N: u32>(left: [u8; N], right: [u8; N]) -> [u8; N] {
     assert(carry == 0, "Addition overflow");
 
     result
+}
+
+pub(crate) fn left_byte_shift<let N: u32>(input: [u8; N], n: u32) -> [u8; N] {
+    let mut out = [0; N];
+
+    for i in 0..N {
+        let index_ind = (((i + n) as u32) < (N as u32)) as u32;
+        out[i] = (index_ind as u8) * input[index_ind * (i + n)];
+    }
+
+    out
+}
+
+pub(crate) fn trim_leading_zeros<let N: u32>(in_value: [u8; N]) -> BoundedVec<u8, N> {
+    let mut value_length = 0;
+
+    for i in 0..N {
+        let num_bytes_ind = (value_length == 0) as u32;
+        let byte_ind = (in_value[i] != 0) as u32;
+        value_length = num_bytes_ind * byte_ind * (N - i) + (1 - num_bytes_ind) * value_length;
+    }
+
+    let value = left_byte_shift(in_value, N - value_length);
+
+    BoundedVec::from_parts(value, value_length)
 }
