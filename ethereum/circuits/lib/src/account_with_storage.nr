@@ -20,10 +20,10 @@ pub(crate) global MAX_STORAGE_VALUE_LEN: u32 = 32; // Values taken from storageP
 pub(crate) global MAX_STORAGE_LEAF_LEN: u32 = 69;
 
 pub struct Account {
-    pub(crate) nonce: u64,
-    pub(crate) balance: Field,
-    pub(crate) storage_root: Bytes32,
-    pub(crate) code_hash: Bytes32,
+    pub nonce: u64,
+    pub balance: Field,
+    pub storage_root: Bytes32,
+    pub code_hash: Bytes32,
 }
 
 impl Eq for Account {
