@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1770705335170,
+  "lastUpdate": 1770705338966,
   "repoUrl": "https://github.com/noir-lang/eth-proofs",
   "entries": {
     "ACIR Opcodes": [
@@ -517,6 +517,55 @@ window.BENCHMARK_DATA = {
           "url": "https://github.com/noir-lang/eth-proofs/commit/8e1a90bcff8f4464a6019a9036d5237fb7a5c1d4"
         },
         "date": 1769785232420,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "benchmark_get_account",
+            "value": 8895,
+            "unit": "opcodes"
+          },
+          {
+            "name": "benchmark_get_header",
+            "value": 2470,
+            "unit": "opcodes"
+          },
+          {
+            "name": "benchmark_get_log",
+            "value": 12894,
+            "unit": "opcodes"
+          },
+          {
+            "name": "benchmark_get_receipt",
+            "value": 9509,
+            "unit": "opcodes"
+          },
+          {
+            "name": "benchmark_get_transaction",
+            "value": 10929,
+            "unit": "opcodes"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "26174818+jialinli98@users.noreply.github.com",
+            "name": "Jialin Li",
+            "username": "jialinli98"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b0962c951782c97c2a634bdbe94966a15634ece8",
+          "message": "feat: use correct sepolia chain id (#26)",
+          "timestamp": "2026-02-09T22:33:51-08:00",
+          "tree_id": "59688829af824ff2710ea7db6a27ed88fed69f2f",
+          "url": "https://github.com/noir-lang/eth-proofs/commit/b0962c951782c97c2a634bdbe94966a15634ece8"
+        },
+        "date": 1770705338879,
         "tool": "customSmallerIsBetter",
         "benches": [
           {
