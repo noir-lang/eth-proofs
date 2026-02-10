@@ -37,7 +37,7 @@ jobs:
         run: |
           cd ethereum/contracts
           forge --version
-          forge build --sizes || (test -f out/GetAccountUltraPLONKVerifier.sol/UltraVerifier.json && echo "Contracts compiled successfully despite size warnings" || exit 1)
+          forge build --sizes || (test -f out/GetAccountUltraPLONKVerifier.sol/HonkVerifier.json && echo "Contracts compiled successfully despite size warnings" || exit 1)
         id: build
 
       - name: Run Forge tests

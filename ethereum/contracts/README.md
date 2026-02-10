@@ -32,15 +32,15 @@ out
 ├── EthereumHistoryVerifier.sol
 │   └── EthereumHistoryVerifier.json
 ├── GetAccountUltraPLONKVerifier.sol
-│   └── UltraVerifier.json
+│   └── HonkVerifier.json
 ├── GetHeaderUltraPLONKVerifier.sol
-│   └── UltraVerifier.json
+│   └── HonkVerifier.json
 ├── GetStorageUltraPLONKVerifier.sol
-│   └── UltraVerifier.json
+│   └── HonkVerifier.json
 ├─── GetTransactionUltraPLONKVerifier.sol
-│   └── UltraVerifier.json
+│   └── HonkVerifier.json
 └── GetLogUltraPLONKVerifier.sol
-    └── UltraVerifier.json
+    └── HonkVerifier.json
 ```
 
 ### Test

@@ -64,12 +64,13 @@ jobs:
       - name: Generate Proofs
         run: |
           export PATH="$HOME/.bb:$PATH"
-          bb prove -b ./target/get_header.json -w ./target/get_header.gz --write_vk -o ./target/get_header
-          bb prove -b ./target/get_account.json -w ./target/get_account.gz --write_vk -o ./target/get_account
-          bb prove -b ./target/get_storage.json -w ./target/get_storage.gz --write_vk -o ./target/get_storage
-          bb prove -b ./target/get_receipt.json -w ./target/get_receipt.gz --write_vk -o ./target/get_receipt
-          bb prove -b ./target/get_transaction.json -w ./target/get_transaction.gz --write_vk -o ./target/get_transaction
-          bb prove -b ./target/get_log.json -w ./target/get_log.gz --write_vk -o ./target/get_log
+          mkdir -p proofs
+          bb prove -b ./target/get_header.json -w ./target/get_header.gz -t evm --write_vk -o ./proofs/get_header
+          bb prove -b ./target/get_account.json -w ./target/get_account.gz -t evm --write_vk -o ./proofs/get_account
+          bb prove -b ./target/get_storage.json -w ./target/get_storage.gz -t evm --write_vk -o ./proofs/get_storage
+          bb prove -b ./target/get_receipt.json -w ./target/get_receipt.gz -t evm --write_vk -o ./proofs/get_receipt
+          bb prove -b ./target/get_transaction.json -w ./target/get_transaction.gz -t evm --write_vk -o ./proofs/get_transaction
+          bb prove -b ./target/get_log.json -w ./target/get_log.gz -t evm --write_vk -o ./proofs/get_log
 
       # Note: Solidity verifiers are pre-generated and committed to ethereum/contracts/src/generated-verifier/
       # Generating them in CI causes OOM errors due to high memory requirements
@@ -83,7 +84,7 @@ jobs:
       - name: Compile Smart Contract
         working-directory: ethereum/contracts
         run: |
-          forge build || (test -f out/GetAccountUltraPLONKVerifier.sol/UltraVerifier.json && echo "Contracts compiled successfully despite size warnings" || exit 1)
+          forge build || (test -f out/GetAccountUltraPLONKVerifier.sol/HonkVerifier.json && echo "Contracts compiled successfully despite size warnings" || exit 1)
 
       - name: Run TypeScript Build
         run: yarn build
@@ -92,9 +93,9 @@ jobs:
         working-directory: ethereum/oracles
         run: yarn test:unit
 
-      # - name: Run e2e Tests
-      #   working-directory: ethereum/tests
-      #   run: yarn test:e2e
+      - name: Run e2e Tests
+        working-directory: ethereum/tests
+        run: yarn test:e2e
 
       - name: Stop Oracle Server
         if: always()

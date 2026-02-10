@@ -5,7 +5,9 @@ import { WitnessMap } from '@noir-lang/noirc_abi';
 import { assert } from 'noir-ethereum-api-oracles';
 import { createAnvilClient } from './ethereum/anvilClient.js';
 
-export const VERIFICATION_GAS_LIMIT = 850_000n;
+// gas limits for all verifiers
+const VERIFICATION_GAS_LIMIT = 8_000_000n;
+const TRANSACTION_GAS_LIMIT = 10_000_000n;
 
 const PAIRING_FAILED_SELECTOR = 'd71fd263';
 
@@ -17,14 +19,91 @@ export interface FoundryArtefact {
   abi: Abi;
   bytecode: {
     object: Hex;
+    linkReferences?: Record<string, Record<string, Array<{ start: number; length: number }>>>;
   };
 }
 
+// Cache deployed libraries to avoid redeploying
+const deployedLibraries = new Map<string, Address>();
+
+async function deployLibrary(libraryName: string, libraryPath: string): Promise<Address> {
+  // Check if already deployed
+  const cacheKey = `${libraryPath}:${libraryName}`;
+  if (deployedLibraries.has(cacheKey)) {
+    return deployedLibraries.get(cacheKey)!;
+  }
+
+  // Import and deploy the library
+  const libraryArtifact = await import(`../../contracts/out/${libraryPath}/${libraryName}.json`, {
+    with: { type: 'json' }
+  });
+
+  const hash = await client.deployContract({
+    abi: libraryArtifact.default.abi,
+    account,
+    bytecode: libraryArtifact.default.bytecode.object as Hex,
+    chain: client.chain
+  });
+
+  const receipt = await client.waitForTransactionReceipt({ hash });
+  assert(receipt.status === 'success', 'Library deployment failed');
+  assert(!!receipt.contractAddress, 'Library address should not be empty');
+
+  deployedLibraries.set(cacheKey, receipt.contractAddress);
+  return receipt.contractAddress;
+}
+
+function linkLibraries(
+  bytecode: Hex,
+  linkReferences: Record<string, Record<string, Array<{ start: number; length: number }>>>,
+  libraryAddresses: Map<string, Address>
+): Hex {
+  let linkedBytecode = bytecode;
+
+  for (const [filePath, libraries] of Object.entries(linkReferences)) {
+    for (const [libraryName, references] of Object.entries(libraries)) {
+      const libraryAddress = libraryAddresses.get(`${filePath}:${libraryName}`);
+      assert(!!libraryAddress, `Library ${libraryName} not deployed`);
+
+      const addressHex = libraryAddress.slice(2).toLowerCase();
+
+      // Replace all occurrences of the library placeholder
+      // It's aknown issue: https://github.com/NomicFoundation/hardhat/issues/4636
+      for (const ref of references) {
+        // Each reference has a start position in bytes, so multiply by 2 for hex string
+        // add 2 to skip '0x'
+        const startPos = ref.start * 2 + 2;
+        const endPos = startPos + ref.length * 2;
+
+        linkedBytecode = (linkedBytecode.slice(0, startPos) + addressHex + linkedBytecode.slice(endPos)) as Hex;
+      }
+    }
+  }
+
+  return linkedBytecode;
+}
+
 export async function deploySolidityProofVerifier(artefact: FoundryArtefact): Promise<SolidityProofVerifier> {
+  let bytecode = artefact.bytecode.object;
+
+  // Deploy and link libraries if needed
+  if (artefact.bytecode.linkReferences && Object.keys(artefact.bytecode.linkReferences).length > 0) {
+    const libraryAddresses = new Map<string, Address>();
+
+    for (const [filePath, libraries] of Object.entries(artefact.bytecode.linkReferences)) {
+      for (const libraryName of Object.keys(libraries)) {
+        const address = await deployLibrary(libraryName, filePath.replace('src/generated-verifier/', ''));
+        libraryAddresses.set(`${filePath}:${libraryName}`, address);
+      }
+    }
+
+    bytecode = linkLibraries(bytecode, artefact.bytecode.linkReferences, libraryAddresses);
+  }
+
   const hash = await client.deployContract({
     abi: artefact.abi,
     account,
-    bytecode: artefact.bytecode.object,
+    bytecode,
     chain: client.chain
   });
 
@@ -59,7 +138,8 @@ export class SolidityProofVerifier {
       hash = await client.writeContract({
         ...this.contractParams,
         functionName: 'verify',
-        args: [decodeHexString(proof), Array.from(witnessMap.values())]
+        args: [decodeHexString(proof), Array.from(witnessMap.values())],
+        gas: TRANSACTION_GAS_LIMIT
       });
     } catch (e: unknown) {
       if (SolidityProofVerifier.isProofFailureRevert(e)) {
@@ -71,11 +151,11 @@ export class SolidityProofVerifier {
     const txReceipt = await client.waitForTransactionReceipt({ hash });
 
     if (txReceipt.status !== 'success') {
-      throw new Error('Proof verification failed');
+      return false;
     }
 
     if (txReceipt.gasUsed > VERIFICATION_GAS_LIMIT) {
-      throw new Error('Proof verification exceeded gas limit');
+      throw new Error(`Proof verification exceeded gas limit: ${txReceipt.gasUsed} > ${VERIFICATION_GAS_LIMIT}`);
     }
 
     return true;
