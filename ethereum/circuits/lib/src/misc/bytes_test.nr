@@ -1,45 +1,68 @@
-mod left_to_right_padding {
+mod skip_leading_zeros {
 
-    use crate::misc::bytes::left_to_right_padding;
+    use crate::misc::bytes::skip_leading_zeros;
 
     #[test]
-    fn empty() {
-        let (shifted, shifted_by) = left_to_right_padding([]);
-        assert(shifted == []);
-        assert(shifted_by == 0);
+    fn small() {
+        let actual = skip_leading_zeros([0, 0, 0, 1, 2, 3]);
+
+        assert_eq(actual.length, 3);
+        assert_eq(actual.offset, 3);
+        assert_eq(actual.data, [0, 0, 0, 1, 2, 3]);
     }
 
     #[test]
-    fn even() {
-        let (shifted, shifted_by) = left_to_right_padding([0x0, 0x0, 0xf, 0xf]);
-        assert(shifted == [0xf, 0xf, 0x0, 0x0]);
-        assert(shifted_by == 2);
+    fn full_array() {
+        let actual = skip_leading_zeros([
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+            25, 26, 27, 28, 29, 30, 31, 32,
+        ]);
+
+        assert_eq(actual.length, 32);
+        assert_eq(actual.offset, 0);
+        assert_eq(
+            actual.data,
+            [
+                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+                24, 25, 26, 27, 28, 29, 30, 31, 32,
+            ],
+        );
     }
 
     #[test]
-    fn odd() {
-        let (shifted, shifted_by) = left_to_right_padding([0x0, 0x0, 0x0, 0xf]);
-        assert(shifted == [0x0, 0xf, 0x0, 0x0]);
-        assert(shifted_by == 2);
+    fn middle_values() {
+        let actual = skip_leading_zeros([
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0,
+        ]);
+
+        assert_eq(actual.length, 22);
+        assert_eq(actual.offset, 10);
+        assert_eq(
+            actual.data,
+            [
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0,
+            ],
+        );
     }
-}
-
-mod shift_right_by_one {
-
-    use crate::misc::bytes::shift_right_by_one;
 
     #[test]
-    fn success() {
-        let mut arr = [0xa, 0x0, 0xb, 0x0];
-        shift_right_by_one(&mut arr);
-        assert(arr == [0x0, 0xa, 0x0, 0xb]);
+    fn all_zeros() {
+        let actual = skip_leading_zeros([0, 0, 0, 0]);
+
+        assert_eq(actual.length, 0);
+        assert_eq(actual.offset, 4);
+        assert_eq(actual.data, [0, 0, 0, 0]);
     }
 
-    #[test(should_fail_with = "Last element must be zero to shift the array right by one")]
-    fn fail() {
-        let non_zero = 0x1;
-        let mut arr = [0xa, 0x0, 0xb, non_zero];
-        shift_right_by_one(&mut arr);
+    #[test]
+    fn single_byte() {
+        let actual = skip_leading_zeros([0, 0, 0, 42]);
+
+        assert_eq(actual.length, 1);
+        assert_eq(actual.offset, 3);
+        assert_eq(actual.data, [0, 0, 0, 42]);
     }
 }
 
@@ -169,53 +192,6 @@ mod nibbles_to_bytes {
     #[test(should_fail_with = "Generic arguments don't match")]
     fn fail() {
         let _: [u8; 1] = nibbles_to_bytes([0x0, 0x0, 0x0]);
-    }
-}
-
-mod byte_value {
-
-    use crate::misc::bytes::byte_value;
-
-    #[test]
-    fn small() {
-        let actual = byte_value([0, 0, 0, 1, 2, 3]);
-
-        assert_eq(actual.len(), 3);
-        assert_eq(actual.storage(), [1, 2, 3, 0, 0, 0]);
-    }
-
-    #[test]
-    fn test1() {
-        let actual = byte_value([
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-            25, 26, 27, 28, 29, 0, 0, 0,
-        ]);
-
-        assert_eq(actual.len(), 32);
-        assert_eq(
-            actual.storage(),
-            [
-                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-                24, 25, 26, 27, 28, 29, 0, 0, 0,
-            ],
-        );
-    }
-
-    #[test]
-    fn test2() {
-        let actual = byte_value([
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0,
-        ]);
-
-        assert_eq(actual.len(), 22);
-        assert_eq(
-            actual.storage(),
-            [
-                11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0,
-            ],
-        );
     }
 }
 

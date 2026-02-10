@@ -1,6 +1,8 @@
 use crate::header::get_header;
 use crate::merkle_patricia_proofs::proof::ProofInput;
-use crate::misc::{bytes::byte_value, fragment::Fragment, option::make_option, types::Bytes32};
+use crate::misc::{
+    bytes::skip_leading_zeros, fragment::Fragment, option::make_option, types::Bytes32,
+};
 use crate::serde::Serde;
 use crate::verifiers::{receipt::verify_receipt, tx_helpers::split::split_into_tx_type_and_rlp};
 
@@ -118,8 +120,7 @@ pub(crate) fn receipt_rlp_from_proof<let MAX_VALUE_LEN: u32, let MAX_LEAF_LEN: u
     tx_type: TxType,
     receipt_proof_input: ProofInput<MAX_PREFIXED_KEY_NIBBLE_LEN, MAX_VALUE_LEN, MAX_DEPTH_NO_LEAF, MAX_LEAF_LEN>,
 ) -> Fragment<MAX_VALUE_LEN, u8> {
-    let value = byte_value(receipt_proof_input.value);
-    let encoded_receipt = Fragment::from_vec(value);
+    let encoded_receipt = skip_leading_zeros(receipt_proof_input.value);
 
     let is_legacy = tx_type == 0;
     let (_actual_tx_type, receipt_rlp) = split_into_tx_type_and_rlp(is_legacy, encoded_receipt);

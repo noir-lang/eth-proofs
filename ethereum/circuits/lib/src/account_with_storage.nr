@@ -2,7 +2,7 @@ use crate::account::{MAX_ACCOUNT_DEPTH_NO_LEAF_M, MAX_ACCOUNT_LEAF_LEN, MAX_ACCO
 use crate::header::{BlockHeaderPartial, get_header};
 use crate::merkle_patricia_proofs::proof::ProofInput;
 use crate::misc::{
-    bytes::right_pad,
+    bytes::skip_leading_zeros,
     fragment::Fragment,
     types::{Address, Bytes32, BYTES32_LENGTH, HASH_LEN},
 };
@@ -76,16 +76,10 @@ fn assert_storage_key_equals(
     );
 }
 
-fn get_fragment<let N: u32>(left_padded_value: [u8; N]) -> Fragment<N, u8> {
-    let value_len = right_pad(left_padded_value).len();
-    let value_offset = N - value_len;
-    Fragment::new(value_offset, value_len, left_padded_value)
-}
-
 fn get_storage_value(
     rlp_encoded_value: [u8; MAX_STORAGE_VALUE_LEN],
 ) -> [u8; MAX_STORAGE_VALUE_LEN] {
-    let mut storage_value = get_fragment(rlp_encoded_value);
+    let mut storage_value = skip_leading_zeros(rlp_encoded_value);
     let rlp_fragment = decode_string(storage_value);
     let rlp_header_len = rlp_fragment.offset;
 

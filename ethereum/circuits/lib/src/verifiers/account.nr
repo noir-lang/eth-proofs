@@ -3,7 +3,7 @@ use crate::account::{
 };
 use crate::HASH_LEN;
 use crate::merkle_patricia_proofs::proof::{ProofInput, verify_merkle_proof};
-use crate::misc::{bytes::right_pad, fragment::Fragment, types::{Address, ADDRESS_LENGTH}};
+use crate::misc::{bytes::trim_leading_zeros, fragment::Fragment, types::{Address, ADDRESS_LENGTH}};
 use crate::rlp::decode::decode_list_of_small_strings;
 use crate::rlp::types::RlpList;
 
@@ -19,15 +19,14 @@ pub(crate) fn assert_account_equals(
     account_rlp_left_padded: [u8; MAX_ACCOUNT_STATE_LEN],
     account: Account,
 ) {
-    let account_rlp_right_padded = right_pad(account_rlp_left_padded).storage();
-    let account_rlp_list: RlpList<ACCOUNT_FIELDS_COUNT> =
-        decode_list_of_small_strings(Fragment::from_array(account_rlp_right_padded));
+    let account_rlp_right_padded = trim_leading_zeros(account_rlp_left_padded).storage();
+    let account_rlp = Fragment::from_array(account_rlp_right_padded);
+    let account_rlp_list: RlpList<ACCOUNT_FIELDS_COUNT> = decode_list_of_small_strings(account_rlp);
     assert(
         account_rlp_list.len() == ACCOUNT_FIELDS_COUNT,
         "Invalid number of fields in account RLP",
     );
 
-    let account_rlp = Fragment::from_array(account_rlp_right_padded);
     account_rlp_list.get(NONCE_INDEX).assert_eq_value("Nonce", account_rlp, account.nonce);
     account_rlp_list.get(BALANCE_INDEX).assert_eq_value(
         "Balance",
