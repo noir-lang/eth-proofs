@@ -13,8 +13,8 @@ pub(crate) global MAX_ACCOUNT_STATE_LEN: u32 = 110; // Values taken from account
 pub(crate) global MAX_ACCOUNT_LEAF_LEN: u32 = 148;
 
 pub struct AccountWithinBlock {
-    pub(crate) account: Account,
-    pub(crate) block_hash: Bytes32,
+    pub account: Account,
+    pub block_hash: Bytes32,
 }
 
 impl Eq for AccountWithinBlock {
