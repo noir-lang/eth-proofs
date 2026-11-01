@@ -20,7 +20,7 @@ use crate::fixtures::mainnet::{
         usdc_uniswap::storage::keys as usdc_uniswap_storage_keys,
     },
 };
-use dep::std::test::OracleMock;
+use std::test::OracleMock;
 
 #[test]
 fn test_get_account_with_storage_success() {

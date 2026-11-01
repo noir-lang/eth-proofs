@@ -1,6 +1,6 @@
 use crate::misc::types::Bytes32;
-use dep::bignum::bignum::BigNum;
-use dep::bignum::U256 as u256;
+use bignum::bignum::BigNum;
+use bignum::U256 as u256;
 
 pub fn from(bytes: Bytes32) -> u256 {
     let mut bytes33 = [0; 33];

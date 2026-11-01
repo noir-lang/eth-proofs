@@ -1,7 +1,7 @@
-use dep::ethereum::misc::bytes32::field_to_bytes32;
-use dep::ethereum::misc::types::Address;
-use dep::token::nft::ERC721;
-use dep::token::nft_list::mainnet::CRYPTO_PUNK;
+use ethereum::misc::bytes32::field_to_bytes32;
+use ethereum::misc::types::Address;
+use token::nft::ERC721;
+use token::nft_list::mainnet::CRYPTO_PUNK;
 
 mod main_test;
 

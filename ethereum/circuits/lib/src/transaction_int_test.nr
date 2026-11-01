@@ -18,7 +18,7 @@ use crate::fixtures::mainnet::{
     },
 };
 use crate::transaction::{get_transaction, TransactionWithinBlock, TxPartial};
-use dep::std::test::OracleMock;
+use std::test::OracleMock;
 
 global MAX_DATA_LEN: u32 = 1000;
 

@@ -2,8 +2,7 @@ pub mod mainnet {
     use crate::chain_id;
     use crate::nft::ERC721Token;
     use crate::slot::{dynamic_array_with_precalculated_slot, mapping, struct_slot};
-    use dep::ethereum::uint256::{from, from_field};
-    use dep::std::field::bytes32_to_field;
+    use ethereum::uint256::{from, from_field};
 
     pub fn BORED_APE_YACHT_CLUB() -> ERC721Token {
         ERC721Token {
@@ -21,13 +20,13 @@ pub mod mainnet {
                 let VALUE_INDEX = 1;
 
                 assert(
-                    bytes32_to_field(token_id) as u32 <= BORED_APE_YACHT_CLUB_MAX_TOKEN_ID,
+                    Field::from_be_bytes(token_id) as u32 <= BORED_APE_YACHT_CLUB_MAX_TOKEN_ID,
                     "Token ID is too high",
                 );
                 let owner_slot = dynamic_array_with_precalculated_slot(
                     BORED_APE_YACHT_CLUB_TOKEN_OWNERS_INNER_ENTRIES_SLOT,
                     2,
-                    bytes32_to_field(token_id),
+                    Field::from_be_bytes(token_id),
                 );
                 struct_slot(owner_slot, VALUE_INDEX)
             },
@@ -46,7 +45,7 @@ pub mod mainnet {
                 let CRYPTO_PUNK_TOKEN_OWNERS_INNER_ENTRIES_SLOT = from_field(10);
 
                 assert(
-                    bytes32_to_field(token_id) as u32 <= CRYPTO_PUNK_MAX_TOKEN_ID,
+                    Field::from_be_bytes(token_id) as u32 <= CRYPTO_PUNK_MAX_TOKEN_ID,
                     "Token ID is too high",
                 );
                 mapping(CRYPTO_PUNK_TOKEN_OWNERS_INNER_ENTRIES_SLOT, token_id)

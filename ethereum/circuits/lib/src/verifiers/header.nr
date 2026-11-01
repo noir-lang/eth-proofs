@@ -1,4 +1,4 @@
-use dep::keccak256::keccak256;
+use keccak256::keccak256;
 
 use crate::chain::{ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID};
 use crate::header::{BlockHeaderPartial, BlockHeaderRlp};

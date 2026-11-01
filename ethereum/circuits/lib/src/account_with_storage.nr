@@ -11,7 +11,7 @@ use crate::serde::Serde;
 use crate::verifiers::account::verify_account;
 use crate::verifiers::storage::verify_storage_values;
 
-use dep::keccak256::keccak256;
+use keccak256::keccak256;
 
 pub(crate) global MAX_PREFIXED_KEY_NIBBLE_LEN: u32 = 66; // (MAX_KEY_LEN + 1) * 2
 pub(crate) global MAX_STORAGE_DEPTH_NO_LEAF_M: u32 = 6; // Emperically correct values to be determined after we scan ethereum state trie.

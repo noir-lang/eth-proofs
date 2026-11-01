@@ -1,6 +1,6 @@
 mod is_crypto_punk_owner_main {
     use crate::main;
-    use dep::ethereum::{
+    use ethereum::{
         fixtures::mainnet::london::crypto_punks::{
             account::account,
             header::{
@@ -12,7 +12,7 @@ mod is_crypto_punk_owner_main {
         },
         misc::{arrays::alter_array, types::Address},
     };
-    use dep::std::test::OracleMock;
+    use std::test::OracleMock;
 
     global CRYPTO_PUNK_OWNER_WALLER_ADDRESS: Address = [
         0xc3, 0x52, 0xb5, 0x34, 0xe8, 0xb9, 0x87, 0xe0, 0x36, 0xa9, 0x35, 0x39, 0xfd, 0x68, 0x97,

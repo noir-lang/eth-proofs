@@ -15,8 +15,8 @@ use crate::receipt::{
     MAX_PREFIXED_KEY_NIBBLE_LEN as RECEIPT_MAX_PREFIXED_KEY_NIBBLE_LEN,
     MAX_VALUE_LEN_M as RECEIPT_MAX_VALUE_LEN_M,
 };
-use dep::bignum::bignum::BigNum;
-use dep::bignum::U256 as u256;
+use bignum::bignum::BigNum;
+use bignum::U256 as u256;
 
 pub trait Serde<let LEN: u32> {
     fn serialize(self) -> [Field; LEN];

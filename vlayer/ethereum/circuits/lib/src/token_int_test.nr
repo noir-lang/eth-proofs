@@ -2,9 +2,9 @@ mod test_ERC20Token {
     use crate::chain_id::MAINNET;
     use crate::token::ERC20;
     use crate::token::ERC20Token;
-    use dep::ethereum::account_with_storage::StorageWithinBlock;
-    use dep::ethereum::account_with_storage_recursive::RecursiveProof;
-    use dep::ethereum::fixtures::mainnet::paris::usdc_circle::{
+    use ethereum::account_with_storage::StorageWithinBlock;
+    use ethereum::account_with_storage_recursive::RecursiveProof;
+    use ethereum::fixtures::mainnet::paris::usdc_circle::{
         account::account,
         header::{
             block_header_partial as paris_block_header_partial,
@@ -14,9 +14,9 @@ mod test_ERC20Token {
         storage::values,
         storage_proof::proofs_serialized,
     };
-    use dep::ethereum::serde::Serde;
-    use dep::std::test::OracleMock;
+    use ethereum::serde::Serde;
     use ethereum::uint256::from_field;
+    use std::test::OracleMock;
 
     #[test]
     fn success() {
