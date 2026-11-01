@@ -103,3 +103,68 @@ fn test_verify_account_wrong_state_proof() {
     wrong_proof.proof.nodes[0][0] -= 1;
     let _ = verify_account(address, account, wrong_proof, state_root);
 }
+
+mod balance_bound {
+    use crate::{account::MAX_ACCOUNT_STATE_LEN, account_with_storage::Account};
+    use crate::fixtures::mainnet::london::crypto_punks::account::{
+        balance, code_hash, nonce, rlp_encoded_left_padded_account, storage_root,
+    };
+    use crate::verifiers::account::assert_account_equals;
+
+    // Left-padded account RLP for the crypto_punks account with the balance
+    // replaced by `balance_bytes` (big-endian, no leading zeros, empty for 0).
+    fn rlp_with_balance<let L: u32>(balance_bytes: [u8; L]) -> [u8; MAX_ACCOUNT_STATE_LEN] {
+        let payload_len = 1 + (1 + L) + 33 + 33;
+        let start = MAX_ACCOUNT_STATE_LEN - 2 - payload_len;
+        let mut rlp = [0; MAX_ACCOUNT_STATE_LEN];
+        rlp[start] = 0xf8;
+        rlp[start + 1] = payload_len as u8;
+        rlp[start + 2] = nonce as u8;
+        rlp[start + 3] = 0x80 + L as u8;
+        for i in 0..L {
+            rlp[start + 4 + i] = balance_bytes[i];
+        }
+        let mut offset = start + 4 + L;
+        rlp[offset] = 0xa0;
+        for i in 0..32 {
+            rlp[offset + 1 + i] = storage_root[i];
+        }
+        offset += 33;
+        rlp[offset] = 0xa0;
+        for i in 0..32 {
+            rlp[offset + 1 + i] = code_hash[i];
+        }
+        rlp
+    }
+
+    #[test]
+    fn max_u128_accepted() {
+        let account = Account { nonce, balance: 2.pow_32(128) - 1, storage_root, code_hash };
+        assert_account_equals(rlp_with_balance([0xff; 16]), account);
+    }
+
+    #[test(should_fail)]
+    fn two_pow_128_rejected() {
+        // The low 128 bits of 2^128 are 0, which matches an empty balance.
+        let account = Account { nonce, balance: 2.pow_32(128), storage_root, code_hash };
+        assert_account_equals(rlp_with_balance([]), account);
+    }
+
+    #[test(should_fail)]
+    fn field_max_rejected() {
+        // p - 1 is the largest Field. Its low 128 bits are
+        // 0x2833e84879b9709143e1f593f0000000.
+        let low_128_bits = [
+            0x28, 0x33, 0xe8, 0x48, 0x79, 0xb9, 0x70, 0x91, 0x43, 0xe1, 0xf5, 0x93, 0xf0, 0x00,
+            0x00, 0x00,
+        ];
+        let account = Account { nonce, balance: -1, storage_root, code_hash };
+        assert_account_equals(rlp_with_balance(low_128_bits), account);
+    }
+
+    #[test(should_fail)]
+    fn real_balance_plus_two_pow_128_rejected() {
+        let account = Account { nonce, balance: balance + 2.pow_32(128), storage_root, code_hash };
+        assert_account_equals(rlp_encoded_left_padded_account, account);
+    }
+}
