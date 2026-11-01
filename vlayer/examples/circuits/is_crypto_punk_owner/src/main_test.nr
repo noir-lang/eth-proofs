@@ -66,4 +66,17 @@ mod is_crypto_punk_owner_main {
         let token_id = 10001;
         main(CRYPTO_PUNK_OWNER_WALLER_ADDRESS, token_id, BLOCK_NUMBER);
     }
+
+    #[test(should_fail_with = "Token ID is too high")]
+    fn token_id_above_u32_range() {
+        let token_id = 0x100000001;
+        main(CRYPTO_PUNK_OWNER_WALLER_ADDRESS, token_id, BLOCK_NUMBER);
+    }
+
+    #[test(should_fail_with = "Token ID is too high")]
+    fn token_id_with_top_byte_set() {
+        // 2^248 + 1
+        let token_id = 0x0100000000000000000000000000000000000000000000000000000000000001;
+        main(CRYPTO_PUNK_OWNER_WALLER_ADDRESS, token_id, BLOCK_NUMBER);
+    }
 }
