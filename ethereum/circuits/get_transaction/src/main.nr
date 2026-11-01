@@ -1,4 +1,4 @@
-use dep::ethereum::transaction::{get_transaction, TransactionWithinBlock};
+use ethereum::transaction::{get_transaction, TransactionWithinBlock};
 
 global MAX_DATA_LEN_M: u32 = 1000;
 

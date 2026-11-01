@@ -23,10 +23,8 @@ jobs:
         with:
           node-version: "20.x"
 
-      - name: Enable Corepack and Install Yarn 4
-        run: |
-          corepack enable
-          yarn set version latest
+      - name: Enable Corepack
+        run: corepack enable
 
       - name: Install Dependencies
         run: yarn install
@@ -34,7 +32,7 @@ jobs:
       - name: Install Nargo
         uses: noir-lang/noirup@v0.1.4
         with:
-          toolchain: 1.0.0-beta.18
+          toolchain: 1.0.0
 
       - name: Compile Circuit
         run: nargo compile --workspace --skip-brillig-constraints-check
@@ -49,7 +47,7 @@ jobs:
       - name: Install Barretenberg
         run: |
           curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/refs/heads/next/barretenberg/bbup/install | bash
-          ~/.bb/bbup -nv 1.0.0-beta.18
+          ~/.bb/bbup -v 6.0.0
           sudo apt install libc++-dev
 
       - name: Generate Witnesses
@@ -73,7 +71,7 @@ jobs:
 
       # Note: Solidity verifiers are pre-generated and committed to ethereum/contracts/src/generated-verifier/
       # Generating them in CI causes OOM errors due to high memory requirements
-      # To regenerate: bb write_solidity_verifier -k ./target/get_header -o ./ethereum/contracts/src/generated-verifier/GetHeaderUltraPLONKVerifier.sol
+      # To regenerate: bb write_solidity_verifier -k ./target/get_header/vk -o ./ethereum/contracts/src/generated-verifier/GetHeaderUltraPLONKVerifier.sol -t evm
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
@@ -83,7 +81,7 @@ jobs:
       - name: Compile Smart Contract
         working-directory: ethereum/contracts
         run: |
-          forge build || (test -f out/GetAccountUltraPLONKVerifier.sol/UltraVerifier.json && echo "Contracts compiled successfully despite size warnings" || exit 1)
+          forge build || (test -f out/GetAccountUltraPLONKVerifier.sol/HonkVerifier.json && echo "Contracts compiled successfully despite size warnings" || exit 1)
 
       - name: Run TypeScript Build
         run: yarn build

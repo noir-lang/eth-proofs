@@ -1,12 +1,11 @@
 use crate::slot::mapping;
-use dep::bignum::U256;
-use dep::ethereum::{
+use bignum::U256;
+use ethereum::{
     account_with_storage::get_account_with_storage,
     account_with_storage_recursive::get_account_with_storage_recursive,
     misc::{bytes32::address_to_bytes32, types::Address},
     uint256::into,
 };
-use dep::std::field::bytes32_to_field;
 
 global TOKEN_BALANCE_INDEX: u32 = 0;
 
@@ -42,6 +41,6 @@ impl ERC20 for ERC20Token {
         };
         let balance = account.values[TOKEN_BALANCE_INDEX];
 
-        bytes32_to_field(balance) as u128
+        Field::from_be_bytes(balance) as u128
     }
 }

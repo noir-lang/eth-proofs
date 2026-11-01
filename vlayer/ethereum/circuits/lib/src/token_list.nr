@@ -1,7 +1,7 @@
 pub mod mainnet {
     use crate::chain_id;
     use crate::token::ERC20Token;
-    use dep::ethereum::uint256::from_field;
+    use ethereum::uint256::from_field;
 
     pub global USDC: ERC20Token = ERC20Token {
         address: [

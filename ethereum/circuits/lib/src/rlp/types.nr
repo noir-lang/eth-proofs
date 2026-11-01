@@ -73,7 +73,7 @@ trait ToRlpFragment<let MAX_VALUE_LEN: u32> {
     fn to_fragment(self) -> Fragment<MAX_VALUE_LEN, u8>;
 }
 
-impl ToRlpFragment<1> for u1 {
+impl ToRlpFragment<1> for bool {
     fn to_fragment(self) -> Fragment<1, u8> {
         Fragment::from_array([self as u8])
     }

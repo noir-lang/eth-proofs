@@ -7,7 +7,7 @@ use crate::misc::{bytes::right_pad, fragment::Fragment, types::{Address, ADDRESS
 use crate::rlp::decode::decode_list_of_small_strings;
 use crate::rlp::types::RlpList;
 
-use dep::keccak256::keccak256;
+use keccak256::keccak256;
 
 global ACCOUNT_FIELDS_COUNT: u32 = 4;
 global NONCE_INDEX: u32 = 0;

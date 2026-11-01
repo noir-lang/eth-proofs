@@ -1,6 +1,6 @@
 mod mapping {
     use crate::slot::mapping;
-    use dep::ethereum::{
+    use ethereum::{
         misc::bytes32::{address_to_bytes32, field_to_bytes32},
         uint256::{from, from_field},
     };
@@ -62,8 +62,8 @@ mod mapping {
 
 mod dynamic_array {
     use crate::slot::dynamic_array;
-    use dep::ethereum::misc::bytes32::MAX_FIELD_VALUE;
-    use dep::ethereum::uint256::{from, from_field};
+    use ethereum::misc::bytes32::MAX_FIELD_VALUE;
+    use ethereum::uint256::{from, from_field};
 
     #[test]
     fn index_zero() {
@@ -96,7 +96,7 @@ mod dynamic_array {
 
 mod dynamic_array_with_precalculated_slot {
     use crate::slot::dynamic_array_with_precalculated_slot;
-    use dep::ethereum::{misc::bytes32::MAX_FIELD_VALUE, uint256::{from, from_field}};
+    use ethereum::{misc::bytes32::MAX_FIELD_VALUE, uint256::{from, from_field}};
 
     #[test]
     fn index_zero() {
