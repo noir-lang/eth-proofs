@@ -1,6 +1,6 @@
-use dep::ethereum::misc::types::Address;
-use dep::token::nft::ERC721;
-use dep::token::nft_list::mainnet::BORED_APE_YACHT_CLUB;
+use ethereum::misc::types::Address;
+use token::nft::ERC721;
+use token::nft_list::mainnet::BORED_APE_YACHT_CLUB;
 
 mod main_test;
 

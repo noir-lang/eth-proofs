@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { updateNestedField, incHexStr } from 'noir-ethereum-api-oracles';
 import { Abi, InputMap, abiEncode } from '@noir-lang/noirc_abi';
 
-import getStorageVerifier from '../../contracts/out/GetStorageUltraPLONKVerifier.sol/UltraVerifier.json' with { type: "json" };
+import getStorageVerifier from '../../contracts/out/GetStorageUltraPLONKVerifier.sol/HonkVerifier.json' with { type: "json" };
 import getStorage from '../../../target/get_storage.json' with { type: "json" };
 
 import { readProofData } from './proofDataReader.js';

@@ -135,7 +135,7 @@ pub(crate) global encoded_receipt: Fragment<1000, u8> = Fragment::from_array([
 ]);
 
 pub(crate) global receipt: TxReceiptPartial = TxReceiptPartial {
-    status: Option::some(1),
+    status: Option::some(true),
     state_root: Option::none(),
     cumulative_gas_used: 661473,
     logs_bloom: [

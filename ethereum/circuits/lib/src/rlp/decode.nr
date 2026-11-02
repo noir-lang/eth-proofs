@@ -1,6 +1,6 @@
 use crate::misc::fragment::Fragment;
 use crate::rlp::types::{LIST, RlpFragment, RlpHeader, RlpList, STRING};
-use dep::std::ops::WrappingSub;
+use std::ops::WrappingSub;
 
 // Maximum number of bytes required to represent entity length.
 // This means that this library can only decode RLP entities with a length of up to 2^16 - 1 bytes.

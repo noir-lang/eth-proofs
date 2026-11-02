@@ -16,8 +16,8 @@ mod U256 {
     use crate::serde::Serde;
     use crate::serde::u256_SERIALIZED_LEN;
     use crate::uint256::from_field;
-    use dep::bignum::bignum::BigNum;
-    use dep::bignum::U256;
+    use bignum::bignum::BigNum;
+    use bignum::U256;
 
     global u128_number: Field = 0x10000000000000000000000000000000;
 
