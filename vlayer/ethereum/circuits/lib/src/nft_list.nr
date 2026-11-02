@@ -2,7 +2,20 @@ pub mod mainnet {
     use crate::chain_id;
     use crate::nft::ERC721Token;
     use crate::slot::{dynamic_array_with_precalculated_slot, mapping, struct_slot};
+    use ethereum::misc::types::Bytes32;
     use ethereum::uint256::{from, from_field};
+
+    // Whether the big-endian 256-bit `token_id` is at most `max_token_id`, which must be
+    // below 2^16. The bytes are u8, so the sum of the high 30 bytes (at most 30 * 255,
+    // no wrap-around) is zero only when all of them are zero.
+    fn token_id_at_most(token_id: Bytes32, max_token_id: u32) -> bool {
+        let mut high_bytes_sum = 0;
+        for i in 0..30 {
+            high_bytes_sum += token_id[i] as Field;
+        }
+        let low_bytes = (token_id[30] as u32) * 256 + (token_id[31] as u32);
+        (high_bytes_sum == 0) & (low_bytes <= max_token_id)
+    }
 
     pub fn BORED_APE_YACHT_CLUB() -> ERC721Token {
         ERC721Token {
@@ -20,7 +33,7 @@ pub mod mainnet {
                 let VALUE_INDEX = 1;
 
                 assert(
-                    Field::from_be_bytes(token_id) as u32 <= BORED_APE_YACHT_CLUB_MAX_TOKEN_ID,
+                    token_id_at_most(token_id, BORED_APE_YACHT_CLUB_MAX_TOKEN_ID),
                     "Token ID is too high",
                 );
                 let owner_slot = dynamic_array_with_precalculated_slot(
@@ -45,7 +58,7 @@ pub mod mainnet {
                 let CRYPTO_PUNK_TOKEN_OWNERS_INNER_ENTRIES_SLOT = from_field(10);
 
                 assert(
-                    Field::from_be_bytes(token_id) as u32 <= CRYPTO_PUNK_MAX_TOKEN_ID,
+                    token_id_at_most(token_id, CRYPTO_PUNK_MAX_TOKEN_ID),
                     "Token ID is too high",
                 );
                 mapping(CRYPTO_PUNK_TOKEN_OWNERS_INNER_ENTRIES_SLOT, token_id)
