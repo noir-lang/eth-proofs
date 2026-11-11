@@ -6,7 +6,7 @@ use crate::misc::{
 };
 use crate::rlp::decode::{decode_list, decode_list_of_small_strings, decode_to_rlp_header};
 use crate::rlp::types::RlpList;
-use dep::keccak256::keccak256;
+use keccak256::keccak256;
 
 pub(crate) global MAX_NODE_LEN: u32 = 532;
 pub(crate) global MAX_NODE_FIELDS: u32 = 17;

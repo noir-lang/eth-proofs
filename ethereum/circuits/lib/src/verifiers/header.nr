@@ -1,4 +1,4 @@
-use dep::keccak256::keccak256;
+use keccak256::keccak256;
 
 use crate::chain::{ETHEREUM_MAINNET_ID, ETHEREUM_SEPOLIA_ID};
 use crate::header::{BlockHeaderPartial, BlockHeaderRlp};
@@ -29,6 +29,7 @@ pub(crate) fn get_header_fields_count(chain_id: u32, block_number: u64) -> u32 {
             fields_count += 3;
         }
     } else if chain_id == ETHEREUM_SEPOLIA_ID {
+        // post cancun
         fields_count = 20;
     } else {
         assert(false, "Unsupported chain ID");

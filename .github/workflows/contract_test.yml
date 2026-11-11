@@ -26,7 +26,7 @@ jobs:
       - name: Install Nargo
         uses: noir-lang/noirup@v0.1.4
         with:
-          toolchain: 1.0.0-beta.18
+          toolchain: 1.0.0
 
       # Note: Solidity verifiers are pre-generated and committed to ethereum/contracts/src/generated-verifier/
       # Generating them in CI causes OOM errors due to high memory requirements

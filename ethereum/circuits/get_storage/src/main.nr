@@ -1,4 +1,4 @@
-use dep::ethereum::{
+use ethereum::{
     account_with_storage::{get_account_with_storage, StorageWithinBlock},
     misc::types::{Address, Bytes32},
 };

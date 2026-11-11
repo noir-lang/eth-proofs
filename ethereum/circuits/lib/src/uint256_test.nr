@@ -1,11 +1,11 @@
 mod from_bytes32 {
     use crate::uint256::from;
-    use dep::bignum::bignum::BigNum;
-    use dep::bignum::U256;
+    use bignum::bignum::BigNum;
+    use bignum::U256;
 
     global limit_u256: U256 = U256::zero() - U256::one();
 
-    global big_number: U256 = U256::modulus().udiv(U256::from(16));
+    global big_number: U256 = U256::modulus().udiv(&U256::from(16));
 
     #[test]
     fn zero() {
@@ -29,10 +29,10 @@ mod from_bytes32 {
 
 mod into_bytes32 {
     use crate::uint256::into;
-    use dep::bignum::bignum::BigNum;
-    use dep::bignum::U256;
+    use bignum::bignum::BigNum;
+    use bignum::U256;
 
-    global big_number: U256 = U256::modulus().udiv(U256::from(16));
+    global big_number: U256 = U256::modulus().udiv(&U256::from(16));
     global limit_u256: U256 = U256::zero() - U256::one();
 
     #[test]

@@ -7,7 +7,7 @@ use crate::fixtures::mainnet::paris::usdc_circle::{
     storage::{keys, values},
 };
 use super::serde::Serde;
-use dep::std::test::OracleMock;
+use std::test::OracleMock;
 
 #[test]
 fn success() {

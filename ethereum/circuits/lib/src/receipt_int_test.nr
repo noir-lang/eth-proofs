@@ -17,7 +17,7 @@ use crate::fixtures::mainnet::cancun::{
     },
 };
 use crate::receipt::{get_receipt, TxReceiptWithinBlock};
-use dep::std::test::OracleMock;
+use std::test::OracleMock;
 
 #[test]
 fn get_receipt_success() {

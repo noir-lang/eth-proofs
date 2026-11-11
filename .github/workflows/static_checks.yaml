@@ -18,10 +18,8 @@ jobs:
         with:
           node-version: "20.x"
 
-      - name: Enable Corepack and Install Yarn 4
-        run: |
-          corepack enable
-          yarn set version latest
+      - name: Enable Corepack
+        run: corepack enable
 
       - name: Install Dependencies
         run: yarn install

@@ -10,6 +10,7 @@ export function publicInputs(abi: Abi): Abi {
 
 export function returnValues(abi: Abi): Abi {
   return {
+    abi_version: abi.abi_version,
     parameters: [],
     error_types: {},
     return_type: abi.return_type

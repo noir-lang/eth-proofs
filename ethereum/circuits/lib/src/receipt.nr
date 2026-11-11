@@ -18,7 +18,7 @@ pub(crate) global MAX_RECEIPT_RLP_LEN_M: u32 = MAX_RECEIPT_ENCODED_LEN_M - 1;
 pub(crate) type TxType = u8;
 
 pub struct TxReceiptPartial {
-    pub(crate) status: Option<u1>,
+    pub(crate) status: Option<bool>,
     pub(crate) state_root: Option<Bytes32>,
     pub(crate) cumulative_gas_used: u32,
     pub(crate) logs_bloom: [u8; BLOOM_FILTER_LEN],
@@ -34,7 +34,7 @@ impl Eq for TxReceiptPartial {
 }
 
 pub(crate) struct ForeignCallTxReceiptPartial {
-    status: u1,
+    status: bool,
     status_is_some: bool,
     state_root: Bytes32,
     state_root_is_some: bool,

@@ -1,4 +1,4 @@
-use dep::std::test::OracleMock;
+use std::test::OracleMock;
 
 use crate::{
     chain::ETHEREUM_MAINNET_ID,
