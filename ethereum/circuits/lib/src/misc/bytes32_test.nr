@@ -46,3 +46,30 @@ mod field_to_bytes32 {
         assert_eq([0; 32], field_to_bytes32(MAX_FIELD_VALUE + 1));
     }
 }
+
+mod high_bytes_are_zero {
+    use crate::misc::bytes32::high_bytes_are_zero;
+
+    #[test]
+    fn only_low_bytes_set() {
+        let mut bytes = [0xff; 32];
+        for i in 0..30 {
+            bytes[i] = 0;
+        }
+        assert(high_bytes_are_zero::<30>(bytes));
+    }
+
+    #[test]
+    fn last_high_byte_set() {
+        let mut bytes = [0; 32];
+        bytes[29] = 1;
+        assert(!high_bytes_are_zero::<30>(bytes));
+    }
+
+    #[test]
+    fn all_high_bytes_max() {
+        // 30 * 255 does not wrap around, so the sum stays non-zero.
+        let bytes = [0xff; 32];
+        assert(!high_bytes_are_zero::<30>(bytes));
+    }
+}
