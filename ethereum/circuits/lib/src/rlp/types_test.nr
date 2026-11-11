@@ -73,7 +73,7 @@ mod rlp_fragment {
         use crate::misc::fragment::Fragment;
         use crate::rlp::types::{RlpFragment, STRING};
 
-        global bit_value: u1 = 0x01;
+        global bit_value: bool = true;
         global encoded_value: Fragment<1, u8> = Fragment::from_array([0x01 as u8]);
         global fragment: RlpFragment = RlpFragment { offset: 0, length: 1, data_type: STRING };
 
@@ -92,7 +92,7 @@ mod rlp_fragment {
 
         #[test(should_fail_with = "Field: Invalid RLP value")]
         fn invalid_value() {
-            fragment.assert_eq_value("Field", encoded_value, bit_value - 1)
+            fragment.assert_eq_value("Field", encoded_value, !bit_value)
         }
 
         #[test(should_fail_with = "Field: Invalid RLP value")]

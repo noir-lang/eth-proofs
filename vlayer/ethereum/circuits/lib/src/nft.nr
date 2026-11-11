@@ -1,5 +1,5 @@
-use dep::bignum::U256;
-use dep::ethereum::{
+use bignum::U256;
+use ethereum::{
     account_with_storage::get_account_with_storage,
     misc::{
         arrays::subarray_inferred_len,

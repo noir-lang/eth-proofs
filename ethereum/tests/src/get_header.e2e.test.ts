@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { updateNestedField, incHexStr } from 'noir-ethereum-api-oracles';
 import { Abi, InputMap, abiEncode } from '@noir-lang/noirc_abi';
 
-import getHeaderVerifier from '../../contracts/out/GetHeaderUltraPLONKVerifier.sol/UltraVerifier.json' with { type: "json" };
+import getHeaderVerifier from '../../contracts/out/GetHeaderUltraPLONKVerifier.sol/HonkVerifier.json' with { type: "json" };
 import getHeader from '../../../target/get_header.json' with { type: "json" };
 
 import { readProofData } from './proofDataReader.js';

@@ -28,20 +28,23 @@ Regenerate these verifiers when:
 nargo compile --workspace --skip-brillig-constraints-check
 
 # 2. Generate verification keys
-bb write_vk -b ./target/get_header.json -o ./target/get_header
-bb write_vk -b ./target/get_account.json -o ./target/get_account
-bb write_vk -b ./target/get_storage.json -o ./target/get_storage
-bb write_vk -b ./target/get_receipt.json -o ./target/get_receipt
-bb write_vk -b ./target/get_transaction.json -o ./target/get_transaction
-bb write_vk -b ./target/get_log.json -o ./target/get_log
+bb write_vk -b ./target/get_header.json -o ./target/get_header -t evm
+bb write_vk -b ./target/get_account.json -o ./target/get_account -t evm
+bb write_vk -b ./target/get_storage.json -o ./target/get_storage -t evm
+bb write_vk -b ./target/get_receipt.json -o ./target/get_receipt -t evm
+bb write_vk -b ./target/get_transaction.json -o ./target/get_transaction -t evm
+bb write_vk -b ./target/get_log.json -o ./target/get_log -t evm
 
 # 3. Generate Solidity verifiers
-bb write_solidity_verifier -k ./target/get_header -o ./ethereum/contracts/src/generated-verifier/GetHeaderUltraPLONKVerifier.sol
-bb write_solidity_verifier -k ./target/get_account -o ./ethereum/contracts/src/generated-verifier/GetAccountUltraPLONKVerifier.sol
-bb write_solidity_verifier -k ./target/get_storage -o ./ethereum/contracts/src/generated-verifier/GetStorageUltraPLONKVerifier.sol
-bb write_solidity_verifier -k ./target/get_receipt -o ./ethereum/contracts/src/generated-verifier/GetReceiptUltraPLONKVerifier.sol
-bb write_solidity_verifier -k ./target/get_transaction -o ./ethereum/contracts/src/generated-verifier/GetTransactionUltraPLONKVerifier.sol
-bb write_solidity_verifier -k ./target/get_log -o ./ethereum/contracts/src/generated-verifier/GetLogUltraPLONKVerifier.sol
+# IMPORTANT: Use -k path/to/vk (the vk FILE), not the directory path
+# Using directory path generates placeholder values instead of real VK data
+# Use -t evm to generate EVM-compatible verifiers
+bb write_solidity_verifier -k ./target/get_header/vk -t evm -o ./ethereum/contracts/src/generated-verifier/GetHeaderUltraPLONKVerifier.sol
+bb write_solidity_verifier -k ./target/get_account/vk -t evm -o ./ethereum/contracts/src/generated-verifier/GetAccountUltraPLONKVerifier.sol
+bb write_solidity_verifier -k ./target/get_storage/vk -t evm -o ./ethereum/contracts/src/generated-verifier/GetStorageUltraPLONKVerifier.sol
+bb write_solidity_verifier -k ./target/get_receipt/vk -t evm -o ./ethereum/contracts/src/generated-verifier/GetReceiptUltraPLONKVerifier.sol
+bb write_solidity_verifier -k ./target/get_transaction/vk -t evm -o ./ethereum/contracts/src/generated-verifier/GetTransactionUltraPLONKVerifier.sol
+bb write_solidity_verifier -k ./target/get_log/vk -t evm -o ./ethereum/contracts/src/generated-verifier/GetLogUltraPLONKVerifier.sol
 
 # 4. Commit the updated verifiers
 git add ethereum/contracts/src/generated-verifier/*.sol

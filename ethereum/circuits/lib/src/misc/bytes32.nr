@@ -15,3 +15,14 @@ pub fn field_to_bytes32(value: Field) -> [u8; 32] {
     let byte_slice = value.to_be_bytes::<32>();
     byte_slice
 }
+
+// Whether the first (most significant) `N` bytes of the big-endian `bytes` are all zero.
+// The bytes are u8, so their sum (at most N * 255, no wrap-around in a Field) is zero only
+// when every one of them is zero.
+pub fn high_bytes_are_zero<let N: u32>(bytes: Bytes32) -> bool {
+    let mut sum = 0;
+    for i in 0..N {
+        sum += bytes[i] as Field;
+    }
+    sum == 0
+}

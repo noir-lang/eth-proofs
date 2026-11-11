@@ -1,9 +1,9 @@
 mod is_dao_worthy_main {
     use crate::main;
-    use dep::ethereum::{
+    use ethereum::{
         account_with_storage::StorageWithinBlock, account_with_storage_recursive::RecursiveProof,
     };
-    use dep::ethereum::fixtures::mainnet::paris::usdc_circle::{
+    use ethereum::fixtures::mainnet::paris::usdc_circle::{
         account::account,
         header::{
             block_header_partial as paris_block_header_partial,
@@ -13,8 +13,8 @@ mod is_dao_worthy_main {
         storage::values,
         storage_proof::proofs_serialized,
     };
-    use dep::std::test::OracleMock;
     use ethereum::serde::Serde;
+    use std::test::OracleMock;
 
     #[test]
     fn success_greater_then() {

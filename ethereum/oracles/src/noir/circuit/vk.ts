@@ -15,7 +15,7 @@ async function generateVkAsFieldsJson(acirPath: string, vkAsFieldsPath: string):
   const vkJson = await barretenberg.writeVKJson(acirPath, vkJsonPath);
 
   // Format: [vk_hash, ...vk_fields]
-  await writeObject([vkJson.vk_hash, ...vkJson.fields], vkAsFieldsPath);
+  await writeObject([vkJson.hash, ...vkJson.vk], vkAsFieldsPath);
 }
 
 export async function generateVk(bytecode: string, vkPath: string, vkAsFieldsPath: string): Promise<void>;

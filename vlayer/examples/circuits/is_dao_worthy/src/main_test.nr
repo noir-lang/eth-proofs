@@ -1,6 +1,6 @@
 mod is_dao_worthy_main {
     use crate::main;
-    use dep::ethereum::fixtures::mainnet::paris::usdc_circle::{
+    use ethereum::fixtures::mainnet::paris::usdc_circle::{
         account::account,
         header::{
             block_header_partial as paris_block_header_partial,
@@ -9,7 +9,7 @@ mod is_dao_worthy_main {
         state_proof::proof_input_serialized as state_proof_input_serialized,
         storage_proof::proofs_serialized,
     };
-    use dep::std::test::OracleMock;
+    use std::test::OracleMock;
 
     #[test]
     fn success_greater_then() {

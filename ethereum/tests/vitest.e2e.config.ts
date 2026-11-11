@@ -5,6 +5,8 @@ export default defineConfig({
     include: ['src/*.e2e.test.ts'],
     globalSetup: 'src/setupAnvil.ts',
     pool: 'forks',
-    fileParallelism: false
+    fileParallelism: false,
+    testTimeout: 90000, // proof verification can be slow
+    hookTimeout: 30000 // deployment needs extra time
   }
 });
