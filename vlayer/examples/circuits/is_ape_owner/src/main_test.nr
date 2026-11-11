@@ -76,4 +76,20 @@ mod is_ape_owner_main {
         ];
         main(BORED_APE_OWNER_WALLER_ADDRESS, token_id, BLOCK_NUMBER);
     }
+
+    #[test(should_fail_with = "Token ID is too high")]
+    fn token_id_above_u32_range() {
+        let mut token_id = [0; 32];
+        token_id[27] = 1;
+        token_id[31] = 1;
+        main(BORED_APE_OWNER_WALLER_ADDRESS, token_id, BLOCK_NUMBER);
+    }
+
+    #[test(should_fail_with = "Token ID is too high")]
+    fn token_id_with_top_byte_set() {
+        let mut token_id = [0; 32];
+        token_id[0] = 1;
+        token_id[31] = 1;
+        main(BORED_APE_OWNER_WALLER_ADDRESS, token_id, BLOCK_NUMBER);
+    }
 }
