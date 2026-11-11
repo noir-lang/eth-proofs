@@ -29,6 +29,9 @@ pub(crate) fn assert_account_equals(
 
     let account_rlp = Fragment::from_array(account_rlp_right_padded);
     account_rlp_list.get(NONCE_INDEX).assert_eq_value("Nonce", account_rlp, account.nonce);
+    // `as u128` keeps only the low 128 bits, so without this check a balance of
+    // 2^128 or more would match the RLP of a smaller balance.
+    assert(account.balance == (account.balance as u128) as Field, "Balance does not fit in u128");
     account_rlp_list.get(BALANCE_INDEX).assert_eq_value(
         "Balance",
         account_rlp,
