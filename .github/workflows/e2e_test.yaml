@@ -72,7 +72,7 @@ jobs:
 
       # Note: Solidity verifiers are pre-generated and committed to ethereum/contracts/src/generated-verifier/
       # Generating them in CI causes OOM errors due to high memory requirements
-      # To regenerate: bb write_solidity_verifier -k ./target/get_header -o ./ethereum/contracts/src/generated-verifier/GetHeaderUltraPLONKVerifier.sol
+      # To regenerate: bb write_solidity_verifier -k ./target/get_header/vk -o ./ethereum/contracts/src/generated-verifier/GetHeaderUltraPLONKVerifier.sol -t evm
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1

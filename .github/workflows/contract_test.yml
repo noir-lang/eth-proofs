@@ -30,7 +30,7 @@ jobs:
 
       # Note: Solidity verifiers are pre-generated and committed to ethereum/contracts/src/generated-verifier/
       # Generating them in CI causes OOM errors due to high memory requirements
-      # To regenerate: bb write_solidity_verifier -k ./target/<circuit> -o ./ethereum/contracts/src/generated-verifier/<Circuit>UltraPLONKVerifier.sol
+      # To regenerate: bb write_solidity_verifier -k ./target/<circuit>/vk -o ./ethereum/contracts/src/generated-verifier/<Circuit>UltraPLONKVerifier.sol -t evm
 
       # Will receive warnings about the size of the contracts
       - name: Run Forge build

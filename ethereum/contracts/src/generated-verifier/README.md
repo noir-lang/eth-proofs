@@ -28,12 +28,12 @@ Regenerate these verifiers when:
 nargo compile --workspace --skip-brillig-constraints-check
 
 # 2. Generate verification keys
-bb write_vk -b ./target/get_header.json -o ./target/get_header
-bb write_vk -b ./target/get_account.json -o ./target/get_account
-bb write_vk -b ./target/get_storage.json -o ./target/get_storage
-bb write_vk -b ./target/get_receipt.json -o ./target/get_receipt
-bb write_vk -b ./target/get_transaction.json -o ./target/get_transaction
-bb write_vk -b ./target/get_log.json -o ./target/get_log
+bb write_vk -b ./target/get_header.json -o ./target/get_header -t evm
+bb write_vk -b ./target/get_account.json -o ./target/get_account -t evm
+bb write_vk -b ./target/get_storage.json -o ./target/get_storage -t evm
+bb write_vk -b ./target/get_receipt.json -o ./target/get_receipt -t evm
+bb write_vk -b ./target/get_transaction.json -o ./target/get_transaction -t evm
+bb write_vk -b ./target/get_log.json -o ./target/get_log -t evm
 
 # 3. Generate Solidity verifiers
 # IMPORTANT: Use -k path/to/vk (the vk FILE), not the directory path
