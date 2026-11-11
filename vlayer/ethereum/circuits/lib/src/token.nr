@@ -3,7 +3,7 @@ use bignum::U256;
 use ethereum::{
     account_with_storage::get_account_with_storage,
     account_with_storage_recursive::get_account_with_storage_recursive,
-    misc::{bytes32::address_to_bytes32, types::Address},
+    misc::{bytes32::{address_to_bytes32, high_bytes_are_zero}, types::{Address, Bytes32}},
     uint256::into,
 };
 
@@ -39,8 +39,12 @@ impl ERC20 for ERC20Token {
         } else {
             get_account_with_storage(self.chain_id, block_number, self.address, into(storage_key))
         };
-        let balance = account.values[TOKEN_BALANCE_INDEX];
-
-        Field::from_be_bytes(balance) as u128
+        balance_to_u128(account.values[TOKEN_BALANCE_INDEX])
     }
+}
+
+// The big-endian value is below 2^128 exactly when its high 16 bytes are zero.
+pub(crate) fn balance_to_u128(balance: Bytes32) -> u128 {
+    assert(high_bytes_are_zero::<16>(balance), "Token balance does not fit in u128");
+    Field::from_be_bytes(balance) as u128
 }

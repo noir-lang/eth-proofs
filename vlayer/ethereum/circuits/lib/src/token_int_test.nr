@@ -60,3 +60,34 @@ mod test_ERC20Token {
         assert_eq(expected_usdc_balnce_of_circle, balance);
     }
 }
+
+mod balance_to_u128 {
+    use crate::token::balance_to_u128;
+
+    #[test]
+    fn max_u128() {
+        let mut balance = [0; 32];
+        for i in 16..32 {
+            balance[i] = 0xff;
+        }
+        assert_eq(balance_to_u128(balance), 0xffffffffffffffffffffffffffffffff);
+    }
+
+    #[test(should_fail_with = "Token balance does not fit in u128")]
+    fn above_u128() {
+        let mut balance = [0; 32];
+        balance[15] = 1;
+        let _ = balance_to_u128(balance);
+    }
+
+    #[test(should_fail_with = "Token balance does not fit in u128")]
+    fn above_field_modulus() {
+        // p + 1, which `Field::from_be_bytes` alone would reduce to 1.
+        let balance = [
+            0x30, 0x64, 0x4e, 0x72, 0xe1, 0x31, 0xa0, 0x29, 0xb8, 0x50, 0x45, 0xb6, 0x81, 0x81,
+            0x58, 0x5d, 0x28, 0x33, 0xe8, 0x48, 0x79, 0xb9, 0x70, 0x91, 0x43, 0xe1, 0xf5, 0x93,
+            0xf0, 0x00, 0x00, 0x02,
+        ];
+        let _ = balance_to_u128(balance);
+    }
+}
