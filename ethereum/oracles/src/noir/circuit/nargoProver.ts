@@ -121,6 +121,6 @@ export class NargoProver {
     await unlink(this.proverTomlPath);
 
     const proofJson = JSON.parse(await readFile(this.proofJsonPath, 'utf-8'));
-    return proofJson.fields as Hex[];
+    return proofJson.proof as Hex[];
   }
 }

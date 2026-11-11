@@ -25,7 +25,7 @@ Since Barretenberg v4.0.0, the CLI supports `--output_format json` which directl
 - VK.json - `target/${name}.vk.json`
   - generated using bb CLI with `--output_format json` flag (available in v4.0.0+)
   - command: `./bb write_vk -b ${acirPath} -o ${vkPath} --output_format json`
-  - the new JSON format includes `fields` array, `vk_hash`, and metadata
+  - bb writes `vk.json` into the `-o` directory; it holds the `vk` field array, its `hash`, and metadata
   - we convert it to a JSON array with `vkHash` as the first element and `vkAsFields` after it
 
 ## Usage

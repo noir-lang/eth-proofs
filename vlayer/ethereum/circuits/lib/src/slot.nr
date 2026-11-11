@@ -1,6 +1,6 @@
-use dep::bignum::U256;
-use dep::ethereum::{misc::types::Bytes32, uint256::{from, into}};
-use dep::keccak256::keccak256;
+use bignum::U256;
+use ethereum::{misc::types::Bytes32, uint256::{from, into}};
+use keccak256::keccak256;
 
 global STORAGE_KEY_HASH_INPUT_LENGTH: u32 = 64;
 

@@ -13,7 +13,7 @@ use crate::fixtures::mainnet::{
         state_proof::proof_input_serialized as state_proof_input_serialized,
     },
 };
-use dep::std::test::OracleMock;
+use std::test::OracleMock;
 
 #[test]
 fn test_get_account_success() {

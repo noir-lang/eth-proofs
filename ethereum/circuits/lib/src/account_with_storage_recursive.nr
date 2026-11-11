@@ -2,7 +2,7 @@ use crate::account_with_storage::StorageWithinBlock;
 use crate::misc::{fragment::Fragment, types::{Address, ADDRESS_LENGTH, Bytes32, BYTES32_LENGTH}};
 use crate::serde::Serde;
 use crate::serde::STORAGE_BLOCK_LEN;
-use dep::std::verify_proof_with_type;
+use std::verify_proof_with_type;
 
 pub struct RecursiveProof {
     pub key_hash: Field,

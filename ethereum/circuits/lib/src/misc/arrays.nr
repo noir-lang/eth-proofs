@@ -1,5 +1,5 @@
 use crate::misc::fragment::Fragment;
-use dep::std::ops::WrappingAdd;
+use std::ops::WrappingAdd;
 
 pub fn alter_array<let ARRAY_LEN: u32>(array: [u8; ARRAY_LEN]) -> [u8; ARRAY_LEN] {
     let mut copy = array.map(|x| x);

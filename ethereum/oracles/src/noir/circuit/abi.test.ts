@@ -9,6 +9,7 @@ describe('abi', () => {
     const publicParam = { name: 'a', type, visibility: 'public' } as const;
     const privateParam = { name: 'b', type, visibility: 'private' } as const;
     const abi: Abi = {
+      abi_version: 1,
       parameters: [publicParam, privateParam],
       return_type: null,
       error_types: {}

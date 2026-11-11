@@ -1,6 +1,6 @@
 mod is_ape_owner_main {
     use crate::main;
-    use dep::ethereum::{
+    use ethereum::{
         fixtures::mainnet::paris::bored_ape_yacht_club::{
             account::account,
             header::{
@@ -12,7 +12,7 @@ mod is_ape_owner_main {
         },
         misc::{arrays::alter_array, types::Address},
     };
-    use dep::std::test::OracleMock;
+    use std::test::OracleMock;
 
     global BORED_APE_OWNER_WALLER_ADDRESS: Address = [
         0x13, 0x70, 0x24, 0xfc, 0xa6, 0xcd, 0x54, 0x2e, 0x95, 0x97, 0xd5, 0xa5, 0x51, 0xeb, 0xb1,

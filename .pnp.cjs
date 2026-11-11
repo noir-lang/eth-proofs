@@ -75,21 +75,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["@aztec/bb.js", [\
-      ["npm:4.0.0-nightly.20260128", {\
-        "packageLocation": "./.yarn/unplugged/@aztec-bb.js-npm-4.0.0-nightly.20260128-1477f59c05/node_modules/@aztec/bb.js/",\
-        "packageDependencies": [\
-          ["@aztec/bb.js", "npm:4.0.0-nightly.20260128"],\
-          ["comlink", "npm:4.4.2"],\
-          ["commander", "npm:12.1.0"],\
-          ["idb-keyval", "npm:6.2.2"],\
-          ["msgpackr", "npm:1.11.8"],\
-          ["pako", "npm:2.1.0"],\
-          ["tslib", "npm:2.8.1"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["@babel/helper-string-parser", [\
       ["npm:7.27.1", {\
         "packageLocation": "./.yarn/cache/@babel-helper-string-parser-npm-7.27.1-d1471e0598-8bda3448e0.zip/node_modules/@babel/helper-string-parser/",\
@@ -1106,60 +1091,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["@msgpackr-extract/msgpackr-extract-darwin-arm64", [\
-      ["npm:3.0.3", {\
-        "packageLocation": "./.yarn/unplugged/@msgpackr-extract-msgpackr-extract-darwin-arm64-npm-3.0.3-23b9647943/node_modules/@msgpackr-extract/msgpackr-extract-darwin-arm64/",\
-        "packageDependencies": [\
-          ["@msgpackr-extract/msgpackr-extract-darwin-arm64", "npm:3.0.3"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@msgpackr-extract/msgpackr-extract-darwin-x64", [\
-      ["npm:3.0.3", {\
-        "packageLocation": "./.yarn/unplugged/@msgpackr-extract-msgpackr-extract-darwin-x64-npm-3.0.3-cf8ce1c077/node_modules/@msgpackr-extract/msgpackr-extract-darwin-x64/",\
-        "packageDependencies": [\
-          ["@msgpackr-extract/msgpackr-extract-darwin-x64", "npm:3.0.3"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@msgpackr-extract/msgpackr-extract-linux-arm", [\
-      ["npm:3.0.3", {\
-        "packageLocation": "./.yarn/unplugged/@msgpackr-extract-msgpackr-extract-linux-arm-npm-3.0.3-e3c3cf3492/node_modules/@msgpackr-extract/msgpackr-extract-linux-arm/",\
-        "packageDependencies": [\
-          ["@msgpackr-extract/msgpackr-extract-linux-arm", "npm:3.0.3"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@msgpackr-extract/msgpackr-extract-linux-arm64", [\
-      ["npm:3.0.3", {\
-        "packageLocation": "./.yarn/unplugged/@msgpackr-extract-msgpackr-extract-linux-arm64-npm-3.0.3-9da3d01c14/node_modules/@msgpackr-extract/msgpackr-extract-linux-arm64/",\
-        "packageDependencies": [\
-          ["@msgpackr-extract/msgpackr-extract-linux-arm64", "npm:3.0.3"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@msgpackr-extract/msgpackr-extract-linux-x64", [\
-      ["npm:3.0.3", {\
-        "packageLocation": "./.yarn/unplugged/@msgpackr-extract-msgpackr-extract-linux-x64-npm-3.0.3-76216d0983/node_modules/@msgpackr-extract/msgpackr-extract-linux-x64/",\
-        "packageDependencies": [\
-          ["@msgpackr-extract/msgpackr-extract-linux-x64", "npm:3.0.3"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["@msgpackr-extract/msgpackr-extract-win32-x64", [\
-      ["npm:3.0.3", {\
-        "packageLocation": "./.yarn/unplugged/@msgpackr-extract-msgpackr-extract-win32-x64-npm-3.0.3-7a8ff8fc6d/node_modules/@msgpackr-extract/msgpackr-extract-win32-x64/",\
-        "packageDependencies": [\
-          ["@msgpackr-extract/msgpackr-extract-win32-x64", "npm:3.0.3"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["@noble/ciphers", [\
       ["npm:1.3.0", {\
         "packageLocation": "./.yarn/cache/@noble-ciphers-npm-1.3.0-73a7db337f-3ba6da645c.zip/node_modules/@noble/ciphers/",\
@@ -1235,42 +1166,42 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@noir-lang/acvm_js", [\
-      ["npm:1.0.0-beta.18", {\
-        "packageLocation": "./.yarn/cache/@noir-lang-acvm_js-npm-1.0.0-beta.18-7978fccc22-74b61a6a17.zip/node_modules/@noir-lang/acvm_js/",\
+      ["npm:1.0.0", {\
+        "packageLocation": "./.yarn/cache/@noir-lang-acvm_js-npm-1.0.0-33e84fc7ef-568927ef9a.zip/node_modules/@noir-lang/acvm_js/",\
         "packageDependencies": [\
-          ["@noir-lang/acvm_js", "npm:1.0.0-beta.18"]\
+          ["@noir-lang/acvm_js", "npm:1.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@noir-lang/noir_js", [\
-      ["npm:1.0.0-beta.18", {\
-        "packageLocation": "./.yarn/cache/@noir-lang-noir_js-npm-1.0.0-beta.18-e053e7f5e0-7da4079f1a.zip/node_modules/@noir-lang/noir_js/",\
+      ["npm:1.0.0", {\
+        "packageLocation": "./.yarn/cache/@noir-lang-noir_js-npm-1.0.0-153215a761-cca8b4f8c9.zip/node_modules/@noir-lang/noir_js/",\
         "packageDependencies": [\
-          ["@noir-lang/acvm_js", "npm:1.0.0-beta.18"],\
-          ["@noir-lang/noir_js", "npm:1.0.0-beta.18"],\
-          ["@noir-lang/noirc_abi", "npm:1.0.0-beta.18"],\
-          ["@noir-lang/types", "npm:1.0.0-beta.18"],\
-          ["pako", "npm:2.1.0"]\
+          ["@noir-lang/acvm_js", "npm:1.0.0"],\
+          ["@noir-lang/noir_js", "npm:1.0.0"],\
+          ["@noir-lang/noirc_abi", "npm:1.0.0"],\
+          ["@noir-lang/types", "npm:1.0.0"],\
+          ["pako", "npm:3.0.3"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@noir-lang/noirc_abi", [\
-      ["npm:1.0.0-beta.18", {\
-        "packageLocation": "./.yarn/cache/@noir-lang-noirc_abi-npm-1.0.0-beta.18-45b5d71d71-3bf49a837b.zip/node_modules/@noir-lang/noirc_abi/",\
+      ["npm:1.0.0", {\
+        "packageLocation": "./.yarn/cache/@noir-lang-noirc_abi-npm-1.0.0-a108433112-e9f4426cba.zip/node_modules/@noir-lang/noirc_abi/",\
         "packageDependencies": [\
-          ["@noir-lang/noirc_abi", "npm:1.0.0-beta.18"],\
-          ["@noir-lang/types", "npm:1.0.0-beta.18"]\
+          ["@noir-lang/noirc_abi", "npm:1.0.0"],\
+          ["@noir-lang/types", "npm:1.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@noir-lang/types", [\
-      ["npm:1.0.0-beta.18", {\
-        "packageLocation": "./.yarn/cache/@noir-lang-types-npm-1.0.0-beta.18-ddbae679f5-6c735036ed.zip/node_modules/@noir-lang/types/",\
+      ["npm:1.0.0", {\
+        "packageLocation": "./.yarn/cache/@noir-lang-types-npm-1.0.0-14aea05932-0b54b48abb.zip/node_modules/@noir-lang/types/",\
         "packageDependencies": [\
-          ["@noir-lang/types", "npm:1.0.0-beta.18"]\
+          ["@noir-lang/types", "npm:1.0.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -2741,24 +2672,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["comlink", [\
-      ["npm:4.4.2", {\
-        "packageLocation": "./.yarn/cache/comlink-npm-4.4.2-cc2b6b1af7-38aa1f455c.zip/node_modules/comlink/",\
-        "packageDependencies": [\
-          ["comlink", "npm:4.4.2"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["commander", [\
-      ["npm:12.1.0", {\
-        "packageLocation": "./.yarn/cache/commander-npm-12.1.0-65c868e907-6e1996680c.zip/node_modules/commander/",\
-        "packageDependencies": [\
-          ["commander", "npm:12.1.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["concat-map", [\
       ["npm:0.0.1", {\
         "packageLocation": "./.yarn/cache/concat-map-npm-0.0.1-85a921b7ee-c996b1cfdf.zip/node_modules/concat-map/",\
@@ -2935,15 +2848,6 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./.yarn/cache/detect-indent-npm-6.1.0-d8c441ff7a-dd83cdeda9.zip/node_modules/detect-indent/",\
         "packageDependencies": [\
           ["detect-indent", "npm:6.1.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["detect-libc", [\
-      ["npm:2.1.2", {\
-        "packageLocation": "./.yarn/cache/detect-libc-npm-2.1.2-d0c382b1e2-acc675c29a.zip/node_modules/detect-libc/",\
-        "packageDependencies": [\
-          ["detect-libc", "npm:2.1.2"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -4566,15 +4470,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["idb-keyval", [\
-      ["npm:6.2.2", {\
-        "packageLocation": "./.yarn/cache/idb-keyval-npm-6.2.2-0a2fe720e7-b52f0d2937.zip/node_modules/idb-keyval/",\
-        "packageDependencies": [\
-          ["idb-keyval", "npm:6.2.2"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["ieee754", [\
       ["npm:1.2.1", {\
         "packageLocation": "./.yarn/cache/ieee754-npm-1.2.1-fb63b3caeb-b0782ef5e0.zip/node_modules/ieee754/",\
@@ -5569,33 +5464,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["msgpackr", [\
-      ["npm:1.11.8", {\
-        "packageLocation": "./.yarn/cache/msgpackr-npm-1.11.8-e5ab084046-1e583a347b.zip/node_modules/msgpackr/",\
-        "packageDependencies": [\
-          ["msgpackr", "npm:1.11.8"],\
-          ["msgpackr-extract", "npm:3.0.3"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["msgpackr-extract", [\
-      ["npm:3.0.3", {\
-        "packageLocation": "./.yarn/unplugged/msgpackr-extract-npm-3.0.3-3594f14366/node_modules/msgpackr-extract/",\
-        "packageDependencies": [\
-          ["@msgpackr-extract/msgpackr-extract-darwin-arm64", "npm:3.0.3"],\
-          ["@msgpackr-extract/msgpackr-extract-darwin-x64", "npm:3.0.3"],\
-          ["@msgpackr-extract/msgpackr-extract-linux-arm", "npm:3.0.3"],\
-          ["@msgpackr-extract/msgpackr-extract-linux-arm64", "npm:3.0.3"],\
-          ["@msgpackr-extract/msgpackr-extract-linux-x64", "npm:3.0.3"],\
-          ["@msgpackr-extract/msgpackr-extract-win32-x64", "npm:3.0.3"],\
-          ["msgpackr-extract", "npm:3.0.3"],\
-          ["node-gyp", "npm:12.2.0"],\
-          ["node-gyp-build-optional-packages", "npm:5.2.2"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["nanoid", [\
       ["npm:3.3.11", {\
         "packageLocation": "./.yarn/cache/nanoid-npm-3.3.11-f98c1f9ef6-40e7f70b3d.zip/node_modules/nanoid/",\
@@ -5642,21 +5510,11 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["node-gyp-build-optional-packages", [\
-      ["npm:5.2.2", {\
-        "packageLocation": "./.yarn/cache/node-gyp-build-optional-packages-npm-5.2.2-2994e6ac33-c81128c6f9.zip/node_modules/node-gyp-build-optional-packages/",\
-        "packageDependencies": [\
-          ["detect-libc", "npm:2.1.2"],\
-          ["node-gyp-build-optional-packages", "npm:5.2.2"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["noir-ethereum-api-e2e-tests", [\
       ["workspace:ethereum/tests", {\
         "packageLocation": "./ethereum/tests/",\
         "packageDependencies": [\
-          ["@noir-lang/noirc_abi", "npm:1.0.0-beta.18"],\
+          ["@noir-lang/noirc_abi", "npm:1.0.0"],\
           ["@types/node", "npm:20.19.30"],\
           ["eslint", "npm:8.57.1"],\
           ["noir-ethereum-api-e2e-tests", "workspace:ethereum/tests"],\
@@ -5675,11 +5533,10 @@ const RAW_RUNTIME_STATE =
       ["workspace:ethereum/oracles", {\
         "packageLocation": "./ethereum/oracles/",\
         "packageDependencies": [\
-          ["@aztec/bb.js", "npm:4.0.0-nightly.20260128"],\
           ["@ethereumjs/trie", "npm:6.2.1"],\
           ["@iarna/toml", "npm:2.2.5"],\
-          ["@noir-lang/noir_js", "npm:1.0.0-beta.18"],\
-          ["@noir-lang/noirc_abi", "npm:1.0.0-beta.18"],\
+          ["@noir-lang/noir_js", "npm:1.0.0"],\
+          ["@noir-lang/noirc_abi", "npm:1.0.0"],\
           ["@types/iarna__toml", "npm:2.0.5"],\
           ["@types/json-bigint", "npm:1.0.4"],\
           ["@types/lodash.isequal", "npm:4.5.8"],\
@@ -5988,10 +5845,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["pako", [\
-      ["npm:2.1.0", {\
-        "packageLocation": "./.yarn/cache/pako-npm-2.1.0-78df11948c-8e86465814.zip/node_modules/pako/",\
+      ["npm:3.0.3", {\
+        "packageLocation": "./.yarn/cache/pako-npm-3.0.3-7879fe2e60-556ce60a92.zip/node_modules/pako/",\
         "packageDependencies": [\
-          ["pako", "npm:2.1.0"]\
+          ["pako", "npm:3.0.3"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -7319,15 +7176,6 @@ const RAW_RUNTIME_STATE =
           ["minimist", "npm:1.2.8"],\
           ["strip-bom", "npm:3.0.0"],\
           ["tsconfig-paths", "npm:3.15.0"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
-    ["tslib", [\
-      ["npm:2.8.1", {\
-        "packageLocation": "./.yarn/cache/tslib-npm-2.8.1-66590b21b8-9c4759110a.zip/node_modules/tslib/",\
-        "packageDependencies": [\
-          ["tslib", "npm:2.8.1"]\
         ],\
         "linkType": "HARD"\
       }]\

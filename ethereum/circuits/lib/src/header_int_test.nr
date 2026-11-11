@@ -4,7 +4,7 @@ use crate::fixtures::mainnet::paris::usdc_circle::header::{
     number,
 };
 use crate::header::get_header;
-use dep::std::test::OracleMock;
+use std::test::OracleMock;
 
 #[test]
 fn test_get_header_success() {
