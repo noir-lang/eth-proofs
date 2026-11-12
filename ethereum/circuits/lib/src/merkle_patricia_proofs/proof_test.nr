@@ -711,3 +711,69 @@ mod verify_merkle_proof {
         );
     }
 }
+
+mod hashed_key_with_leading_zero_byte {
+    use crate::merkle_patricia_proofs::proof::{
+        MAX_NODE_LEN, Proof, verify_merkle_proof_for_hashed_key,
+    };
+    use dep::keccak256::keccak256;
+
+    global KEY_BYTES: u32 = 32;
+    global MAX_KEY_LEN: u32 = 66;
+    global LEAF_LEN: u32 = 39;
+
+    // 32-byte trie key (e.g. keccak256(address)) whose first byte is 0x00, as happens for 1 in 256 keys.
+    fn hashed_key() -> [u8; KEY_BYTES] {
+        let mut key = [0; KEY_BYTES];
+        for i in 1..KEY_BYTES {
+            key[i] = i as u8;
+        }
+        key
+    }
+
+    // Single-leaf trie: leaf = rlp([0x20 ++ key, rlp(0x010203)]); root = keccak256(leaf).
+    fn leaf() -> [u8; LEAF_LEN] {
+        let key = hashed_key();
+        let mut leaf = [0; LEAF_LEN];
+        leaf[0] = 0xe6; // list, 38-byte payload
+        leaf[1] = 0xa1; // string, 33 bytes
+        leaf[2] = 0x20; // leaf node, even number of nibbles
+        for i in 0..KEY_BYTES {
+            leaf[3 + i] = key[i];
+        }
+        leaf[35] = 0x83; // string, 3 bytes
+        leaf[36] = 0x01;
+        leaf[37] = 0x02;
+        leaf[38] = 0x03;
+        leaf
+    }
+
+    fn padded_key() -> [u8; MAX_KEY_LEN] {
+        let key = hashed_key();
+        let mut padded_key = [0; MAX_KEY_LEN];
+        for i in 0..KEY_BYTES {
+            padded_key[MAX_KEY_LEN - KEY_BYTES + i] = key[i];
+        }
+        padded_key
+    }
+
+    fn proof() -> (Proof<1, LEAF_LEN>, [u8; 32]) {
+        let leaf = leaf();
+        let root = keccak256(leaf, LEAF_LEN);
+        (Proof { nodes: [[0; MAX_NODE_LEN]], leaf, depth: 1 }, root)
+    }
+
+    #[test]
+    fn success() {
+        let (proof, root) = proof();
+        verify_merkle_proof_for_hashed_key(padded_key(), [0x01, 0x02, 0x03], root, proof);
+    }
+
+    #[test(should_fail_with = "Expected zero padding before the hashed key")]
+    fn nonzero_padding() {
+        let (proof, root) = proof();
+        let mut key = padded_key();
+        key[MAX_KEY_LEN - KEY_BYTES - 1] = 0x01;
+        verify_merkle_proof_for_hashed_key(key, [0x01, 0x02, 0x03], root, proof);
+    }
+}

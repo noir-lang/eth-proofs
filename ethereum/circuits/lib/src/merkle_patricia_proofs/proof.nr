@@ -191,13 +191,52 @@ pub fn verify_leaf<let MAX_LEAF_LEN: u32, let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, 
     );
 }
 
+// Verifies a proof for a left-padded `key`. Leading zero bytes of `key` are treated as padding, so this is only
+// correct for keys whose first byte is never zero, such as RLP-encoded transaction and receipt indices.
+// For 32-byte hashed keys (state and storage tries) use `verify_merkle_proof_for_hashed_key`.
 pub fn verify_merkle_proof<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, let MAX_VALUE_LEN: u32, let MAX_DEPTH: u32, let MAX_LEAF_LEN: u32>(
     key: Key<MAX_PREFIXED_KEY_NIBBLE_LEN>,
     value: Value<MAX_VALUE_LEN>,
     root: Hash,
     proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>,
 ) {
-    let key = right_pad(key);
+    verify_merkle_proof_with_key(right_pad(key), value, root, proof);
+}
+
+// Verifies a proof for a key that is a 32-byte hash stored in the last `HASH_LEN` bytes of `key`.
+// Such keys (keccak256 of an address or storage slot) start with a zero byte for 1 in 256 keys,
+// so their length can't be inferred from leading zeros.
+pub fn verify_merkle_proof_for_hashed_key<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, let MAX_VALUE_LEN: u32, let MAX_DEPTH: u32, let MAX_LEAF_LEN: u32>(
+    key: Key<MAX_PREFIXED_KEY_NIBBLE_LEN>,
+    value: Value<MAX_VALUE_LEN>,
+    root: Hash,
+    proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>,
+) {
+    verify_merkle_proof_with_key(hashed_key(key), value, root, proof);
+}
+
+pub(crate) fn hashed_key<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32>(
+    key: Key<MAX_PREFIXED_KEY_NIBBLE_LEN>,
+) -> BoundedVec<u8, MAX_PREFIXED_KEY_NIBBLE_LEN> {
+    assert(MAX_PREFIXED_KEY_NIBBLE_LEN >= HASH_LEN, "Key is shorter than a hash");
+    let offset = MAX_PREFIXED_KEY_NIBBLE_LEN - HASH_LEN;
+    let mut storage = [0; MAX_PREFIXED_KEY_NIBBLE_LEN];
+    for i in 0..MAX_PREFIXED_KEY_NIBBLE_LEN {
+        if i < offset {
+            assert(key[i] == 0, "Expected zero padding before the hashed key");
+        } else {
+            storage[i - offset] = key[i];
+        }
+    }
+    BoundedVec::from_parts(storage, HASH_LEN)
+}
+
+pub fn verify_merkle_proof_with_key<let MAX_PREFIXED_KEY_NIBBLE_LEN: u32, let MAX_VALUE_LEN: u32, let MAX_DEPTH: u32, let MAX_LEAF_LEN: u32>(
+    key: BoundedVec<u8, MAX_PREFIXED_KEY_NIBBLE_LEN>,
+    value: Value<MAX_VALUE_LEN>,
+    root: Hash,
+    proof: Proof<MAX_DEPTH, MAX_LEAF_LEN>,
+) {
     let key_nibbles = bytes_to_nibbles(Fragment::from_vec(key));
     let mut key_ptr = 0;
 
