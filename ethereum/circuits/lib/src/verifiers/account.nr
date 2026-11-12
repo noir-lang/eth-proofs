@@ -2,7 +2,7 @@ use crate::account::{
     Account, MAX_ACCOUNT_LEAF_LEN, MAX_ACCOUNT_STATE_LEN, MAX_PREFIXED_KEY_NIBBLE_LEN,
 };
 use crate::HASH_LEN;
-use crate::merkle_patricia_proofs::proof::{ProofInput, verify_merkle_proof};
+use crate::merkle_patricia_proofs::proof::{ProofInput, verify_merkle_proof_for_hashed_key};
 use crate::misc::{bytes::right_pad, fragment::Fragment, types::{Address, ADDRESS_LENGTH}};
 use crate::rlp::decode::decode_list_of_small_strings;
 use crate::rlp::types::RlpList;
@@ -66,7 +66,7 @@ pub fn verify_account<let MAX_DEPTH_NO_LEAF: u32>(
 ) {
     assert_address_equals(state_proof_input.key, address);
     assert_account_equals(state_proof_input.value, account);
-    verify_merkle_proof(
+    verify_merkle_proof_for_hashed_key(
         state_proof_input.key,
         state_proof_input.value,
         state_root,
