@@ -21,6 +21,7 @@ export interface BlockHeader {
   blobGasUsed?: Hex;
   excessBlobGas?: Hex;
   parentBeaconBlockRoot?: Hex;
+  requestsHash?: Hex;
 }
 
 function unpadded(hex: Hex) {
@@ -60,6 +61,9 @@ export function headerToRlpFields(blockHeader: BlockHeader): Hex[] {
   if (blockHeader.parentBeaconBlockRoot !== undefined) {
     headerFields.push(blockHeader.parentBeaconBlockRoot);
   }
+  if (blockHeader.requestsHash !== undefined) {
+    headerFields.push(blockHeader.requestsHash);
+  }
   return headerFields;
 }
 
@@ -72,12 +76,13 @@ export function toHexString(arg: number | bigint): Hex {
   return `0x${arg.toString(16)}`;
 }
 
-/* Can be removed after viem adds parentBeaconBlockRoot */
+/* Can be removed after viem adds parentBeaconBlockRoot and requestsHash */
 export type Block<TIncludeTransactions extends boolean = false> = GetBlockReturnType<
   undefined,
   TIncludeTransactions
 > & {
   parentBeaconBlockRoot?: Hex;
+  requestsHash?: Hex;
 };
 
 export function blockToHeader(block: Block): BlockHeader {
@@ -101,7 +106,8 @@ export function blockToHeader(block: Block): BlockHeader {
     withdrawalsRoot: block.withdrawalsRoot !== null ? block.withdrawalsRoot : undefined,
     blobGasUsed: block.blobGasUsed !== undefined ? toHexString(block.blobGasUsed) : undefined,
     excessBlobGas: block.excessBlobGas !== undefined ? toHexString(block.excessBlobGas) : undefined,
-    parentBeaconBlockRoot: block.parentBeaconBlockRoot ?? undefined
+    parentBeaconBlockRoot: block.parentBeaconBlockRoot ?? undefined,
+    requestsHash: block.requestsHash ?? undefined
   };
   return blockHeader;
 }

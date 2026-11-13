@@ -6,31 +6,65 @@ use crate::misc::{arrays::sub_array_equals, fragment::Fragment};
 use crate::rlp::decode::decode_list;
 use crate::rlp::types::RlpList;
 
-global MAX_HEADER_FIELDS_COUNT: u32 = 20;
+global MAX_HEADER_FIELDS_COUNT: u32 = 21;
 global STATE_ROOT_INDEX: u32 = 3;
 global TRANSACTIONS_ROOT_INDEX: u32 = 4;
 global RECEIPTS_ROOT_INDEX: u32 = 5;
 global BLOCK_NUM_INDEX: u32 = 8;
 
+// Mainnet blocks at which a fork added header fields.
+// London: base_fee_per_gas (EIP-1559)
+// Shanghai: withdrawals_root (EIP-4895)
+// Cancun: blob_gas_used, excess_blob_gas (EIP-4844), parent_beacon_block_root (EIP-4788)
+// Prague: requests_hash (EIP-7685)
+// Paris (the Merge) did not add header fields.
 pub(crate) global LONDON_BLOCK_NUM: u64 = 12_965_000;
-pub(crate) global PARIS_BLOCK_NUM: u64 = 15_537_394;
+pub(crate) global SHANGHAI_BLOCK_NUM: u64 = 17_034_870;
 pub(crate) global CANCUN_BLOCK_NUM: u64 = 19_426_587;
+pub(crate) global PRAGUE_BLOCK_NUM: u64 = 22_431_084;
+
+// Sepolia launched with London active, so base_fee_per_gas is present from genesis.
+pub(crate) global SEPOLIA_SHANGHAI_BLOCK_NUM: u64 = 2_990_908;
+pub(crate) global SEPOLIA_CANCUN_BLOCK_NUM: u64 = 5_187_023;
+pub(crate) global SEPOLIA_PRAGUE_BLOCK_NUM: u64 = 7_836_331;
+
+fn post_london_fields_count(
+    block_number: u64,
+    shanghai_block_num: u64,
+    cancun_block_num: u64,
+    prague_block_num: u64,
+) -> u32 {
+    let mut fields_count = 16;
+    if block_number >= shanghai_block_num {
+        fields_count += 1;
+    }
+    if block_number >= cancun_block_num {
+        fields_count += 3;
+    }
+    if block_number >= prague_block_num {
+        fields_count += 1;
+    }
+    fields_count
+}
 
 pub(crate) fn get_header_fields_count(chain_id: u32, block_number: u64) -> u32 {
     let mut fields_count = 15;
     if chain_id == ETHEREUM_MAINNET_ID {
         if block_number >= LONDON_BLOCK_NUM {
-            fields_count += 1;
-        }
-        if block_number >= PARIS_BLOCK_NUM {
-            fields_count += 1;
-        }
-        if block_number >= CANCUN_BLOCK_NUM {
-            fields_count += 3;
+            fields_count = post_london_fields_count(
+                block_number,
+                SHANGHAI_BLOCK_NUM,
+                CANCUN_BLOCK_NUM,
+                PRAGUE_BLOCK_NUM,
+            );
         }
     } else if chain_id == ETHEREUM_SEPOLIA_ID {
-        // post cancun
-        fields_count = 20;
+        fields_count = post_london_fields_count(
+            block_number,
+            SEPOLIA_SHANGHAI_BLOCK_NUM,
+            SEPOLIA_CANCUN_BLOCK_NUM,
+            SEPOLIA_PRAGUE_BLOCK_NUM,
+        );
     } else {
         assert(false, "Unsupported chain ID");
     }
