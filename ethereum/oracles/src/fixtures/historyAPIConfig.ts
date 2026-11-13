@@ -73,6 +73,10 @@ export const HISTORY_API_FIXTURES: HistoryAPIFixtures = {
         blockNumber: 19_000_000n,
         address: '0x9c8ff314c9bc7f6e59a9d9225fb22946427edc03',
         storageKeys: [OWNER_OF_9TH_NOUN_STORAGE_KEY]
+      },
+      // Last block before Shanghai added withdrawalsRoot. Paris itself added no header fields.
+      pre_shanghai: {
+        blockNumber: 17_034_869n
       }
     },
     cancun: {
@@ -96,6 +100,12 @@ export const HISTORY_API_FIXTURES: HistoryAPIFixtures = {
         blockNumber: 19_667_377n,
         transactionHash: TETHER_APPROVE_TX_HASH,
         logIdx: 0
+      }
+    },
+    prague: {
+      // First Prague block. Prague added requestsHash (EIP-7685).
+      first: {
+        blockNumber: 22_431_084n
       }
     }
   }

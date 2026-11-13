@@ -3,3 +3,4 @@ pub(crate) mod homestead;
 pub mod london;
 pub mod paris;
 pub(crate) mod cancun;
+pub(crate) mod prague;
